@@ -1,1 +1,0 @@
-document.write("<h1>Tables</h1>");

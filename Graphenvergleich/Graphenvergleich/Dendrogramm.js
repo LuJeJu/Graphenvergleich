@@ -1,1 +1,0 @@
-document.write("<h1>Dendrogramme</h1>");
