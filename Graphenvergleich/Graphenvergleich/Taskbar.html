@@ -1,23 +1,27 @@
 <html>
     <head>
-        <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> 
+        <!-- <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> -->
     </head>
         <body bgcolor="#ababab">
         	<input type="file" id="files" accept=".json" />
-
-			<script>
-            	const files = document.getElementById("files");
+            <script src="https://d3js.org/d3.v5.min.js"></script>
+            <script>
+                const files = document.getElementById("files");
                 files.onchange = function(event) {
                 var file = event.target.files[0];
                 var reader = new FileReader();
                 reader.onload = function(e) {
                 	var content = e.target.result;
-                    var data = JSON.parse(content);
-                    console.log(data);
+                    var bayes = JSON.parse(content);
+                    console.log(bayes);
+                    d3.tree(bayes[1]);
                     }
-                 reader.readAsText(file);   	
+                 reader.readAsText(file);
+                 
                 }
-			</script>
+
+            </script>
+            
         </body>
 </html>
 
