@@ -1,29 +1,29 @@
 <html>
-    <head>
-        <!-- <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> -->
-    </head>
-        <body bgcolor="#ababab">
-        	<input type="file" id="files" multiple accept=".json" />
-            <script src="https://d3js.org/d3.v5.min.js"></script>
-            <script>
-                const files = document.getElementById("files");
-                files.addEventListener('change',(event) => {
-                    var i;
-                    for(i=0; i<FileList.length; i++) {
-                var file = event.target.files[i];
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                	var content = e.target.result;
-                    var bayes = JSON.parse(content);
-                    console.log(bayes); 
-                    }
-                 reader.readAsText(file);
-                }
-                 });
+	<head>
+		<!-- <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> -->
+	</head>
+		<body bgcolor="#ababab">
+			<input type="file" id="files" multiple accept=".json">
+			<script src="https://d3js.org/d3.v5.min.js"></script>
+			<script>
+				const fileObj = document.getElementById("files");
+				fileObj.onchange = (event) => {
+					const files = event.target.files;
+					for (var i=0; i<files.length; i++) {
+						var file = files[i];
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							var content = e.target.result;
+							var bayes = JSON.parse(content);
+							console.log(bayes); 
+						}
+						reader.readAsText(file);
+					}
+				}
 
-            </script>
-            
-        </body>
+			</script>
+			
+		</body>
 </html>
 
 
