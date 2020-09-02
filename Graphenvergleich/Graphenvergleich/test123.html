@@ -2,16 +2,13 @@
 	<head>
 		<!-- <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> -->
 	</head>
-	<body bgcolor="#ababab">
+		<body bgcolor="#ababab">
 			<input type="file" id="files" multiple accept=".json">
 			<!--<script src="https://d3js.org/d3.v5.min.js"></script> -->
 			<script type="text/javascript" src="input.js"></script>
 			<script>
-				
-				const fileObj = document.getElementById("files");
-				fileObj.onchange = (event) => {
-				read();
-				}
+				var bayes;
+				read(bayes);
 			</script>
 		</body>
 </html>
