@@ -1,20 +1,18 @@
-var bayes=0;
 //var wert=false;
-function read(){
-
-					const files = event.target.files;
-					for (var i=0; i<files.length; i++) {
-						var file = files[i];
+function read(file){
+                        var bayes;
 						var reader = new FileReader();
 						reader.onload = function(e) {
 							var content = e.target.result;
 							bayes = JSON.parse(content);
 							
-                            //console.dir(bayes);
+                            console.dir(bayes);
+                            //return bayes;
                             //wert=true;
 							//console.log(bayes.A.children); 
 						}
+
                         reader.readAsText(file);
-                        
-                    }
+                        return bayes;
+                        // den reader returnen bringt leider auch nichts und auch oben in der function nicht...
                 }
