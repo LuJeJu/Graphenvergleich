@@ -7,12 +7,12 @@ function read(file){
 							bayes = JSON.parse(content);
 							
                             console.dir(bayes);
-                            //return bayes;
+                            // return bayes;
                             //wert=true;
 							//console.log(bayes.A.children); 
 						}
 
                         reader.readAsText(file);
-                        return bayes;
+                        // return bayes;
                         // den reader returnen bringt leider auch nichts und auch oben in der function nicht...
                 }

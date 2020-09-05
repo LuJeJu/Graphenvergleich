@@ -1,13 +1,23 @@
 <html>
     <head>
         <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Einzelgraphen</h1>
+        <div id="result"></div>
     </head>
-    <script type="text/javascript" src="input.js"></script>
+    <script type="text/javascript" src="hilfe.js"></script>
+    <!-- <script type="text/javascript" src="darstellung1.js"></script> -->
+    <script type="text/javascript" src="graphen.js"></script>
     <!-- <script type="text/html" src="Taskbar.html"></script> -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
         d3.selectAll("data").style("color", "blue");
-        // setInterval(bayes.onchange = console.log(bayes), 0.5);
+        //setInterval(graphs.onchange = console.log(graphs), 100);
+        //console.log(fkt);
+    function dar(){
+    var fkt = document.getElementById("result").innerHTML = localStorage.getItem("Graphs");
+    console.log(fkt);
+    document.write("hier ist ein graph");
+    };
+
     </script>
 
 </html>

@@ -1,22 +1,15 @@
 <html>
 	<head>
 		<!-- <h1 style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;">Taskleiste</h1> -->
+		<script type="text/javascript" src="graphen.js"></script>
+		<script type="text/html" src="Einzelgraphen.html"></script>
+		<script type="text/javascript" src="hilfe.js"></script>
 	</head>
 	<body bgcolor="#ababab">
-			<input type="file" id="files" multiple accept=".json">
-			<!--<script src="https://d3js.org/d3.v5.min.js"></script> -->
-			<script type="text/javascript" src="input.js"></script>
+			<input type="file" id="files" multiple accept=".json">	
+			<button onclick="dar()">Starten</button>
 			<script>
-				var graphs = new Array(4);
-				const fileObj = document.getElementById("files");
-				fileObj.onchange = (event) => {
-				const files = event.target.files;
-				for (var i=0; i<files.length; i++) {
-				var file = files[i];
-				graphs[i] = read(file);
-				}
-				}
-				console.log(graphs);
+				read();
 			</script>
 		</body>
 </html>
