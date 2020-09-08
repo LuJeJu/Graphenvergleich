@@ -1,6 +1,6 @@
-var fkt;
 function darstellung(){
-   fkt = localStorage.getItem("Graphs");
-   console.log(fkt);
-   dar();
+   document.getElementById("Dendrogramme").innerHTML = graphs;
+   document.getElementById("Einzelgraphen").innerHTML = graphs;
+   document.getElementById("Mainwindow").innerHTML = graphs;
+   document.getElementById("CondProbTables").innerHTML = graphs;
 };
