@@ -23,5 +23,5 @@ function read(){
 				}
 				}
                 graphs.onchange = console.log(graphs);
-                localStorage.setItem("Graphs",graphs);
+                // localStorage.setItem("Graphs",graphs);
             }
