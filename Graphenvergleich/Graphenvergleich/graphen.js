@@ -21,8 +21,8 @@ function darstellung(){
    console.log(child2);
    var div1 = document.createElement("div");
    var div2 = document.createElement("div");
-   document.getElementById("Einzelgraphen").appendChild(div1);
-   document.getElementById("Einzelgraphen").appendChild(div2);
+   //document.getElementById("Einzelgraphen").appendChild(div1);
+   //document.getElementById("Einzelgraphen").appendChild(div2);
    }
    if(graphs.length>=3){
       var parent3 = new Array();

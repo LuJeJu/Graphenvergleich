@@ -1,89 +1,12 @@
 <html>
-    <head>
+    <head >
         <style>
-         /*  @import url("style.css") screen; -*/
-         
-    body {
-    margin:0;
-    padding:0;
-    }         
-#container {
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-}
-
-#Taskbar {
-    border-bottom: 1px solid lightgrey;
-    border-top: 1px solid lightgrey;
-    border-right: 1px solid lightgrey;
-    border-left: 1px solid lightgrey;
-    background-color: lightgrey;
-    flex: 1
-
-
- }
- 
-#Ansicht {
-    flex: 15;
-    background-color: white;
-    display: flex;
-  
-}
-
-#Dendrogramme { 
-    width: 25%;
-     /* height: 100%; */
-    background-color: rgb(238, 238, 238);
-    resize: horizontal;
-    overflow: auto;
-    border-right: 1px solid lightgrey;
-
-}
-
-#CPT {
-    flex: 1;
-    resize: horizontal;
-    background-color: rgb(238, 238, 238);
-    display: flex;   
-    width: 25%;
-    /* height: 100%; */
-    border-left: 1px solid lightgrey;
- 
-}
-
-#Mitte {
-    width: 50%;
-    background-color: white;
-    overflow: auto;
-    resize: horizontal;
-
-}
-
-#Vergleich1 {
-    height: 49%;
-    background-color: white;
-    resize: vertical;
-    overflow: auto;
-    flex: 1;
-    border-bottom: 1px solid lightgrey;
-  
-}
-#Vergleich2 {
-    background-color: white;
-    overflow: auto;
-    flex: 1;
-    height: 49%;
-    border-top: 1px solid lightgrey;
-  
-}
+           @import url("style.css") screen;
     </style>
     </head>
     <body>
-         <div id="container"> 
-            <div id="Taskbar">Taskbar
+         <div id="container" style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;"> 
+            <div id="Taskbar">
                 <input type="file" id="files" multiple accept=".json">	
                 <script type="text/javascript" src="input.js"></script>
                 <script type="text/javascript" src="graphen.js"></script>
