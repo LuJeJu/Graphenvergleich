@@ -11,6 +11,13 @@ function darstellung(){
       separates source nodes from others for every graph and
       create divs depending on the number of graphs for the separate display
    */
+
+      // delete default display
+  d3.select("#Vergleich2").text("");
+  d3.select("#Vergleich1").text("");
+  d3.select("#CPT").text("");
+  d3.select("#Dendrogramme").text("");
+
       // more than 1 graph
    if(graphs.length>=1){
       var parent1 = new Array();
@@ -19,6 +26,7 @@ function darstellung(){
    console.log(parent1);
    console.log(child1);
    }
+
       // more than 2 graphs
    if(graphs.length>=2){
       var parent2 = new Array();
@@ -30,8 +38,12 @@ function darstellung(){
    //var div2 = document.createElement("div");
    //document.getElementById("Vergleich2").appendChild(div1);
    //document.getElementById("Vergleich2").appendChild(div2);
-   d3.select("#Vergleich2").append("div");
+   var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
+   g1.style("width","50%").style("height","100%").style("flex","1").text("graph 1");
+   var g2 = d3.select("#Vergleich2").append("div").attr("id","g2");
+   g2.style("width","50%").style("height","100%").style("flex","1").text("graph 2");
    }
+
       // more than 3 graphs
    if(graphs.length>=3){
       var parent3 = new Array();
@@ -40,6 +52,7 @@ function darstellung(){
    console.log(parent3);
    console.log(child3);
    }
+
       // exactly 4 graphs
    if(graphs.length=4){
       var parent4 = new Array();
@@ -48,6 +61,7 @@ function darstellung(){
    console.log(parent4);
    console.log(child4);
    }
+
       // more than 4 graphs -> hint that only 4 will be considered
    if(graphs.length>4){}
 };
