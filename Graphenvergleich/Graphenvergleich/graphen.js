@@ -19,10 +19,11 @@ function darstellung(){
    graph1(graphs[1], parent2,child2);
    console.log(parent2);
    console.log(child2);
-   var div1 = document.createElement("div");
-   var div2 = document.createElement("div");
-   //document.getElementById("Einzelgraphen").appendChild(div1);
-   //document.getElementById("Einzelgraphen").appendChild(div2);
+   //var div1 = document.createElement("div");
+   //var div2 = document.createElement("div");
+   //document.getElementById("Vergleich2").appendChild(div1);
+   //document.getElementById("Vergleich2").appendChild(div2);
+   d3.select("#Vergleich2").append("div");
    }
    if(graphs.length>=3){
       var parent3 = new Array();
