@@ -1,3 +1,4 @@
+// function will be called by clicking the "Start"-button in Taskbar
 function darstellung(){
    /*
    document.getElementById("Dendrogramme").innerHTML = graphs;
@@ -6,6 +7,11 @@ function darstellung(){
    document.getElementById("CondProbTables").innerHTML = graphs;
    console.log(graphs[0].B.parents[0]);
 */  
+   /*
+      separates source nodes from others for every graph and
+      create divs depending on the number of graphs for the separate display
+   */
+      // more than 1 graph
    if(graphs.length>=1){
       var parent1 = new Array();
       var child1 = new Array();
@@ -13,6 +19,7 @@ function darstellung(){
    console.log(parent1);
    console.log(child1);
    }
+      // more than 2 graphs
    if(graphs.length>=2){
       var parent2 = new Array();
       var child2 = new Array();
@@ -25,6 +32,7 @@ function darstellung(){
    //document.getElementById("Vergleich2").appendChild(div2);
    d3.select("#Vergleich2").append("div");
    }
+      // more than 3 graphs
    if(graphs.length>=3){
       var parent3 = new Array();
       var child3 = new Array();
@@ -32,15 +40,19 @@ function darstellung(){
    console.log(parent3);
    console.log(child3);
    }
-   if(graphs.length>=4){
+      // exactly 4 graphs
+   if(graphs.length=4){
       var parent4 = new Array();
       var child4 = new Array();
    graph1(graphs[3], parent4,child4);
    console.log(parent4);
    console.log(child4);
    }
+      // more than 4 graphs -> hint that only 4 will be considered
+   if(graphs.length>4){}
 };
 
+// separate-function
 function graph1(g, parent,child){
    var key,prob;
    for(key in g){
