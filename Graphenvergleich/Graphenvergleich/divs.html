@@ -1,31 +1,99 @@
 <html>
     <head>
         <style>
-            @import url("style.css") screen;
-        </style>
+         /*  @import url("style.css") screen; -*/
+            
+#container {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#Taskbar {
+    border-bottom: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    background-color: lightgrey;
+    flex: 1
+
+
+ }
+ 
+#Ansicht {
+    flex: 15;
+    background-color: white;
+    display: flex;
+  
+}
+
+#Dendrogramme { 
+    width: 25%;
+    height: 100%;
+    background-color: rgb(238, 238, 238);
+    resize: horizontal;
+    overflow: auto;
+    border-right: 1px solid lightgrey;
+
+}
+
+#CPT {
+    flex: 1;
+    resize: horizontal;
+    background-color: rgb(238, 238, 238);
+    display: flex;   
+    width: 25%;
+    height: 100%;
+    border-left: 1px solid lightgrey;
+ 
+}
+
+#Mitte {
+    width: 50%;
+    background-color: white;
+    overflow: auto;
+    resize: horizontal;
+
+}
+
+#Vergleich1 {
+    height: 49%;
+    background-color: white;
+    resize: vertical;
+    overflow: auto;
+    flex: 1;
+    border-bottom: 1px solid lightgrey;
+  
+}
+#Vergleich2 {
+    background-color: white;
+    overflow: auto;
+    flex: 1;
+    height: 49%;
+    border-top: 1px solid lightgrey;
+  
+}
+    </style>
     </head>
     <body>
-        
-            <div id="Taskbar">
+         <div id="container"> 
+            <div id="Taskbar">Taskbar
                 <input type="file" id="files" multiple accept=".json">	
                 <script type="text/javascript" src="input.js"></script>
                 <script type="text/javascript" src="graphen.js"></script>
                 <button onclick="darstellung()">Starten</button>
                 <script>read()</script>
             </div>
-
-            <div id="Dendrogramme"><p>Dendrogramme</p>
+            <div id="Ansicht"> 
+                <div id="Dendrogramme">Dendogramme</div>
+                <div id="Mitte"> 
+                    <div id="Vergleich1">Vergleich1</div>
+                    <div id="Vergleich2">Vergleich2</div>
+                </div>
+                <div id="CPT">CPT</div>
             </div>
-
-            <div id="Mainwindow"><p>Vergleich</p>
-            </div>
-
-            <div id="CondProbTables"><p>Tables</p>
-            </div>
-
-            <div id="Einzelgraphen">
-                <p>Einzelgraphen</p>
-            </div>
-
+        </div>
     </body>
 </html>
