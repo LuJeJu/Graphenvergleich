@@ -51,15 +51,21 @@ function darstellung(){
    graph1(graphs[2], parent3,child3);
    console.log(parent3);
    console.log(child3);
+   g1.style("height","50%");
+   g2.style("height","50%");
+   var g3 = d3.select("#Vergleich2").append("div").attr("id","g3");
+   g3.style("width","50%").style("height","50%").style("flex","1").text("graph 3");
    }
 
       // exactly 4 graphs
-   if(graphs.length=4){
+   if(graphs.length==4){
       var parent4 = new Array();
       var child4 = new Array();
    graph1(graphs[3], parent4,child4);
    console.log(parent4);
    console.log(child4);
+   var g4 = d3.select("#Vergleich2").append("div").attr("id","g4");
+   g4.style("width","50%").style("height","50%").style("flex","1").text("graph 4");
    }
 
       // more than 4 graphs -> hint that only 4 will be considered
