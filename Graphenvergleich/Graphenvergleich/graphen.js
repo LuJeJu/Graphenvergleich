@@ -1,6 +1,11 @@
 // function will be called by clicking the "Start"-button in Taskbar
 function darstellung(){
    /*
+      graphs jedes mal nach graphen hochladen ins gleiche array gepushed,
+      -> button "Start" ausgrauen und resetbutton einfügen
+   */
+
+   /*
    document.getElementById("Dendrogramme").innerHTML = graphs;
    document.getElementById("Einzelgraphen").innerHTML = graphs;
    document.getElementById("Mainwindow").innerHTML = graphs;
@@ -53,18 +58,20 @@ function darstellung(){
    console.log(child3);
    g1.style("height","50%");
    g2.style("height","50%");
-   var g3 = d3.select("#Vergleich2").append("div").attr("id","g3");
+   var cont = d3.select("#Vergleich2").append("div").attr("id","cont").text("cont");
+   cont.style("flex-direction", "column").style("width","50%").style("height","50%").style("flex","1"); 
+   var g3 = d3.select("#cont").append("div").attr("id","g3");
    g3.style("width","50%").style("height","50%").style("flex","1").text("graph 3");
    }
 
       // exactly 4 graphs
-   if(graphs.length==4){
+   if(graphs.length >= 4){
       var parent4 = new Array();
       var child4 = new Array();
    graph1(graphs[3], parent4,child4);
    console.log(parent4);
    console.log(child4);
-   var g4 = d3.select("#Vergleich2").append("div").attr("id","g4");
+   var g4 = d3.select("#cont").append("div").attr("id","g4");
    g4.style("width","50%").style("height","50%").style("flex","1").text("graph 4");
    }
 
