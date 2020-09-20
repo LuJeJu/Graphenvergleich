@@ -43,10 +43,6 @@ function darstellung(){
    //var div2 = document.createElement("div");
    //document.getElementById("Vergleich2").appendChild(div1);
    //document.getElementById("Vergleich2").appendChild(div2);
-   var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
-   g1.style("width","50%").style("height","100%").style("flex","1").text("graph 1");
-   var g2 = d3.select("#Vergleich2").append("div").attr("id","g2");
-   g2.style("width","50%").style("height","100%").style("flex","1").text("graph 2");
    }
 
       // more than 3 graphs
@@ -56,12 +52,6 @@ function darstellung(){
    graph1(graphs[2], parent3,child3);
    console.log(parent3);
    console.log(child3);
-   g1.style("height","50%");
-   g2.style("height","50%");
-   var cont = d3.select("#Vergleich2").append("div").attr("id","cont").text("cont");
-   cont.style("flex-direction", "column").style("width","50%").style("height","50%").style("flex","1"); 
-   var g3 = d3.select("#cont").append("div").attr("id","g3");
-   g3.style("width","50%").style("height","50%").style("flex","1").text("graph 3");
    }
 
       // exactly 4 graphs
@@ -71,12 +61,37 @@ function darstellung(){
    graph1(graphs[3], parent4,child4);
    console.log(parent4);
    console.log(child4);
-   var g4 = d3.select("#cont").append("div").attr("id","g4");
-   g4.style("width","50%").style("height","50%").style("flex","1").text("graph 4");
    }
 
       // more than 4 graphs -> hint that only 4 will be considered
    if(graphs.length>4){}
+};
+
+function singledisplay(){
+
+   if(graphs.length == 2){
+      var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
+      g1.style("width","50%").style("height","100%").style("flex","1").text("graph 1");
+      var g2 = d3.select("#Vergleich2").append("div").attr("id","g2");
+      g2.style("width","50%").style("height","100%").style("flex","1").text("graph 2");
+   }
+
+   if(graphs.length == 3 || graphs.length == 4){
+      var cont1 = d3.select("#Vergleich2").append("div").attr("id","cont1");
+      cont1.style("width","100%").style("height","50%").style("flex","1");
+      cont1.style("flex-direction", "row");
+      var cont2 = d3.select("#Vergleich2").append("div").attr("id","cont2");
+      cont2.style("width","100%").style("height","50%").style("flex","1");
+      cont2.style("flex-direction", "row");
+      var g1 = d3.select("#cont1").append("div").attr("id","g1");
+      g1.style("width","50%").style("height","100%").style("flex","1").text("graph 1");
+      var g2 = d3.select("#cont1").append("div").attr("id","g2");
+      g2.style("width","50%").style("height","100%").style("flex","1").text("graph 2");
+      var g3 = d3.select("#cont2").append("div").attr("id","g3");
+      g3.style("width","50%").style("height","100%").style("flex","1").text("graph 3");
+      var g4 = d3.select("#cont2").append("div").attr("id","g4");
+      g4.style("width","50%").style("height","100%").style("flex","1").text("graph 4");
+   }
 };
 
 // separate-function
