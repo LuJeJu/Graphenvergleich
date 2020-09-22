@@ -114,7 +114,55 @@ function graph1(g, parent,child){
    }
 };
 
-function draw(parent,child,divs){
+/* function draw(parent,child,divs){
    var node = d3.select("#"+divs).append("svg");
    
-};
+}; */
+
+var canvas = d3.select("body").append("svg")
+   .attr("width", 500)
+   .attr("height", 500)
+   .append("g")
+      .attr("transform", "translate(50, 50)");
+
+var tree = d3.layout.tree()
+   .size([400, 400]);
+
+   d3.jason("name.json", function (data) {     //hier muss .json eingelesen werden 
+      var nodes = tree.nodes(data);
+      var edges = tree.edges(nodes);
+
+      var node = canvas.selectAll(".node")
+         .data(nodes)
+         .enter()
+         .append("g")
+            .attr("class", "node")
+            .attr("transform", function (d) {
+               return "translate("+ d.x +", "+ d.y +" )"; 
+            })
+            
+      node.append("circle")
+         .attr("r", 5)
+         .attr("fill", "steelblue");
+      
+      node.append("text")
+         .text(function (d) {
+            return d.name;
+         })
+
+      var diagonal = d3.svg.diagonal()
+         .projection(function (d) {
+            return [d.y, d.x];
+
+         });
+
+      canvas.selectAll(".link")
+         .data(links)
+         .enter()
+         .append("path")
+         .attr("class", "link")
+         .attr("fill", "none")
+         .attr("stroke", "#ADADAD")
+         .attr("d", diagonal);
+
+   })
