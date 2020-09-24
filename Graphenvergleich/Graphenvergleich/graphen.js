@@ -131,43 +131,62 @@ var canvas = d3.select("#"+divs).append("svg")
    .attr("height", "100%")
    //.append("g")
    //   .attr("transform", "translate(50, 50)");
-
-   var nodes = parent;
+   var n = new Array();
+   for(var i =0; i<parent.length;i++){
+      parent[i].x = 0;
+      parent[i].y = i*100;
+      n.push(parent[i]);
+   }
+   for(var i =0; i<child.length;i++){
+      child[i].x = 100;
+      child[i].y = i*100;
+      n.push(child[i]);
+   }
+   var nodes = n;
    var links = link;
+   console.log(nodes);
 
-var tree = d3.forceSimulation()
+var simulation = d3.forceSimulation(nodes)
       //.force("linkForce", d3.forceLink().distance(30).strength(10));
       .force("center", d3.forceCenter(width/2,height/2))
-      .force("charge", d3.forceManyBody());
-      //.force("collide", d3.forceCollide().strength(10));
-      //.force("link", d3.forceLink().links(links));
-   //.size([divs.width, divs.height]).nodes(parent).links(link);
+      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("link", d3.forceLink(links).id(function(d){ return d.node;}).distance(10).strength(2));
+
+      
+      simulation.on("tick",function() {
+         nodes.attr("vx",d => d.x).attr("vy",d => d.y)
+     }); 
+     simulation.stop();
+      console.log(nodes);
 
       var n = canvas.selectAll(".node")
          .data(nodes)
          .enter()
          .append("g")
-            .attr("class", "node");
-            //.attr("transform", function (d) {
-            //   return "translate("+ d.x +", "+ d.y +" )"; 
-            //})
+            .attr("class", "node")
+            .attr("transform", function (d) {
+               return "translate("+ d.x +", "+ d.y +" )"; 
+            });
             
       n.append("rect")
-         .attr("width", 10)
-         .attr("height", 10)
-         .attr("fill", "steelblue");
+         .attr("width", 20)
+         .attr("height", 20)
+         .attr("fill", "steelblue")
+         .attr("text-anchor", "middle");
       
       n.append("text")
          .text(function (d) {
             return d.node;
          })
-         /*
+         .attr("x", function(d){return d.x + 10;})
+         .attr("y", function(d){return d.y + 10;});
+      /*   
       var diagonal = d3.svg.diagonal()
          .projection(function (d) {
             return [d.y, d.x];
 
          });
-         */
+        */
 
       canvas.selectAll(".link")
          .data(links)
@@ -204,3 +223,4 @@ function transform(parent, child, link){
       }else continue;
    }
 };
+
