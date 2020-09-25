@@ -79,9 +79,9 @@ function singledisplay(){
 
    if(graphs.length == 2){
       var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
-      g1.style("width","50%").style("height","100%").style("flex","1").text("graph 1");
+      g1.style("width","100%").style("height","50%").style("flex","1").style("border-bottom", "1px solid lightgrey");
       var g2 = d3.select("#Vergleich2").append("div").attr("id","g2");
-      g2.style("width","50%").style("height","100%").style("flex","1").text("graph 2");
+      g2.style("width","50%").style("height","calc(100% - 1 px)").style("flex","1");
       draw(parent1, child1, "g1", link1);
       draw(parent2, child2, "g2", link2);
    }
@@ -98,13 +98,13 @@ function singledisplay(){
       cont2.style("width","100%").style("height","50%").style("flex","1");
       cont2.style("display", "flex").style("flex-direction", "row");
       var g1 = d3.select("#cont1").append("div").attr("id","g1");
-      g1.style("width","50%").style("height","100%").style("flex","1");//.text("graph 1");
+      g1.style("width","50%").style("height","100%").style("flex","1").style("border-bottom", "1px solid lightgrey").style("overflow", "auto");//.text("graph 1");
       var g3 = d3.select("#cont1").append("div").attr("id","g3");
-      g3.style("width","50%").style("height","100%").style("flex","1");//.text("graph 3");
+      g3.style("width","calc(50% - 1 px)").style("height","100%").style("flex","1").style("border-bottom", "1px solid lightgrey").style("border-left", "1px solid lightgrey").style("overflow", "auto");//.text("graph 3");
       var g2 = d3.select("#cont2").append("div").attr("id","g2");
-      g2.style("width","50%").style("height","100%").style("flex","1");//.text("graph 2");
+      g2.style("width","50%").style("height","calc(100% - 1 px)").style("flex","1").style("overflow", "auto");//.text("graph 2");
       var g4 = d3.select("#cont2").append("div").attr("id","g4");
-      g4.style("width","50%").style("height","100%").style("flex","1");//.text("graph 4");
+      g4.style("width","calc(50% - 1 px)").style("height","calc(100% - 1 px)").style("flex","1").style("border-left", "1px solid lightgrey").style("overflow", "auto");//.text("graph 4");
       draw(parent1, child1, "g1", link1);
       draw(parent2, child2, "g2", link2);
       draw(parent3, child3, "g3", link3);
@@ -124,13 +124,15 @@ function graph1(g, parent,child){
 
 function draw(parent,child,divs, link){
 
-   var width = divs.width;
-   var height = divs.height;
-var canvas = d3.select("#"+divs).append("svg")
+   var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
+   var height = document.getElementById(divs).offsetHeight;
+
+   var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
-   .attr("height", "100%")
+   .attr("height", "100%");
    //.append("g")
-   //   .attr("transform", "translate(50, 50)");
+   //.attr("transform", "translate(50, 50)");
+
    var n = new Array();
    for(var i =0; i<parent.length;i++){
       parent[i].x = 0;
@@ -148,38 +150,54 @@ var canvas = d3.select("#"+divs).append("svg")
 
 var simulation = d3.forceSimulation(nodes)
       //.force("linkForce", d3.forceLink().distance(30).strength(10));
-      .force("center", d3.forceCenter(width/2,height/2))
+      .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
       .force("charge", d3.forceManyBody().strength(-1000))
+      .force("collide", d3.forceCollide().radius(100))
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).distance(10).strength(2));
-
+      simulation.stop();
       
       simulation.on("tick",function() {
-         nodes.attr("vx",d => d.x).attr("vy",d => d.y)
+         n.attr("x",function(d){ return d.x;}).attr("y",function(d){return d.y;});
      }); 
-     simulation.stop();
-      console.log(nodes);
 
       var n = canvas.selectAll(".node")
          .data(nodes)
          .enter()
          .append("g")
-            .attr("class", "node")
+         .attr("class", "node")
             .attr("transform", function (d) {
                return "translate("+ d.x +", "+ d.y +" )"; 
-            });
+            })
             
+      var r_width = 20;
+      var r_height = 20;
+
       n.append("rect")
-         .attr("width", 20)
-         .attr("height", 20)
-         .attr("fill", "steelblue")
-         .attr("text-anchor", "middle");
-      
-      n.append("text")
+      //.attr("r", 30)
+         .attr("width", r_width)
+         .attr("height", r_height)
+         .attr("fill", "steelblue");
+
+      var text = canvas.append("g")
+            .attr("class", "labels")
+            .selectAll("text")
+            .data(nodes)
+            .enter()
+         .append("text")
+         .attr("text-anchor", "middle")
          .text(function (d) {
             return d.node;
          })
-         .attr("x", function(d){return d.x + 10;})
-         .attr("y", function(d){return d.y + 10;});
+         .attr("dominant-baseline", "central")
+         //.attr("x", "50%")
+         //.attr("y", "50%");
+         .attr("x", function(d, r_width){return d.x + r_width/2;})
+         .attr("y", function(d, r_height){return d.y + r_height/2;});
+
+         // gibt textgröße aus
+      //var r_width = n.select("text").node().getBoundingClientRect().width;
+      //var r_height = n.select("text").node().getBoundingClientRect().height;
+         
       /*   
       var diagonal = d3.svg.diagonal()
          .projection(function (d) {
