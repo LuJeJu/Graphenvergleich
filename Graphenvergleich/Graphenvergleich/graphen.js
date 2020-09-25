@@ -127,11 +127,18 @@ function draw(parent,child,divs, link){
    var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
    var height = document.getElementById(divs).offsetHeight;
 
+   if(divs == "g1") var color = "#0080FF";
+   if(divs == "g2") var color = "#298A08";
+   if(divs == "g3") var color = "#DF3A01";
+   if(divs == "g4") var color = "#8904B1";
+
+
    var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
-   .attr("height", "100%");
-   //.append("g")
+   .attr("height", "100%")
+   .append("g");
    //.attr("transform", "translate(50, 50)");
+   var defs = canvas.append("defs");
 
    var n = new Array();
    for(var i =0; i<parent.length;i++){
@@ -153,7 +160,7 @@ var simulation = d3.forceSimulation(nodes)
       .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("collide", d3.forceCollide().radius(100))
-      .force("link", d3.forceLink(links).id(function(d){ return d.node;}).distance(10).strength(2));
+      .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
       simulation.stop();
       
       simulation.on("tick",function() {
@@ -165,9 +172,9 @@ var simulation = d3.forceSimulation(nodes)
          .enter()
          .append("g")
          .attr("class", "node")
-            .attr("transform", function (d) {
+         .attr("transform", function (d) {
                return "translate("+ d.x +", "+ d.y +" )"; 
-            })
+         });
             
       var r_width = 20;
       var r_height = 20;
@@ -188,11 +195,11 @@ var simulation = d3.forceSimulation(nodes)
          .text(function (d) {
             return d.node;
          })
-         .attr("dominant-baseline", "central")
+         .attr("dominant-baseline", "middle")
          //.attr("x", "50%")
          //.attr("y", "50%");
-         .attr("x", function(d, r_width){return d.x + r_width/2;})
-         .attr("y", function(d, r_height){return d.y + r_height/2;});
+         .attr("x", function(d){return d.x + (20/2);})
+         .attr("y", function(d){return d.y + (20/2);});
 
          // gibt textgröße aus
       //var r_width = n.select("text").node().getBoundingClientRect().width;
@@ -205,14 +212,34 @@ var simulation = d3.forceSimulation(nodes)
 
          });
         */
+       canvas.append("svg:defs").selectAll("marker")
+       .data(["end"])      // Different link/path types can be defined here
+       .enter().append("svg:marker")    // This section adds in the arrows
+       .attr("id", "arrow")
+       .attr("viewBox", "0 -5 10 10")
+       .attr("refX", 15)
+       .attr("refY", -1.5)
+       .attr("markerWidth", 6)
+       .attr("markerHeight", 6)
+       .attr("fill", color)
+       .attr("orient", "auto")
+       .append("svg:path")
+       .attr("d", "M0,-5L10,0L0,5");
 
-      canvas.selectAll(".link")
+      var l =canvas.selectAll(".link")
          .data(links)
          .enter()
          .append("path")
          .attr("class", "link")
-         .attr("fill", "none")
-         .attr("stroke", "#ADADAD");
+         .style("stroke", color)
+         .style("stroke-width", 2.0)
+         .attr('marker-start', (d) => "url(#arrow)")
+         .attr("marker-end", "url(#arrow)")
+         .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
+         //.attr("x1", function(d) { return d.source.x; })
+         //.attr("y1", function(d) { return d.source.y; })
+         //.attr("x2", function(d) { return d.target.x; })
+         //.attr("y2", function(d) { return d.target.y; });
          //.attr("d", diagonal);
 
    };
