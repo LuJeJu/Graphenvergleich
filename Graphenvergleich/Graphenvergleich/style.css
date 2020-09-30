@@ -58,8 +58,10 @@ body {
     resize: vertical;
     overflow: auto;
     flex: 1;
-    border-bottom: 1px solid lightgrey;
-  
+    border-bottom: 2px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    
 }
 #Vergleich2 {
     background-color: white;
@@ -68,6 +70,9 @@ body {
     flex-direction: column;
     flex: 1;
     height: 49%;
-    border-top: 1px solid lightgrey;
+    /*border-top: 1px solid lightgrey;*/
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-bottom: 2px solid lightgrey;
   
 }
