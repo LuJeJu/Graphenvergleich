@@ -31,7 +31,7 @@ function darstellung(){
    graph1(graphs[0], parent1, child1);
    transform(parent1,child1,link1);
    console.log(parent1);
-   console.log(child1);
+   //console.log(child1);
    }
 
       // more than 2 graphs
@@ -42,7 +42,7 @@ function darstellung(){
    graph1(graphs[1], parent2, child2);
    transform(parent2,child2,link2);
    console.log(parent2);
-   console.log(child2);
+   //console.log(child2);
    //var div1 = document.createElement("div");
    //var div2 = document.createElement("div");
    //document.getElementById("Vergleich2").appendChild(div1);
@@ -57,7 +57,7 @@ function darstellung(){
    graph1(graphs[2], parent3, child3);
    transform(parent3,child3,link3);
    console.log(parent3);
-   console.log(child3);
+   //console.log(child3);
    }
 
       // exactly 4 graphs
@@ -68,9 +68,10 @@ function darstellung(){
    graph1(graphs[3], parent4, child4);
    transform(parent4,child4,link4);
    console.log(parent4);
-   console.log(child4);
+   //console.log(child4);
    }
    singledisplay();
+   multidisplay();
       // more than 4 graphs -> hint that only 4 will be considered
    // if(graphs.length>4){}
 };
@@ -122,6 +123,7 @@ function graph1(g, parent,child){
    }
 };
 
+   // draw graphs separatly
 function draw(parent,child,divs, link){
 
    var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
@@ -161,11 +163,7 @@ var simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("collide", d3.forceCollide().radius(100))
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
-      simulation.stop();
-      
-      simulation.on("tick",function() {
-         n.attr("x",function(d){ return d.x;}).attr("y",function(d){return d.y;});
-     }); 
+      //simulation.stop(); 
 
       var n = canvas.selectAll(".node")
          .data(nodes)
@@ -176,13 +174,14 @@ var simulation = d3.forceSimulation(nodes)
                return "translate("+ d.x +", "+ d.y +" )"; 
          });
             
-      var r_width = 20;
-      var r_height = 20;
+       r_width = 20;
+       r_height = 20;
 
       n.append("rect")
       //.attr("r", 30)
          .attr("width", r_width)
          .attr("height", r_height)
+         .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "steelblue");
 
       var text = canvas.append("g")
@@ -233,14 +232,18 @@ var simulation = d3.forceSimulation(nodes)
          .attr("class", "link")
          .style("stroke", color)
          .style("stroke-width", 2.0)
-         .attr('marker-start', (d) => "url(#arrow)")
          .attr("marker-end", "url(#arrow)")
-         .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
-         //.attr("x1", function(d) { return d.source.x; })
-         //.attr("y1", function(d) { return d.source.y; })
+         //.attr("x1", function(d) { return d.source.x+20; })
+         //.attr("y1", function(d) { return d.source.y+20/2; })
          //.attr("x2", function(d) { return d.target.x; })
-         //.attr("y2", function(d) { return d.target.y; });
+         //.attr("y2", function(d) { return d.target.y+20/2; })
+         .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
+         .attr("transform", "translate( 20, 10)");
          //.attr("d", diagonal);
+
+         simulation.on("tick",function() {
+            n.attr("x",function(d){ return d.x;}).attr("y",function(d){return d.y;});
+        });
 
    };
 
@@ -267,5 +270,70 @@ function transform(parent, child, link){
          }
       }else continue;
    }
+};
+
+function multidisplay(){
+   var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
+   var height = document.getElementById("Vergleich1").offsetHeight;
+
+   var canvas = d3.select("#Vergleich1").append("svg")
+   .attr("width", "100%")
+   .attr("height", "100%")
+   .append("g");
+   var defs = canvas.append("defs");
+
+   var n = new Array();
+
+   for(var i =0; i< parent1.length; i++){
+      parent1[i].x = 0;
+      parent1[i].y = i*100;
+      n.push(parent1[i]);
+   }
+   if(graphs.length >= 2){
+      console.log(2);
+      var element;
+      for(var i =0; i<parent2.length;i++){
+         for(var j=0; j<n.length; j++){
+            if(parent2[i].node[0] == n[j].node[0]) {element = true; break;}
+            else element = false;
+         }
+         if(element == false){
+         parent2[i].x = 0;
+         parent2[i].y = (n.length)*100;
+         n.push(parent2[i]);
+         }   
+      }
+   }
+   if(graphs.length >= 3){
+      console.log(3);
+      var element;
+      for(var i =0; i<parent3.length;i++){
+         for(var j=0; j<n.length; j++){
+            if(parent3[i].node[0] == n[j].node[0]) {element = true; break;}
+            else element = false;
+         }
+         if(element == false){
+         parent3[i].x = 0;
+         parent3[i].y = (n.length)*100;
+         n.push(parent3[i]);
+         }
+      }
+   }
+   if(graphs.length == 4){
+      console.log(4);
+      var element;
+      for(var i =0; i<parent4.length;i++){
+         for(var j=0; j<n.length; j++){
+            if(parent4[i].node[0] == n[j].node[0]) {element = true; break;}
+            else element = false;
+         }
+         if(element == false){
+         parent4[i].x = 0;
+         parent4[i].y = (n.length)*100;
+         n.push(parent4[i]);
+         }
+      }
+   }
+   console.log(n);
 };
 
