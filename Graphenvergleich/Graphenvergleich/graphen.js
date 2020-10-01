@@ -72,6 +72,7 @@ function darstellung(){
    }
    singledisplay();
    multidisplay();
+   dendrogram();
       // more than 4 graphs -> hint that only 4 will be considered
    // if(graphs.length>4){}
 };
@@ -90,14 +91,14 @@ function singledisplay(){
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey");
-      
+
       draw(parent1, child1, "g1", link1);
       draw(parent2, child2, "g2", link2);
    }
 
    /*
    bei 2 Graphen horizontal teilen -> bei 4 Graphen gleiche leserichtung lo, lu, ro, ru
-   */ 
+   */
 
    if(graphs.length == 3 || graphs.length == 4){
       var cont1 = d3.select("#Vergleich2").append("div").attr("id","cont1");
@@ -115,7 +116,7 @@ function singledisplay(){
          .style("border-right", "1px solid lightgrey")
          .style("overflow", "auto");//.text("graph 1");
       var g3 = d3.select("#cont1").append("div").attr("id","g3");
-      g3 .style("width","calc(50% - 1 px)") 
+      g3 .style("width","calc(50% - 1 px)")
          .style("height","100%")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
@@ -213,7 +214,7 @@ var simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("collide", d3.forceCollide().radius(100))
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
-      //simulation.stop(); 
+      //simulation.stop();
 
       var n = canvas.selectAll(".node")
          .data(nodes)
@@ -221,9 +222,9 @@ var simulation = d3.forceSimulation(nodes)
          .append("g")
          .attr("class", "node")
          .attr("transform", function (d) {
-               return "translate("+ d.x +", "+ d.y +" )"; 
+               return "translate("+ d.x +", "+ d.y +" )";
          });
-            
+
        r_width = 20;
        r_height = 20;
 
@@ -253,17 +254,16 @@ var simulation = d3.forceSimulation(nodes)
          // gibt textgröße aus
       //var r_width = n.select("text").node().getBoundingClientRect().width;
       //var r_height = n.select("text").node().getBoundingClientRect().height;
-         
-      /*   
+
+      /*
       var diagonal = d3.svg.diagonal()
          .projection(function (d) {
             return [d.y, d.x];
-
          });
         */
        canvas.append("svg:defs").selectAll("marker")
-       .data(["end"])      
-       .enter().append("svg:marker")   
+       .data(["end"])
+       .enter().append("svg:marker")
        .attr("id", "arrow")
        .attr("viewBox", "0 -5 10 10")
        .attr("refX", 15)
@@ -330,6 +330,7 @@ function transform(parent, child, link){
    }
 };
 
+
 function multidisplay(){
    var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
    var height = document.getElementById("Vergleich1").offsetHeight;
@@ -337,7 +338,11 @@ function multidisplay(){
    var canvas = d3.select("#Vergleich1").append("svg")
    .attr("width", "100%")
    .attr("height", "100%")
-   .append("g");
+   .append("g")
+   .attr("cursor", "pointer")
+   .attr("pointer-events", "all")
+   .attr("id", "NodeButton");
+
    var defs = canvas.append("defs");
 
    var n = new Array();
@@ -361,7 +366,7 @@ function multidisplay(){
          parent2[i].x = 10;
          parent2[i].y = (n.length)*110 +10;
          n.push(parent2[i]);
-         }   
+         }
       }
    }
    if(graphs.length >= 3){
@@ -408,7 +413,7 @@ function multidisplay(){
          child1[i].y = count*110 +10;
          count++;
          n.push(child1[i]);
-         }   
+         }
       }
 
    if(graphs.length >= 2){
@@ -424,7 +429,7 @@ function multidisplay(){
          child2[i].y = count*110 +10;
          count++;
          n.push(child2[i]);
-         }   
+         }
       }
    }
    if(graphs.length >= 3){
@@ -502,9 +507,9 @@ function multidisplay(){
          .append("g")
          .attr("class", "node")
          .attr("transform", function (d) {
-               return "translate("+ d.x +", "+ d.y +" )"; 
+               return "translate("+ d.x +", "+ d.y +" )";
          });
-            
+
        r_width = 20;
        r_height = 20;
 
@@ -529,8 +534,8 @@ function multidisplay(){
          .attr("y", function(d){return d.y + (20/2);});
 
       canvas.append("svg:defs").selectAll("marker")
-       .data(["end"])      
-       .enter().append("svg:marker")    
+       .data(["end"])
+       .enter().append("svg:marker")
        .attr("id", "arrow")
        .attr("viewBox", "0 -5 10 10")
        .attr("refX", 15)
@@ -555,5 +560,21 @@ function multidisplay(){
          .attr("marker-end", "url(#arrow)")
          .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
          .attr("transform", "translate( 20, 10)");
-  
+
+};
+
+
+function dendrogram(){
+   var width = document.getElementById("Dendrogramme").offsetWidth;
+   var height = document.getElementById("Dendrogramme").offsetHeight;
+
+   var canvas = d3.select("Dendrogramme").append("svg")
+   .attr("width", "100%")
+   .attr("height", "100%")
+   .append("g");
+    document.getElementById("NodeButton")
+            .onclick = function() {
+                console.log("yay");
+            };
+
 };
