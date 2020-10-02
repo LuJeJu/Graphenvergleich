@@ -73,6 +73,7 @@ function darstellung(){
    singledisplay();
    multidisplay();
    dendrogram();
+   cpt();
       // more than 4 graphs -> hint that only 4 will be considered
    // if(graphs.length>4){}
 };
@@ -578,3 +579,80 @@ function dendrogram(){
             };
 
 };
+
+
+function cpt(){
+   var width = document.getElementById("Dendrogramme").offsetWidth;
+   var height = document.getElementById("Dendrogramme").offsetHeight;
+
+   var canvas = d3.select("Dendrogramme").append("svg")
+   .attr("width", "100%")
+   .attr("height", "100%")
+   .append("g"); 
+
+
+   
+    var columns = ['True', 'False'];
+    //var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
+    var data = 
+      [
+      [graphs[0].D.prob[0], graphs[0].D.prob[1]] , 
+      [graphs[1].D.prob[0], graphs[1].D.prob[1]] , 
+      [graphs[2].D.prob[0], graphs[2].D.prob[1]] , 
+      [graphs[3].D.prob[0], graphs[3].D.prob[1]] 
+      ]; 
+            
+  // create table
+  var table = d3.select('#CPT')
+        .append('table')
+        .style("border-collapse", "collapse")
+        .style("border", "2px black solid");
+  
+  // create table header row
+  table.append('thead').append('tr')
+      .selectAll('th')
+      .data(columns)
+      .enter()
+      .append('th')
+      .text(function(d) { return d; })
+      .style("border", "1px black solid")
+      .style("padding", "5px")
+      .style("background-color", "lightgray")
+      .style("font-weight", "bold")
+      .style("text-transform", "uppercase");
+
+   // create table header column
+   /*able.append('thead').append('tc')
+   .selectAll('tr')
+   .data(rows)
+   .enter()
+   .append('tr')
+   .text(function(d) { return d; })
+   .style("border", "1px black solid")
+   .style("padding", "5px")
+   .style("background-color", "lightgray")
+   .style("font-weight", "bold")
+   .style("text-transform", "uppercase");
+   */
+
+   // data
+  table.append("tbody")
+  .selectAll("tr").data(data)
+  .enter()
+  .append("tr")  
+  .selectAll("td") 
+  .data(function(d){return d;})
+  .enter()
+  .append("td")
+  .style("border", "1px black solid")
+  .style("padding", "5px")
+  .text(function(d){return d;})
+  .style("font-size", "12px");
+  console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
+  // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
+  
+
+  
+   //RESET BUTTON!!!!!!!!!
+  //bei onklick node einfärben, so dass zu sehen ist, welche Node wir beobachten (dendrogramme, cpts)
+}

@@ -41,9 +41,12 @@ body {
     background-color: rgb(238, 238, 238);
     display: flex;   
     width: 25%;
-    border-left: 1px solid lightgrey;
- 
+    border-left: 1px solid lightgrey; 
+    overflow: auto;
 }
+
+
+
 #Mitte {
     width: 50%;
     background-color: white;
