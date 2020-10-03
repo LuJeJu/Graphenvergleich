@@ -521,32 +521,32 @@ function multidisplay(){
          .attr("fill", "lightgray");
 
       var text = canvas.append("g")
-            .attr("class", "labels")
-            .selectAll("text")
-            .data(nodes)
-            .enter()
+         .attr("class", "labels")
+         .selectAll("text")
+         .data(nodes)
+         .enter()
          .append("text")
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.node;
          })
-         .attr("dominant-baseline", "middle")
-         .attr("x", function(d){return d.x + (20/2);})
-         .attr("y", function(d){return d.y + (20/2);});
+            .attr("dominant-baseline", "middle")
+            .attr("x", function(d){return d.x + (20/2);})
+            .attr("y", function(d){return d.y + (20/2);});
 
       canvas.append("svg:defs").selectAll("marker")
-       .data(["end"])
-       .enter().append("svg:marker")
-       .attr("id", "arrow")
-       .attr("viewBox", "0 -5 10 10")
-       .attr("refX", 15)
-       .attr("refY", -1.5)
-       .attr("markerWidth", 6)
-       .attr("markerHeight", 6)
-       .attr("fill", "#0080FF")
-       .attr("orient", "auto")
-       .append("svg:path")
-       .attr("d", "M0,-5L10,0L0,5");
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", "arrow")
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 15)
+         .attr("refY", -1.5)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "#0080FF")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
 
       var l =canvas.selectAll(".link")
          .data(links)
@@ -570,9 +570,9 @@ function dendrogram(){
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
    var canvas = d3.select("Dendrogramme").append("svg")
-   .attr("width", "100%")
-   .attr("height", "100%")
-   .append("g");
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .append("g");
     document.getElementById("NodeButton")
             .onclick = function() {
                 console.log("yay");
@@ -586,9 +586,9 @@ function cpt(){
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
    var canvas = d3.select("Dendrogramme").append("svg")
-   .attr("width", "100%")
-   .attr("height", "100%")
-   .append("g"); 
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .append("g"); 
 
 
    
@@ -601,12 +601,20 @@ function cpt(){
       ['Graph3', graphs[2].D.prob[0], graphs[2].D.prob[1]] , 
       ['Graph4', graphs[3].D.prob[0], graphs[3].D.prob[1]] 
       ]; // text extrahieren 
+
+   var colors = [
+       '#0080FF','#0080FF','#0080FF', 
+       '#298A08','#298A08','#298A08',
+       '#E74C3C','#E74C3C','#E74C3C',
+       '#8E44AD','#8E44AD','#8E44AD', 
+    ];
+      //var text = data.attr('fill', 'green');
             
   // create table
   var table = d3.select('#CPT')
-        .append('table')
-        .style("border-collapse", "collapse")
-        .style("border", "2px black solid");
+      .append('table')
+      .style("border-collapse", "collapse")
+      .style("border", "2px darkgrey solid");
   
   // create table header row
   table.append('thead').append('tr')
@@ -615,11 +623,11 @@ function cpt(){
       .enter()
       .append('th')
       .text(function(d) { return d; })
-      .style("border", "1px black solid")
+      .style("border", "1px darkgrey solid")
       .style("padding", "5px")
       .style("background-color", "lightgray")
       .style("font-weight", "bold")
-      .style("text-transform", "uppercase");
+      .style("text-transform", "uppercase",);
 
    // create table header column
    /*table.append('thead').append('tc')
@@ -634,25 +642,29 @@ function cpt(){
    .style("font-weight", "bold")
    .style("text-transform", "uppercase"); */
    
-
+   var table_color_index = 0;
    // data
-  table.append("tbody")
-  .selectAll("tr").data(data)
-  .enter()
-  .append("tr")  
-  .selectAll("td") 
-  .data(function(d){return d;})
-  .enter()
-  .append("td")
-  .style("border", "1px black solid")
-  .style("padding", "5px")
-  .text(function(d){return d;})
-  .style("font-size", "12px");
-  console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
-  // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
+   table.append("tbody")
+      .selectAll("tr").data(data)
+      .enter()
+      .append("tr")  
+      .selectAll("td") 
+      .data(function(d){return d;})
+      .enter()
+      .append("td")
+      .style("border", "1px darkgrey solid")
+      .style("padding", "5px")
+      .text(function(d){return d;})
+      .style("font-size", "12px")
+      //.style('background-color', 'lightblue')
+      .style('background-color',function(d,i){
+          return colors[table_color_index++];
+      });
+   console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
+   // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
   
 
   
    //RESET BUTTON!!!!!!!!!
-  //bei onklick node einfärben, so dass zu sehen ist, welche Node wir beobachten (dendrogramme, cpts)
+   //bei onklick node einfärben, so dass zu sehen ist, welche Node wir beobachten (dendrogramme, cpts)
 }
