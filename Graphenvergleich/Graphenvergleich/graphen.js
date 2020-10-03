@@ -592,15 +592,15 @@ function cpt(){
 
 
    
-    var columns = ['True', 'False'];
-    //var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
+    var columns = ['B','True', 'False'];
+    var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
     var data = 
       [
-      [graphs[0].D.prob[0], graphs[0].D.prob[1]] , 
-      [graphs[1].D.prob[0], graphs[1].D.prob[1]] , 
-      [graphs[2].D.prob[0], graphs[2].D.prob[1]] , 
-      [graphs[3].D.prob[0], graphs[3].D.prob[1]] 
-      ]; 
+      ['Graph1', graphs[0].D.prob[0], graphs[0].D.prob[1]] , 
+      ['Graph2', graphs[1].D.prob[0], graphs[1].D.prob[1]] , 
+      ['Graph3', graphs[2].D.prob[0], graphs[2].D.prob[1]] , 
+      ['Graph4', graphs[3].D.prob[0], graphs[3].D.prob[1]] 
+      ]; // text extrahieren 
             
   // create table
   var table = d3.select('#CPT')
@@ -622,7 +622,7 @@ function cpt(){
       .style("text-transform", "uppercase");
 
    // create table header column
-   /*able.append('thead').append('tc')
+   /*table.append('thead').append('tc')
    .selectAll('tr')
    .data(rows)
    .enter()
@@ -632,8 +632,8 @@ function cpt(){
    .style("padding", "5px")
    .style("background-color", "lightgray")
    .style("font-weight", "bold")
-   .style("text-transform", "uppercase");
-   */
+   .style("text-transform", "uppercase"); */
+   
 
    // data
   table.append("tbody")
