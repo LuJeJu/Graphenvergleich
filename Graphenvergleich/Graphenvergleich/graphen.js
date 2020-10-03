@@ -141,7 +141,8 @@ function singledisplay(){
       draw(parent1, child1, "g1", link1);
       draw(parent2, child2, "g2", link2);
       draw(parent3, child3, "g3", link3);
-      draw(parent4, child4, "g4", link4);
+      if(graphs.length == 4){
+      draw(parent4, child4, "g4", link4);}
    }
 };
 
@@ -182,7 +183,11 @@ function draw(parent,child,divs, link){
 
    var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
-   .attr("height", "100%");/*
+   .attr("height", "100%")
+   .call(d3.zoom().on("zoom", function(){
+      canvas.attr("transform", d3.event.transform)
+   }));
+   /*
    var rect = canvas.append("rect")
    .attr("width", "50")
    .attr("height", "15")
@@ -339,10 +344,10 @@ function multidisplay(){
    var canvas = d3.select("#Vergleich1").append("svg")
    .attr("width", "100%")
    .attr("height", "100%")
-   .append("g")
-   .attr("cursor", "pointer")
-   .attr("pointer-events", "all")
-   .attr("id", "NodeButton");
+   .call(d3.zoom().on("zoom", function(){
+      canvas.attr("transform", d3.event.transform)
+   }))
+   .append("g");
 
    var defs = canvas.append("defs");
 
@@ -465,34 +470,40 @@ function multidisplay(){
          }
       }
    }
-   console.log(n);
-   var l1 = new Array();
-   var l2 = new Array();
-   var l3 = new Array();
-   var l4 = new Array();
-   transform(parent1, child1, l1);
-   transform(parent2, child2, l2);
-   transform(parent3, child3, l3);
-   transform(parent4, child4, l4);
 
-   for(var i=0; i< l1.length; i++){
-      l1[i].g = 1;
-      link.push(l1[i]);
+   if(graphs.length >= 1){
+      var l1 = new Array();
+      transform(parent1, child1, l1);
+      for(var i=0; i< l1.length; i++){
+         l1[i].g = 1;
+         link.push(l1[i]);
+      }
    }
-   for(var i=0; i< l2.length; i++){
-      l2[i].g = 2;
-      link.push(l2[i]);
+   if(graphs.length >= 2){
+      var l2 = new Array(); 
+      transform(parent2, child2, l2);
+      for(var i=0; i< l2.length; i++){
+         l2[i].g = 2;
+         link.push(l2[i]);
+      }
    }
-   for(var i=0; i< l3.length; i++){
-      l3[i].g = 3;
-      link.push(l3[i]);
+   if(graphs.length >= 3){
+      var l3 = new Array();
+      transform(parent3, child3, l3);
+      for(var i=0; i< l3.length; i++){
+         l3[i].g = 3;
+         link.push(l3[i]);
+      }
    }
-   for(var i=0; i< l4.length; i++){
-      l4[i].g = 4;
-      link.push(l4[i]);
+   if(graphs.length == 4){
+      var l4 = new Array();
+      transform(parent4, child4, l4);
+      for(var i=0; i< l4.length; i++){
+         l4[i].g = 4;
+         link.push(l4[i]);
+      }
    }
-   console.log(l4);
-   console.log(link);
+
    var nodes = n;
    var links = link;
 
@@ -518,7 +529,15 @@ function multidisplay(){
          .attr("width", r_width)
          .attr("height", r_height)
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-         .attr("fill", "lightgray");
+         .attr("fill", "lightgray")
+         .attr("cursor", "pointer")
+         .attr("pointer-events", "all")
+         .attr("id", "NodeButton")
+         .on("click",function(d){console.log("Click !!!");
+         console.log(d);
+                                 dendrogram(d);
+                                 cpt(d);
+                                 });
 
       var text = canvas.append("g")
          .attr("class", "labels")
@@ -526,6 +545,14 @@ function multidisplay(){
          .data(nodes)
          .enter()
          .append("text")
+         .attr("cursor", "pointer")
+            .attr("pointer-events", "all")
+            .attr("id", "NodeButton")
+            .on("click",function(d){console.log("Click !!!");
+            console.log(d);
+                                    dendrogram(d);
+                                    cpt(d);
+                                    })
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.node;
@@ -560,12 +587,30 @@ function multidisplay(){
          .style("stroke-width", 2.0)
          .attr("marker-end", "url(#arrow)")
          .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
-         .attr("transform", "translate( 20, 10)");
+         .attr("transform", "translate( 20, 10)")
+         /*
+            leider kommt durch das mouseover über die anzeige ein unsichtbares div
+            weiß noch nicht, wie ich das weg bekomme, aber wenn ich das fertig gemacht hab
+            kann ich das ursprünglich auf 0 px stellen und vllt ist es dann schon weg
+         */
+         .on("mouseover", function(d){
+                           var coord = d3.mouse(this);
+                           d3 .select("#line_window")
+                              .style("left", coord[0])
+                              .style("top", coord[1])
+                              .text("Farben")
+                              .transition()
+                              .style("visibility", "visible");
+                           })
+         .on("mouseout", function(d){
+                           d3 .select("#line_window")
+                              .transition()
+                              .style("visibility", "hidden");
+         });
 
 };
 
-
-function dendrogram(){
+function dendrogram(clicked_node){
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
@@ -573,15 +618,25 @@ function dendrogram(){
       .attr("width", "100%")
       .attr("height", "100%")
       .append("g");
+      // ist glaube als übergabeparameter besser und die beiden 
+      // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
+      // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
+
+
+      // falls ganze teilbäume dargestellt werden sollen könntest du
+      // mit ner schleife über die Eingabe, dann als Array, iterieren
+
+      /*
     document.getElementById("NodeButton")
             .onclick = function() {
                 console.log("yay");
             };
-
+*/
 };
 
 
-function cpt(){
+function cpt(clicked_node){
+   // siehe riesentext bei den dendrogrammen xD
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
@@ -665,6 +720,7 @@ function cpt(){
   
 
   
-   //RESET BUTTON!!!!!!!!!
+   //RESET BUTTON!!!!!!!!! -> kommt noch aber zoomen fand ich jetzt erstmal für montag wichtiger
    //bei onklick node einfärben, so dass zu sehen ist, welche Node wir beobachten (dendrogramme, cpts)
+   // -> keine ahnung ob das so einfach geht ^^,
 }

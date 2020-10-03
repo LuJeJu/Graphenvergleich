@@ -79,3 +79,12 @@ body {
     border-bottom: 2px solid lightgrey;
   
 }
+
+#line_window {
+    background-color: white;
+    position: relative;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    border: 1px solid black;
+}
