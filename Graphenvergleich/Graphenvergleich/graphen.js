@@ -1,3 +1,5 @@
+var marked = new Array();
+
 // function will be called by clicking the "Start"-button in Taskbar
 function darstellung(){
    /*
@@ -116,29 +118,29 @@ function singledisplay(){
          .style("height","100%")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
-         .style("border-right", "1px solid lightgrey")
-         .style("overflow", "auto");//.text("graph 1");
+         .style("border-right", "1px solid lightgrey");
+         //.style("overflow", "auto");//.text("graph 1");
       var g3 = d3.select("#cont1").append("div").attr("id","g3");
       g3 .style("width","calc(50% - 1 px)")
          .style("height","100%")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
-         .style("border-left", "1px solid lightgrey")
-         .style("overflow", "auto");//.text("graph 3");
+         .style("border-left", "1px solid lightgrey");
+         //.style("overflow", "auto");//.text("graph 3");
       var g2 = d3.select("#cont2").append("div").attr("id","g2");
       g2 .style("width","50%")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey")
-         .style("border-right", "1px solid lightgrey")
-         .style("overflow", "auto");//.text("graph 2");
+         .style("border-right", "1px solid lightgrey");
+         //.style("overflow", "auto");//.text("graph 2");
       var g4 = d3.select("#cont2").append("div").attr("id","g4");
       g4 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey")
-         .style("border-left", "1px solid lightgrey")
-         .style("overflow", "auto");//.text("graph 4");
+         .style("border-left", "1px solid lightgrey");
+         //.style("overflow", "auto");//.text("graph 4");
 
       draw(parent1, child1, "g1", link1);
       draw(parent2, child2, "g2", link2);
@@ -195,14 +197,11 @@ function draw(parent,child,divs, link){
 
    var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
-   .attr("height", "100%")
+   .attr("height", "calc(100% - 16px)")
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
-   }));
-
-   var g = canvas.append("g");
-   //.attr("transform", "translate(50, 50)");
-   var defs = canvas.append("defs");
+   }))
+   .append("g");
 
    var n = new Array();
    for(var i =0; i<parent.length;i++){
@@ -345,8 +344,6 @@ function multidisplay(){
       canvas.attr("transform", d3.event.transform)
    }))
    .append("g");
-
-   var defs = canvas.append("defs");
 
    var n = new Array();
    var link = new Array();
@@ -534,11 +531,19 @@ function multidisplay(){
          .attr("id", "NodeButton")
          .on("click",function(d){console.log("Click !!!");
          console.log(d);
+         console.log("vorher");
+         console.log(marked);
                                  node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
                                  d3.select(this).style("fill", node_color);
                                  if(node_color == "lightblue"){
+                                 marked.push(d);
                                  dendrogram(d);
                                  cpt(d);
+                                 }
+                                 if(node_color == "lightgrey"){
+                                    marked.splice(marked.findIndex(v => v.node[0]=== d.node[0]),1);
+                                    console.log("nachher");
+                                    console.log(marked);
                                  }
                                  });
 
@@ -615,6 +620,7 @@ function multidisplay(){
                            d3 .select("#line_window")
                               .style("left", coord[0])
                               .style("top", coord[1])
+                              .style("font-size", 20)
                               //.text(t)
                               .transition()
                               .style("visibility", "visible");
@@ -677,8 +683,8 @@ function cpt(clicked_node){
    var colors = [
        '#0080FF','#0080FF','#0080FF', 
        '#298A08','#298A08','#298A08',
-       '#E74C3C','#E74C3C','#E74C3C',
-       '#8E44AD','#8E44AD','#8E44AD', 
+       '#DF3A01','#DF3A01','#DF3A01',
+       '#8904B1','#8904B1','#8904B1', 
     ];
       //var text = data.attr('fill', 'green');
             

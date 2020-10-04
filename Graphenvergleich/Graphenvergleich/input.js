@@ -39,6 +39,7 @@ function reset(){
 	parent4 = [];
 	child4 = [];
 	link4 = [];
+	maked = [];
 	d3.select("#Vergleich2").text("Vergleich2");
   	d3.select("#Vergleich1").text("Vergleich1");
   	d3.select("#CPT").text("CPT");

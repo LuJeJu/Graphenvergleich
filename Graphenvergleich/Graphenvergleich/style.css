@@ -50,7 +50,7 @@ body {
 #Mitte {
     width: 50%;
     background-color: white;
-    overflow: auto;
+    /*overflow: auto;*/
     resize: horizontal;
 
 }
@@ -59,7 +59,7 @@ body {
     height: 49%;
     background-color: white;
     resize: vertical;
-    overflow: auto;
+    /*overflow: auto;*/
     flex: 1;
     border-bottom: 2px solid lightgrey;
     border-left: 1px solid lightgrey;
@@ -68,7 +68,7 @@ body {
 }
 #Vergleich2 {
     background-color: white;
-    overflow: auto;
+    /*overflow: auto;*/
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -85,6 +85,6 @@ body {
     position: relative;
     visibility: hidden;
     height: auto;
-    width: auto;
+    width: 50px;
     border: 1px solid black;
 }
