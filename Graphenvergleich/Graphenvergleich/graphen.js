@@ -181,20 +181,23 @@ function draw(parent,child,divs, link){
       title = "Graph 4";
    }
 
+   var rect = d3.select("#"+divs).append("rect")
+   .attr("id", "graphnumberrect")
+   .attr("width", "50")
+   .attr("height", "15")
+   .attr("transform", "translate(0,0)")
+   .style("background-color", "lightgrey")
+   .style("border-right", "1px solid lightgrey")
+   .style("border-bottom", "1px solid lightgrey");
+   rect.append("text").attr("id", "graphnumbertext").attr("x", 1).attr("y", 11).text(title);
+
    var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
    .attr("height", "100%")
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
    }));
-   /*
-   var rect = canvas.append("rect")
-   .attr("width", "50")
-   .attr("height", "15")
-   .attr("x", 0)
-   .attr("y", 0)
-   .attr("fill", "none");
-   canvas.append("text").attr("x", 0).attr("y", 10).text(title); */
+
    var g = canvas.append("g");
    //.attr("transform", "translate(50, 50)");
    var defs = canvas.append("defs");
@@ -301,14 +304,6 @@ var simulation = d3.forceSimulation(nodes)
             n.attr("x",function(d){ return d.x;}).attr("y",function(d){return d.y;});
         });
 
-   var rect = canvas.append("rect")
-   .attr("width", "50")
-   .attr("height", "15")
-   .attr("x", 0)
-   .attr("y", 0)
-   .attr("fill", "lightgrey");
-   canvas.append("text").attr("x", 1).attr("y", 11).text(title);
-
    };
 
 function transform(parent, child, link){
@@ -407,6 +402,7 @@ function multidisplay(){
    }
    console.log(n);
    var count = 0;
+
    //children iteration
    for(var i =0; i< child1.length; i++){
       var element;
@@ -524,6 +520,7 @@ function multidisplay(){
 
        r_width = 20;
        r_height = 20;
+      var node_color = "lightgray";
 
       n.append("rect")
          .attr("width", r_width)
@@ -535,8 +532,12 @@ function multidisplay(){
          .attr("id", "NodeButton")
          .on("click",function(d){console.log("Click !!!");
          console.log(d);
+                                 node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
+                                 d3.select(this).style("fill", node_color);
+                                 if(node_color == "lightblue"){
                                  dendrogram(d);
                                  cpt(d);
+                                 }
                                  });
 
       var text = canvas.append("g")
@@ -550,6 +551,8 @@ function multidisplay(){
             .attr("id", "NodeButton")
             .on("click",function(d){console.log("Click !!!");
             console.log(d);
+                                    node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
+                                    d3.select(this).style("fill", node_color);
                                     dendrogram(d);
                                     cpt(d);
                                     })
@@ -559,7 +562,14 @@ function multidisplay(){
          })
             .attr("dominant-baseline", "middle")
             .attr("x", function(d){return d.x + (20/2);})
-            .attr("y", function(d){return d.y + (20/2);});
+            .attr("y", function(d){return d.y + (20/2);})
+            .on("click",function(d){console.log("Click !!!");
+            console.log(d);
+                                    node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
+                                    d3.select(d).style("fill", node_color);
+                                    dendrogram(d);
+                                    cpt(d);
+                                    });
 
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
@@ -595,10 +605,15 @@ function multidisplay(){
          */
          .on("mouseover", function(d){
                            var coord = d3.mouse(this);
+                           var t = "";
+                           if(d.g == 1) d3 .select("#line_window").text("---").style("color", "#0080FF");
+                           if(d.g == 2) d3 .select("#line_window").text("---").style("color", "#298A08");
+                           if(d.g == 3) d3 .select("#line_window").text("---").style("color", "#DF3A01");
+                           if(d.g == 4) d3 .select("#line_window").text("---").style("color", "#8904B1");
                            d3 .select("#line_window")
                               .style("left", coord[0])
                               .style("top", coord[1])
-                              .text("Farben")
+                              //.text(t)
                               .transition()
                               .style("visibility", "visible");
                            })
@@ -721,6 +736,4 @@ function cpt(clicked_node){
 
   
    //RESET BUTTON!!!!!!!!! -> kommt noch aber zoomen fand ich jetzt erstmal für montag wichtiger
-   //bei onklick node einfärben, so dass zu sehen ist, welche Node wir beobachten (dendrogramme, cpts)
-   // -> keine ahnung ob das so einfach geht ^^,
 }
