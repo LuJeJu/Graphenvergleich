@@ -4,6 +4,7 @@ function read(){
                 //read json, parse all graphs in one array
 				const fileObj = document.getElementById("files");
 				fileObj.onchange = (event) => {
+					document.getElementById("start").disabled = false;
 				const files = event.target.files;
 				var i=0;
 				for(i; i<files.length; i++){
@@ -19,5 +20,27 @@ function read(){
 						reader.readAsText(file);			
 					}
 				}
-                graphs.onchange = console.log(graphs);
-            }
+				graphs.onchange = console.log(graphs);
+			}
+			
+function reset(){
+	graphs = [];
+	document.getElementById("files").value = "";
+	document.getElementById("reset").disabled = true;
+	parent1 = [];
+	child1 = [];
+	link1 = [];
+	parent2 = [];
+	child2 = [];
+	link2 = [];
+	parent3 = [];
+	child3 = [];
+	link3 = [];
+	parent4 = [];
+	child4 = [];
+	link4 = [];
+	d3.select("#Vergleich2").text("Vergleich2");
+  	d3.select("#Vergleich1").text("Vergleich1");
+  	d3.select("#CPT").text("CPT");
+  	d3.select("#Dendrogramme").text("Dendrogramme");
+};			

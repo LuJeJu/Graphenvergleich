@@ -18,6 +18,8 @@ function darstellung(){
    */
 
       // delete default display
+   document.getElementById("reset").disabled = false;
+   document.getElementById("start").disabled = true;   
   d3.select("#Vergleich2").text("");
   d3.select("#Vergleich1").text("");
   d3.select("#CPT").text("");
@@ -732,8 +734,4 @@ function cpt(clicked_node){
       });
    console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
    // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
-  
-
-  
-   //RESET BUTTON!!!!!!!!! -> kommt noch aber zoomen fand ich jetzt erstmal für montag wichtiger
-}
+};

@@ -9,13 +9,14 @@
             <div id="Taskbar">
                 <script src="https://d3js.org/d3.v5.min.js"></script>
                 <input type="file" id="files" multiple accept=".json">	
+                <button id ="start" disabled = true onclick="darstellung()">Start</button>
                 <script type="text/javascript" src="input.js"></script>
                 <script type="text/javascript" src="graphen.js"></script>
-                <button onclick="darstellung()">Start</button>
+                <button id = "reset" disabled = true onclick="reset()">Reset</button>
                 <script>read()</script>
             </div>
             <div id="Ansicht"> 
-                <div id="Dendrogramme">Dendogramme</div>
+                <div id="Dendrogramme">Dendrogramme</div>
                 <div id="Mitte"> 
                     <div id="line_window"></div>
                     <div id="Vergleich1">Vergleich1
