@@ -659,6 +659,9 @@ function dendrogram(clicked_node){
 
 
 function cpt(clicked_node){
+
+   d3.select("#CPT").text("");
+
    // siehe riesentext bei den dendrogrammen xD
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
@@ -669,8 +672,7 @@ function cpt(clicked_node){
       .append("g"); 
 
 
-   
-    var columns = ['B','True', 'False'];
+    var columns = ['D','True', 'False'];
     var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
     var data = 
       [
@@ -681,10 +683,10 @@ function cpt(clicked_node){
       ]; // text extrahieren 
 
    var colors = [
-       '#0080FF','#0080FF','#0080FF', 
-       '#298A08','#298A08','#298A08',
-       '#DF3A01','#DF3A01','#DF3A01',
-       '#8904B1','#8904B1','#8904B1', 
+      '#0080FF','#0080FF','#0080FF', 
+      '#298A08','#298A08','#298A08',
+      '#E74C3C','#E74C3C','#E74C3C',
+      '#8E44AD','#8E44AD','#8E44AD',  
     ];
       //var text = data.attr('fill', 'green');
             

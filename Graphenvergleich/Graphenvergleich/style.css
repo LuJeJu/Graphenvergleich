@@ -43,6 +43,8 @@ body {
     width: 25%;
     border-left: 1px solid lightgrey; 
     overflow: auto;
+
+    
 }
 
 
@@ -79,7 +81,6 @@ body {
     border-bottom: 2px solid lightgrey;
   
 }
-
 #line_window {
     background-color: white;
     position: relative;
