@@ -673,26 +673,26 @@ function cpt(clicked_node){
       .append("g"); 
 
 
-    var columns = ['D','True', 'False'];
-    var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
-    var data = 
+   //var columns = ['D','True', 'False'];
+   //var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
+   const data = 
       [
-      ['Graph1', graphs[0].D.prob[0], graphs[0].D.prob[1]] , 
-      ['Graph2', graphs[1].D.prob[0], graphs[1].D.prob[1]] , 
-      ['Graph3', graphs[2].D.prob[0], graphs[2].D.prob[1]] , 
-      ['Graph4', graphs[3].D.prob[0], graphs[3].D.prob[1]] 
+         ["Graph1", 0.9, 0.1],
+			["Graph2", [0.8, 0.2], [0.5, 0.5]],
+			["Graph3", 0.7, 0.3],
+			["Graph4", [[0.8, 0.2], [0.5, 0.5]], [[0.6, 0.4], [0.3, 0.7]]],
       ]; // text extrahieren 
 
-   var colors = [
-      "#386cb0","#386cb0","#386cb0", 
-      "#7fc97f","#7fc97f","#7fc97f",
-      "#fdc086","#fdc086","#fdc086",
-      "#beaed4","#beaed4","#beaed4",  
+    colors = [
+      '#386cb0',
+      '#7fc97f',
+      '#fdc086',
+      '#beaed4'
     ];
       //var text = data.attr('fill', 'green');
-      
+            
   // create table
-  var table = d3.select('#CPT')
+  /*var table = d3.select('#CPT')
       .append('table')
       .style("border-collapse", "collapse")
       .style("border", "2px darkgrey solid");
@@ -708,10 +708,10 @@ function cpt(clicked_node){
       .style("padding", "5px")
       .style("background-color", "lightgray")
       .style("font-weight", "bold")
-      .style("text-transform", "uppercase",);
+      .style("text-transform", "uppercase",); 
 
    // create table header column
-   /*table.append('thead').append('tc')
+   table.append('thead').append('tc')
    .selectAll('tr')
    .data(rows)
    .enter()
@@ -723,8 +723,9 @@ function cpt(clicked_node){
    .style("font-weight", "bold")
    .style("text-transform", "uppercase"); */
    
-   var table_color_index = 0;
+  
    // data
+  /*var table_color_index = 0;
    table.append("tbody")
       .selectAll("tr").data(data)
       .enter()
@@ -739,8 +740,103 @@ function cpt(clicked_node){
       .style("font-size", "12px")
       //.style('background-color', 'lightblue')
       .style('background-color',function(d,i){
-          return colors[table_color_index++];
-      });
+          return colors[table_color_index++]; 
+      }); */
    console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
    // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
+
+   function f(elem, direction="col") {
+      if (typeof(elem) === "number") {
+         var div = document.createElement("div");
+         div.innerHTML = elem.toString();
+         return div;
+      } else {
+         var table = document.createElement("table");
+         table.style.width = "100%";
+         //table.setAttribute("border", "1");
+
+         var tbody = document.createElement("tbody");
+
+         if (direction === "col") {
+            var tr = document.createElement("tr");
+
+            var td1 = document.createElement("td");
+            td1.appendChild(f(elem[0], "row"));
+            tr.appendChild(td1);
+
+            var td2 = document.createElement("td");
+            td2.appendChild(f(elem[1], "row"));
+            tr.appendChild(td2);
+
+            tbody.append(tr);
+         } else {
+            var tr1 = document.createElement("tr");
+            var td1 = document.createElement("td");
+            td1.appendChild(f(elem[0], "col"));
+            tr1.appendChild(td1);
+            tbody.append(tr1);
+
+            var tr2 = document.createElement("tr");
+            var td2 = document.createElement("td");
+            td2.appendChild(f(elem[1], "col"));
+            tr2.appendChild(td2);
+            tbody.append(tr2);
+         }
+
+         table.append(tbody);
+         return table;
+      }
+   }
+
+   function g(data) {
+
+      var table = document.createElement("table");
+
+      var thead = document.createElement("thead");
+      var tr_head = document.createElement("tr");
+
+      var th_node = document.createElement("th");
+      th_node.innerHTML = "D";
+      tr_head.appendChild(th_node);
+
+      var th_true = document.createElement("th");
+      th_true.innerHTML = "TRUE";
+      tr_head.appendChild(th_true);
+
+      var th_false = document.createElement("th");
+      th_false.innerHTML = "FALSE";
+      tr_head.appendChild(th_false);
+
+      thead.appendChild(tr_head);
+      table.appendChild(thead);
+
+      var tbody = document.createElement("tbody");
+
+      for (var i=0; i<data.length; i++) {
+
+         var tr = document.createElement("tr");
+         tr.style.backgroundColor = colors[i];
+
+         var td_node = document.createElement("td");
+         td_node.innerHTML = data[i][0];
+         tr.appendChild(td_node);
+
+         var td_true = document.createElement("td");
+         td_true.appendChild(f(data[i][1]));
+         tr.appendChild(td_true);
+
+         var td_false = document.createElement("td");
+         td_false.appendChild(f(data[i][2]));
+         tr.appendChild(td_false);
+
+         tbody.appendChild(tr);
+
+      }
+
+      table.append(tbody);
+      return table;
+
+   }
+
+   document.getElementById("CPT").appendChild(g(data));
 };

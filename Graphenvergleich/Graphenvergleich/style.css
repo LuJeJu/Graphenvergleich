@@ -47,7 +47,22 @@ body {
     
 }
 
+#CPT table {
+    width: 250px;
+    border-collapse: collapse;
+}
 
+#CPT th {
+    background-color: lightgrey;
+}
+
+#CPT > table, #cpt > table th, #cpt > table > tbody > tr > td {
+    border: 1px solid darkgrey;
+}
+
+#CPT > table th, #cpt > table > tbody > tr > td {
+    padding: 5px;
+}
 
 #Mitte {
     width: 50%;
