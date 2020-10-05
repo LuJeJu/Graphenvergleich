@@ -76,7 +76,7 @@ function darstellung(){
    }
    singledisplay();
    multidisplay();
-   dendrogram();
+   //dendrogram();
    cpt();
       // more than 4 graphs -> hint that only 4 will be considered
    // if(graphs.length>4){}
@@ -87,7 +87,7 @@ function singledisplay(){
    if(graphs.length == 2){
       var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
       g1 .style("width","100%")
-         .style("height","50%")
+         .style("height","calc(50% - 1 px)")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey");
 
@@ -114,21 +114,21 @@ function singledisplay(){
       cont2.style("display", "flex").style("flex-direction", "row");
 
       var g1 = d3.select("#cont1").append("div").attr("id","g1");
-      g1 .style("width","50%")
-         .style("height","100%")
+      g1 .style("width","calc(50% - 1 px)")
+         .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
          .style("border-right", "1px solid lightgrey");
          //.style("overflow", "auto");//.text("graph 1");
       var g3 = d3.select("#cont1").append("div").attr("id","g3");
       g3 .style("width","calc(50% - 1 px)")
-         .style("height","100%")
+         .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
          .style("border-left", "1px solid lightgrey");
          //.style("overflow", "auto");//.text("graph 3");
       var g2 = d3.select("#cont2").append("div").attr("id","g2");
-      g2 .style("width","50%")
+      g2 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey")
@@ -634,9 +634,27 @@ function multidisplay(){
 
 };
 
+
+var isDived = false; //asking if #dendrogram has divs already
 function dendrogram(clicked_node){
+
+//console.log(clicked_node);
+
+   if(isDived == true){ //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
+        for (var s = 1; s < 7; s++){
+            if(document.getElementById("k" + s) !== null){
+            //console.log(document.getElementById("k" + s));
+            document.getElementById("k" + s).remove();
+            }
+        }
+        isDived =false;
+   }
+
+   //console.log(document.getElementById("k1") + "_after_removal");
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
+
+  // console.log(clicked_node);
 /*
    var canvas = d3.select("#Dendrogramme").append("svg")
       .attr("width", "100%")
@@ -644,20 +662,24 @@ function dendrogram(clicked_node){
       .append("g");
 
 */
+console.log(marked);
    //Anzeige in Divs aufteilen je nach Knotenanzahl
-   //if(clicked_node.length == 2){
+   if(marked.length == 2){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width", "100%")
-                 .style("height", "50%")
-                 //.style("flex","1")
-                 //.style("border-bottom", "1px solid lightgrey");
+                 .style("height", "calc(50% - 1px)")
+                 .style("flex","1")
+                 .style("border-bottom", "1px solid lightgrey");
 
         var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
               k2 .style("width","100%")
-                 .style("height", "50%")
-                 //.style("flex","1")
-                 //.style("border-top", "1px solid lightgrey");
-                 //}
+                 .style("height", "calc(50% - 1px)")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey");
+
+        isDived = true;
+       // console.log(document.getElementById("k1"));
+   }
 /*
    if(clicked_node.length == 3){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
@@ -691,33 +713,10 @@ function dendrogram(clicked_node){
                  .style("flex","1")
                  .style("border-top", "1px solid lightgrey");}
 
-   if(clicked_node.length == 5){
-        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
-              k1 .style("width","100%")
-                 .style("height","50%")
-                 .style("flex","1")
-                 .style("border-bottom", "1px solid lightgrey");
-
-        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
-              g2 .style("width","100%")
-                 .style("height","calc(100% - 1 px)")
-                 .style("flex","1")
-                 .style("border-top", "1px solid lightgrey");}
-
-   if(clicked_node.length == 6){
-        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
-              k1 .style("width","100%")
-                 .style("height","50%")
-                 .style("flex","1")
-                 .style("border-bottom", "1px solid lightgrey");
-
-        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
-              g2 .style("width","100%")
-                 .style("height","calc(100% - 1 px)")
-                 .style("flex","1")
-                 .style("border-top", "1px solid lightgrey");}
 */
-
+ //in jedem div müssen auch noch einteilungen für die einzelnen Knoten vorgenommen werden.
+ //4 knoten sollten es maximal sein bei 4 vergleichsgraphen.
+ //dann haben wir 4*4 fenster und 4*4 graphen, das sollte vergleichbarkeit genug sein
 
       //
       // ist glaube als übergabeparameter besser und die beiden 

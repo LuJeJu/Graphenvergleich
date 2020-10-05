@@ -43,7 +43,7 @@ body {
     resize: horizontal;
     direction: rtl;/*direction des resize ist jetzt richt to left, also untere linke Ecke*/
     background-color: rgb(238, 238, 238);
-    display: flex;   
+    display: flex;
     width: 25%;
     border-left: 1px solid lightgrey;
     overflow: auto;
