@@ -258,7 +258,8 @@ var simulation = d3.forceSimulation(nodes)
          .attr("dominant-baseline", "middle")
          //.attr("x", "50%")
          //.attr("y", "50%");
-         .attr("x", function(d){return d.x + (20/2);})
+         .attr("x", function(d){
+            return d.x + (20/2);})
          .attr("y", function(d){return d.y + (20/2);});
 
          // gibt textgröße aus
@@ -276,11 +277,11 @@ var simulation = d3.forceSimulation(nodes)
        .enter().append("svg:marker")
        .attr("id", "arrow")
        .attr("viewBox", "0 -5 10 10")
-       .attr("refX", 15)
-       .attr("refY", -1.5)
+       .attr("refX", 10)
+       .attr("refY", 0)
        .attr("markerWidth", 6)
        .attr("markerHeight", 6)
-       .attr("fill", color)
+       .attr("fill", color)   //function mit if-abfrage
        .attr("orient", "auto")
        .append("svg:path")
        .attr("d", "M0,-5L10,0L0,5");
@@ -297,8 +298,8 @@ var simulation = d3.forceSimulation(nodes)
          //.attr("y1", function(d) { return d.source.y+20/2; })
          //.attr("x2", function(d) { return d.target.x; })
          //.attr("y2", function(d) { return d.target.y+20/2; })
-         .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
-         .attr("transform", "translate( 20, 10)");
+         .attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
+         //.attr("transform", "translate( 20, 10)");
          //.attr("d", diagonal);
 
          simulation.on("tick",function() {
@@ -501,7 +502,7 @@ function multidisplay(){
 
    var nodes = n;
    var links = link;
-
+  
    var simulation = d3.forceSimulation(nodes)
       .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
       .force("charge", d3.forceManyBody().strength(-1000))
@@ -521,14 +522,14 @@ function multidisplay(){
        r_height = 20;
       var node_color = "lightgray";
 
-      n.append("rect")
+      var node_rect = n.append("rect")
          .attr("width", r_width)
          .attr("height", r_height)
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray")
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
-         .attr("id", "NodeButton")
+         .attr("id", function(d){ return "NodeButton"+"_"+ d.node;})
          .on("click",function(d){console.log("Click !!!");
          console.log(d);
          console.log("vorher");
@@ -559,7 +560,7 @@ function multidisplay(){
             .on("click",function(d){console.log("Click !!!");
             console.log(d);
                                     node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                    d3.select(this).style("fill", node_color);
+                                    d3.select("#NodeButton_"+ d.node).style("fill", node_color);
                                     dendrogram(d);
                                     cpt(d);
                                     })
@@ -573,7 +574,7 @@ function multidisplay(){
             .on("click",function(d){console.log("Click !!!");
             console.log(d);
                                     node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                    d3.select(d).style("fill", node_color);
+                                    d3.select("#NodeButton_"+ d.node).style("fill", node_color);
                                     dendrogram(d);
                                     cpt(d);
                                     });
