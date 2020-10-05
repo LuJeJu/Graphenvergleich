@@ -169,19 +169,19 @@ function draw(parent,child,divs, link){
 
    // colors for links
    if(divs == "g1"){
-      var color = "#0080FF";
+      var color = "#386cb0";
       title = "Graph 1";
    }
    if(divs == "g2"){
-      var color = "#298A08";
+      var color = "#7fc97f";
       title = "Graph 2";
    }
    if(divs == "g3"){
-      var color = "#DF3A01";
+      var color = "#fdc086";
       title = "Graph 3";
    }
    if(divs == "g4"){
-      var color = "#8904B1";
+      var color = "#beaed4";
       title = "Graph 4";
    }
 
@@ -598,10 +598,10 @@ function multidisplay(){
          .enter()
          .append("path")
          .attr("class", "link")
-         .style("stroke", function(d){ if(d.g ==1) return "#0080FF";
-                                       if(d.g ==2) return "#298A08";
-                                       if(d.g ==3) return "#DF3A01";
-                                       if(d.g ==4) return "#8904B1";})
+         .style("stroke", function(d){ if(d.g ==1) return "#386cb0";
+                                       if(d.g ==2) return "#7fc97f";
+                                       if(d.g ==3) return "#fdc086";
+                                       if(d.g ==4) return "#beaed4";})
          .style("stroke-width", 2.0)
          .attr("marker-end", "url(#arrow)")
          .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
@@ -614,10 +614,10 @@ function multidisplay(){
          .on("mouseover", function(d){
                            var coord = d3.mouse(this);
                            var t = "";
-                           if(d.g == 1) d3 .select("#line_window").text("---").style("color", "#0080FF");
-                           if(d.g == 2) d3 .select("#line_window").text("---").style("color", "#298A08");
-                           if(d.g == 3) d3 .select("#line_window").text("---").style("color", "#DF3A01");
-                           if(d.g == 4) d3 .select("#line_window").text("---").style("color", "#8904B1");
+                           if(d.g == 1) d3 .select("#line_window").text("---").style("color", "#386cb0");
+                           if(d.g == 2) d3 .select("#line_window").text("---").style("color", "#7fc97f");
+                           if(d.g == 3) d3 .select("#line_window").text("---").style("color", "#fdc086");
+                           if(d.g == 4) d3 .select("#line_window").text("---").style("color", "#beaed4");
                            d3 .select("#line_window")
                               .style("left", coord[0])
                               .style("top", coord[1])
@@ -684,13 +684,13 @@ function cpt(clicked_node){
       ]; // text extrahieren 
 
    var colors = [
-      '#0080FF','#0080FF','#0080FF', 
-      '#298A08','#298A08','#298A08',
-      '#E74C3C','#E74C3C','#E74C3C',
-      '#8E44AD','#8E44AD','#8E44AD',  
+      "#386cb0","#386cb0","#386cb0", 
+      "#7fc97f","#7fc97f","#7fc97f",
+      "#fdc086","#fdc086","#fdc086",
+      "#beaed4","#beaed4","#beaed4",  
     ];
       //var text = data.attr('fill', 'green');
-            
+      
   // create table
   var table = d3.select('#CPT')
       .append('table')
