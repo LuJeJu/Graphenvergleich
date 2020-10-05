@@ -37,11 +37,15 @@ body {
 
 #CPT {
     flex: 1;
+    /*wenn man Flex rausnimmt, funktioniert die Skalierung,
+    allerdings rutscht dann das Fenster nach links, wenn zu weit skaliert wird*/
+
     resize: horizontal;
+    direction: rtl;/*direction des resize ist jetzt richt to left, also untere linke Ecke*/
     background-color: rgb(238, 238, 238);
     display: flex;   
     width: 25%;
-    border-left: 1px solid lightgrey; 
+    border-left: 1px solid lightgrey;
     overflow: auto;
 
     

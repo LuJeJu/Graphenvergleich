@@ -637,11 +637,89 @@ function multidisplay(){
 function dendrogram(clicked_node){
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
-
-   var canvas = d3.select("Dendrogramme").append("svg")
+/*
+   var canvas = d3.select("#Dendrogramme").append("svg")
       .attr("width", "100%")
       .attr("height", "100%")
       .append("g");
+
+*/
+   //Anzeige in Divs aufteilen je nach Knotenanzahl
+   //if(clicked_node.length == 2){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width", "100%")
+                 .style("height", "50%")
+                 //.style("flex","1")
+                 //.style("border-bottom", "1px solid lightgrey");
+
+        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
+              k2 .style("width","100%")
+                 .style("height", "50%")
+                 //.style("flex","1")
+                 //.style("border-top", "1px solid lightgrey");
+                 //}
+/*
+   if(clicked_node.length == 3){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width","100%")
+                 .style("height","1/3")
+                 .style("flex","1")
+                 .style("border-bottom", "1px solid lightgrey");
+
+        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
+              k2 .style("width","100%")
+                 .style("height","1/3")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey")
+
+        var k3 = d3.select("#Dendrogramme").append("div").attr("id","k3");
+              k2 .style("width","100%")
+                 .style("height","calc(100% - 1 px)")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey");}
+
+   if(clicked_node.length == 4){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width","100%")
+                 .style("height","50%")
+                 .style("flex","1")
+                 .style("border-bottom", "1px solid lightgrey");
+
+        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
+              g2 .style("width","100%")
+                 .style("height","calc(100% - 1 px)")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey");}
+
+   if(clicked_node.length == 5){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width","100%")
+                 .style("height","50%")
+                 .style("flex","1")
+                 .style("border-bottom", "1px solid lightgrey");
+
+        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
+              g2 .style("width","100%")
+                 .style("height","calc(100% - 1 px)")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey");}
+
+   if(clicked_node.length == 6){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width","100%")
+                 .style("height","50%")
+                 .style("flex","1")
+                 .style("border-bottom", "1px solid lightgrey");
+
+        var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
+              g2 .style("width","100%")
+                 .style("height","calc(100% - 1 px)")
+                 .style("flex","1")
+                 .style("border-top", "1px solid lightgrey");}
+*/
+
+
+      //
       // ist glaube als übergabeparameter besser und die beiden 
       // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
       // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
@@ -650,12 +728,6 @@ function dendrogram(clicked_node){
       // falls ganze teilbäume dargestellt werden sollen könntest du
       // mit ner schleife über die Eingabe, dann als Array, iterieren
 
-      /*
-    document.getElementById("NodeButton")
-            .onclick = function() {
-                console.log("yay");
-            };
-*/
 };
 
 
