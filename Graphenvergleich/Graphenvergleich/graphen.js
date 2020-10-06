@@ -756,30 +756,30 @@ console.log(marked);
 
 };
 
-
 function cpt(clicked_node){
 
    d3.select("#CPT").text("");
 
    // siehe riesentext bei den dendrogrammen xD
-   var width = document.getElementById("Dendrogramme").offsetWidth;
-   var height = document.getElementById("Dendrogramme").offsetHeight;
+   var width = document.getElementById("CPT").offsetWidth;
+   var height = document.getElementById("CPT").offsetHeight;
 
-   var canvas = d3.select("Dendrogramme").append("svg")
+   var canvas = d3.select("CPT").append("svg")
       .attr("width", "100%")
       .attr("height", "100%")
       .append("g"); 
 
+   console.log(clicked_node.node);
+   console.log(clicked_node.prob[0]);
 
-   //var columns = ['D','True', 'False'];
-   //var rows = ['Graph1', 'Graph2', 'Graph3', 'Graph4'];
+
    const data = 
       [
-         ["Graph1", 0.9, 0.1],
-			["Graph2", [0.8, 0.2], [0.5, 0.5]],
-			["Graph3", 0.7, 0.3],
-			["Graph4", [[0.8, 0.2], [0.5, 0.5]], [[0.6, 0.4], [0.3, 0.7]]],
-      ]; // text extrahieren 
+         ["Graph1", clicked_node.prob[0], clicked_node.prob[1]],
+			["Graph2", clicked_node.prob[0], clicked_node.prob[1]],
+			["Graph3", clicked_node.prob[0], clicked_node.prob[1]],
+			["Graph4", clicked_node.prob[0], clicked_node.prob[1]]
+      ]; 
 
     colors = [
       '#386cb0',
@@ -787,66 +787,16 @@ function cpt(clicked_node){
       '#fdc086',
       '#beaed4'
     ];
-      //var text = data.attr('fill', 'green');
-            
-  // create table
-  /*var table = d3.select('#CPT')
-      .append('table')
-      .style("border-collapse", "collapse")
-      .style("border", "2px darkgrey solid");
-  
-  // create table header row
-  table.append('thead').append('tr')
-      .selectAll('th')
-      .data(columns)
-      .enter()
-      .append('th')
-      .text(function(d) { return d; })
-      .style("border", "1px darkgrey solid")
-      .style("padding", "5px")
-      .style("background-color", "lightgray")
-      .style("font-weight", "bold")
-      .style("text-transform", "uppercase",); 
-
-   // create table header column
-   table.append('thead').append('tc')
-   .selectAll('tr')
-   .data(rows)
-   .enter()
-   .append('tr')
-   .text(function(d) { return d; })
-   .style("border", "1px black solid")
-   .style("padding", "5px")
-   .style("background-color", "lightgray")
-   .style("font-weight", "bold")
-   .style("text-transform", "uppercase"); */
-   
-  
-   // data
-  /*var table_color_index = 0;
-   table.append("tbody")
-      .selectAll("tr").data(data)
-      .enter()
-      .append("tr")  
-      .selectAll("td") 
-      .data(function(d){return d;})
-      .enter()
-      .append("td")
-      .style("border", "1px darkgrey solid")
-      .style("padding", "5px")
-      .text(function(d){return d;})
-      .style("font-size", "12px")
-      //.style('background-color', 'lightblue')
-      .style('background-color',function(d,i){
-          return colors[table_color_index++]; 
-      }); */
-   console.log(graphs[0].B.prob[0][0]); //how to access probs (true, false)
-   // add onclick fucntion for nodes -> if node was clicked, display table with all probs (from all graphs) of this node + color the table
-
+         
    function f(elem, direction="col") {
       if (typeof(elem) === "number") {
          var div = document.createElement("div");
          div.innerHTML = elem.toString();
+         div.onmouseover= function(){
+            console.log('Hallo');
+            const element = document.getElementById("#prob_window");
+            //element.style. ;
+         };
          return div;
       } else {
          var table = document.createElement("table");
@@ -883,6 +833,7 @@ function cpt(clicked_node){
 
          table.append(tbody);
          return table;
+
       }
    }
 
@@ -894,7 +845,7 @@ function cpt(clicked_node){
       var tr_head = document.createElement("tr");
 
       var th_node = document.createElement("th");
-      th_node.innerHTML = "D";
+      th_node.innerHTML = clicked_node.node;
       tr_head.appendChild(th_node);
 
       var th_true = document.createElement("th");
@@ -937,4 +888,7 @@ function cpt(clicked_node){
    }
 
    document.getElementById("CPT").appendChild(g(data));
+
+
+
 };

@@ -35,15 +35,17 @@ body {
 
 }
 
+
+
+
 #CPT {
     flex: 1;
     /*wenn man Flex rausnimmt, funktioniert die Skalierung,
     allerdings rutscht dann das Fenster nach links, wenn zu weit skaliert wird*/
 
     resize: horizontal;
-    direction: rtl;/*direction des resize ist jetzt richt to left, also untere linke Ecke*/
     background-color: rgb(238, 238, 238);
-    display: flex;
+    display: flex;   
     width: 25%;
     border-left: 1px solid lightgrey;
     overflow: auto;
@@ -52,7 +54,7 @@ body {
 }
 
 #CPT table {
-    width: 250px;
+    width: 300px;
     border-collapse: collapse;
 }
 
@@ -101,6 +103,15 @@ body {
   
 }
 #line_window {
+    background-color: white;
+    position: relative;
+    visibility: hidden;
+    height: auto;
+    width: 50px;
+    border: 1px solid black;
+}
+
+#prob_window {
     background-color: white;
     position: relative;
     visibility: hidden;
