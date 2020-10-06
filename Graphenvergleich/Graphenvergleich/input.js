@@ -39,9 +39,17 @@ function reset(){
 	parent4 = [];
 	child4 = [];
 	link4 = [];
-	maked = [];
+	marked = [];
 	d3.select("#Vergleich2").text("Vergleich2");
   	d3.select("#Vergleich1").text("Vergleich1");
   	d3.select("#CPT").text("CPT");
   	d3.select("#Dendrogramme").text("Dendrogramme");
 };			
+
+function center_all(){
+	d3.select("#compare_g").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_g1").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_g2").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_g3").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_g4").transition().attr("transform", "translate(0,0)");
+};

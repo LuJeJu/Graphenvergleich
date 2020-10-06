@@ -21,7 +21,8 @@ function darstellung(){
 
       // delete default display
    document.getElementById("reset").disabled = false;
-   document.getElementById("start").disabled = true;   
+   document.getElementById("start").disabled = true;
+   document.getElementById("center").disabled = false;   
   d3.select("#Vergleich2").text("");
   d3.select("#Vergleich1").text("");
   d3.select("#CPT").text("");
@@ -186,7 +187,6 @@ function draw(parent,child,divs, link){
    }
 
    var rect = d3.select("#"+divs).append("rect")
-   .attr("id", "graphnumberrect")
    .attr("width", "50")
    .attr("height", "15")
    .attr("transform", "translate(0,0)")
@@ -201,7 +201,8 @@ function draw(parent,child,divs, link){
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
    }))
-   .append("g");
+   .append("g")
+   .attr("id", "single_" + divs);
 
    var n = new Array();
    for(var i =0; i<parent.length;i++){
@@ -272,6 +273,7 @@ var simulation = d3.forceSimulation(nodes)
             return [d.y, d.x];
          });
         */
+
        canvas.append("svg:defs").selectAll("marker")
        .data(["end"])
        .enter().append("svg:marker")
@@ -281,7 +283,10 @@ var simulation = d3.forceSimulation(nodes)
        .attr("refY", 0)
        .attr("markerWidth", 6)
        .attr("markerHeight", 6)
-       .attr("fill", color)   //function mit if-abfrage
+       .attr("fill", function(d){if(d.g ==1) return "#386cb0";
+                                 if(d.g ==2) return "#7fc97f";
+                                 if(d.g ==3) return "#fdc086";
+                                 if(d.g ==4) return "#beaed4";})  //warum wird alles schwarz????
        .attr("orient", "auto")
        .append("svg:path")
        .attr("d", "M0,-5L10,0L0,5");
@@ -339,12 +344,14 @@ function multidisplay(){
    var height = document.getElementById("Vergleich1").offsetHeight;
 
    var canvas = d3.select("#Vergleich1").append("svg")
+   .attr("id", "compare_svg")
    .attr("width", "100%")
    .attr("height", "100%")
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
    }))
-   .append("g");
+   .append("g")
+   .attr("id", "compare_g");
 
    var n = new Array();
    var link = new Array();
@@ -529,22 +536,25 @@ function multidisplay(){
          .attr("fill", "lightgray")
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
-         .attr("id", function(d){ return "NodeButton"+"_"+ d.node;})
+         .attr("id", function(d){ return "NodeButton_"+ d.node;})
          .on("click",function(d){console.log("Click !!!");
-         console.log(d);
-         console.log("vorher");
-         console.log(marked);
                                  node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                 d3.select(this).style("fill", node_color);
+                                 var curr = d3.select("#NodeButton_"+ d.node);
+                                 curr.transition().style("fill", node_color);
                                  if(node_color == "lightblue"){
-                                 marked.push(d);
-                                 dendrogram(d);
-                                 cpt(d);
+                                    marked.push(d);
+                                    dendrogram(d);
+                                    cpt(d);
                                  }
                                  if(node_color == "lightgrey"){
-                                    marked.splice(marked.findIndex(v => v.node[0]=== d.node[0]),1);
-                                    console.log("nachher");
-                                    console.log(marked);
+                                    var index;
+                                       for(var i = 0; i< marked.length; i++){
+                                          if(d.node[0] == marked[i].node[0]){
+                                          index = i;
+                                          console.log(marked[i]);
+                                          marked.splice(index,1);
+                                          }
+                                       }
                                  }
                                  });
 
@@ -555,15 +565,8 @@ function multidisplay(){
          .enter()
          .append("text")
          .attr("cursor", "pointer")
-            .attr("pointer-events", "all")
-            .attr("id", "NodeButton")
-            .on("click",function(d){console.log("Click !!!");
-            console.log(d);
-                                    node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                    d3.select("#NodeButton_"+ d.node).style("fill", node_color);
-                                    dendrogram(d);
-                                    cpt(d);
-                                    })
+         .attr("pointer-events", "all")
+         .attr("id", function(d){ return "Nodetext_"+d.node;})
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.node;
@@ -572,12 +575,31 @@ function multidisplay(){
             .attr("x", function(d){return d.x + (20/2);})
             .attr("y", function(d){return d.y + (20/2);})
             .on("click",function(d){console.log("Click !!!");
-            console.log(d);
+                                    console.log("textclick");
+                                    console.log(d);
                                     node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                    d3.select("#NodeButton_"+ d.node).style("fill", node_color);
+                                    var curr = d3.select("#NodeButton_"+ d.node);
+                                    console.log(curr);
+                                    curr.transition().style("fill", node_color);
+                                    if(node_color == "lightblue"){
+                                       marked.push(d);
+                                       dendrogram(d);
+                                       cpt(d);
+                                    }
+                                       if(node_color == "lightgrey"){
+                                       var index;
+                                          for(var i = 0; i< marked.length; i++){
+                                             if(curr.node[0] == marked[i].node[0]){
+                                                console.log(marked[i]);
+                                             index = i;
+                                             marked.splice(index,1);
+                                             }
+                                          }
+                                       }
                                     dendrogram(d);
                                     cpt(d);
-                                    });
+                                    }
+                                    );
 
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
@@ -588,7 +610,12 @@ function multidisplay(){
          .attr("refY", -1.5)
          .attr("markerWidth", 6)
          .attr("markerHeight", 6)
-         .attr("fill", "#0080FF")
+         .attr("fill", function(d){ 
+                                    if(d.g == 4) return "#beaed4";
+                                    if(d.g == 3) return "#fdc086";
+                                    if(d.g == 2) return "#7fc97f";
+                                    if(d.g == 1) return "#386cb0";
+                  	               })
          .attr("orient", "auto")
          .append("svg:path")
          .attr("d", "M0,-5L10,0L0,5");
