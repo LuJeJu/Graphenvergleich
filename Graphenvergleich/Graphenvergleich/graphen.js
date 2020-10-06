@@ -659,7 +659,7 @@ var isDived = false; //asking if #dendrogram has divs already
 function dendrogram(){
 
    if(isDived == true){ //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
-        for (var s = 1; s < 7; s++){
+        for (var s = 0; s < 7; s++){
             if(document.getElementById("k" + s) !== null){
             //console.log(document.getElementById("k" + s));
             document.getElementById("k" + s).remove();
@@ -679,8 +679,17 @@ function dendrogram(){
       .append("g");
 
 */
-console.log(marked);
    //Anzeige in Divs aufteilen je nach Knotenanzahl
+   if (marked.length == 1){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width", "100%")
+                 .style("height", "100%")
+                 .style("flex","1")
+                 //.style("border-bottom", "2px solid lightgrey");
+        isDived = true;
+        split_window("#k1", "dendrok1");
+   }
+
    if(marked.length == 2){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width", "100%")
@@ -728,7 +737,6 @@ console.log(marked);
         split_window("#k3", "dendrok3");
    }
 
-
    if(marked.length == 4){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width","100%")
@@ -770,14 +778,10 @@ console.log(marked);
  //4 knoten sollten es maximal sein bei 4 vergleichsgraphen.
  //dann haben wir 4*4 fenster und 4*4 graphen, das sollte vergleichbarkeit genug sein
 
-      //
       // ist glaube als übergabeparameter besser und die beiden 
       // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
       // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
 
-
-      // falls ganze teilbäume dargestellt werden sollen könntest du
-      // mit ner schleife über die Eingabe, dann als Array, iterieren
 
 };
 
