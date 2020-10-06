@@ -102,6 +102,7 @@ body {
     border-bottom: 2px solid lightgrey;
   
 }
+/*
 #line_window {
     background-color: white;
     position: relative;
@@ -110,6 +111,7 @@ body {
     width: 50px;
     border: 1px solid black;
 }
+*/
 
 #prob_window {
     background-color: white;
