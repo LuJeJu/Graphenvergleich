@@ -13,6 +13,16 @@
                 <script type="text/javascript" src="input.js"></script>
                 <script type="text/javascript" src="graphen.js"></script>
                 <button id = "center" disabled = true onclick = "center_all()">Center</button>
+                <div class= "dropdown_menu">
+                    <button class = "sync" disabled = true onclick = "sync()">Sync</button>
+                    <div class="dropdown_divs">
+                        <button id= "compare" onclick = 'is_clicked("compare")'>Vergleich</button>
+                        <button id= "window1" onclick = 'is_clicked("window1")'>Graph 1</button>
+                        <button id= "window2" onclick = 'is_clicked("window2")'>Graph 2</button>
+                        <button id= "window3" onclick = 'is_clicked("window3")'>Graph 3</button>
+                        <button id= "window4" onclick = 'is_clicked("window4")'>Graph 4</button>
+                    </div>
+                </div>
                 <button id = "reset" disabled = true onclick="reset()">Reset</button>
                 <script>read()</script>
             </div>

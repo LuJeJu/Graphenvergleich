@@ -23,6 +23,7 @@ function darstellung(){
    document.getElementById("reset").disabled = false;
    document.getElementById("start").disabled = true;
    document.getElementById("center").disabled = false;   
+   document.getElementsByClassName("sync").disabled = false;
   d3.select("#Vergleich2").text("");
   d3.select("#Vergleich1").text("");
   d3.select("#CPT").text("");

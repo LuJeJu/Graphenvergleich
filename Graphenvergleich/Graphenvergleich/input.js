@@ -53,3 +53,17 @@ function center_all(){
 	d3.select("#single_g3").transition().attr("transform", "translate(0,0)");
 	d3.select("#single_g4").transition().attr("transform", "translate(0,0)");
 };
+
+function sync(){
+
+};
+
+function is_clicked(id){
+	var button = document.getElementById(id);
+	if(button.style.background === "grey"){
+		button.style.background = "lightgrey";
+	}
+	if(button.style.background === "lightgrey"){
+		button.style.background = "grey";
+	}	
+};

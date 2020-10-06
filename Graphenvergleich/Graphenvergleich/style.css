@@ -121,3 +121,47 @@ body {
     width: 50px;
     border: 1px solid black;
 }
+
+#compare {
+    width: 80px;
+    background-color: lightgray;
+}
+
+#window1 {
+    width: 80px;
+    background-color: lightgray;
+}
+
+#window2 {
+    width: 80px;
+    background-color: lightgray;
+}
+
+#window3 {
+    width: 80px;
+    background-color: lightgray;
+}
+
+#window4 {
+    width: 80px;
+    background-color: lightgray;
+}
+
+.dropdown_menu {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_divs {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 50px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+
+ .dropdown_divs a:hover {background-color: lightslategray;}
+
+.dropdown_menu:hover .dropdown_divs {display: block;}
