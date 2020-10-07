@@ -1,0 +1,178 @@
+body {
+    margin:0;
+    padding:0;
+    }         
+#container {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#Taskbar {
+    border-bottom: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    background-color: lightgrey;
+    flex: 1
+ }
+ 
+#Ansicht {
+    flex: 15;
+    background-color: white;
+    display: flex;
+  
+}
+
+#Dendrogramme { 
+    width: 25%;
+    background-color: rgb(238, 238, 238);
+    resize: horizontal;
+    overflow: auto;
+    border-right: 1px solid lightgrey;
+
+}
+
+
+
+
+#CPT {
+    flex: 1;
+    /*wenn man Flex rausnimmt, funktioniert die Skalierung,
+    allerdings rutscht dann das Fenster nach links, wenn zu weit skaliert wird*/
+
+    resize: horizontal;
+    background-color: rgb(238, 238, 238);
+    display: flex;   
+    width: 25%;
+    border-left: 1px solid lightgrey;
+    overflow: auto;
+
+    
+}
+
+#CPT table {
+    width: 300px;
+    border-collapse: collapse;
+}
+
+#CPT th {
+    background-color: lightgrey;
+}
+
+#CPT > table, #cpt > table th, #cpt > table > tbody > tr > td {
+    border: 1px solid darkgrey;
+}
+
+#CPT > table th, #cpt > table > tbody > tr > td {
+    padding: 5px;
+}
+
+#Mitte {
+    width: 50%;
+    background-color: white;
+    /*overflow: auto;*/
+    resize: horizontal;
+
+}
+
+#Vergleich1 {
+    height:  calc(50% - 1px);
+    background-color: white;
+    resize: vertical;
+    /*overflow: auto;*/
+    flex: 1;
+    border-bottom: 1px solid lightgrey;
+    /*border-top: 1px solid lightgrey;*/
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    
+}
+#Vergleich2 {
+    background-color: white;
+    /*overflow: auto;*/
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: calc(50% - 1px);
+    border-top: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+   /* border-bottom: 1px solid lightgrey;*/
+  
+}
+/*
+#line_window {
+    background-color: white;
+    position: relative;
+    visibility: hidden;
+    height: auto;
+    width: 50px;
+    border: 1px solid black;
+}
+*/
+
+#prob_window {
+    background-color: white;
+    position: absolute;
+    visibility: hidden;
+    width: 50px;
+    border: 1px solid black;
+    z-index: 100;
+    height: 30px;
+
+}
+
+#compare {
+    width: 80px;
+    background-color: white;
+}
+
+#window1 {
+    width: 80px;
+    background-color: white;
+}
+
+#window2 {
+    width: 80px;
+    background-color: white;
+}
+
+#window3 {
+    width: 80px;
+    background-color: white;
+}
+
+#window4 {
+    width: 80px;
+    background-color: white;
+}
+
+.dropdown_menu {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_divs {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 50px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* -> darf nicht sonst ist es beim clicken ja immer gleich und abfrage geht nicht
+        schade wäre hübsch gewesen
+#compare:hover {background-color: lightgray;}
+#window1:hover {background-color: lightgray;}
+#window2:hover {background-color: lightgray;}
+#window3:hover {background-color: lightgray;}
+#window4:hover {background-color: lightgray;}
+*/
+
+.dropdown_divs :hover {background-color: lightslategray;}
+
+.dropdown_menu:hover .dropdown_divs {display: block;}

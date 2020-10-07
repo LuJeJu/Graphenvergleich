@@ -13,18 +13,28 @@
                 <script type="text/javascript" src="input.js"></script>
                 <script type="text/javascript" src="graphen.js"></script>
                 <button id = "center" disabled = true onclick = "center_all()">Center</button>
+                <button id = "hide" disabled = true>Hide Unmarked</button>
                 <div class= "dropdown_menu">
-                    <button class = "sync" disabled = true onclick = "sync()">Sync</button>
+                    <button id = "sync" disabled = true onclick = "sync()">Sync</button>
                     <div class="dropdown_divs">
-                        <button id= "compare" onclick = 'is_clicked("compare")'>Vergleich</button>
-                        <button id= "window1" onclick = 'is_clicked("window1")'>Graph 1</button>
-                        <button id= "window2" onclick = 'is_clicked("window2")'>Graph 2</button>
-                        <button id= "window3" onclick = 'is_clicked("window3")'>Graph 3</button>
-                        <button id= "window4" onclick = 'is_clicked("window4")'>Graph 4</button>
+                        <!-- Abfrage nach Anzahl fehlt noch -->
+                        <button id= "compare" onclick = 'is_clicked("compare", compare_clicked)'>Vergleich</button>
+                        <button id= "window1" onclick = 'is_clicked("window1", window1_clicked)'>Graph 1</button>
+                        <button id= "window2" onclick = 'is_clicked("window2", window2_clicked)'>Graph 2</button>
+                        <button id= "window3" onclick = 'is_clicked("window3", window3_clicked)'>Graph 3</button>
+                        <button id= "window4" onclick = 'is_clicked("window4", window4_clicked)'>Graph 4</button>
                     </div>
                 </div>
                 <button id = "reset" disabled = true onclick="reset()">Reset</button>
-                <script>read()</script>
+                <script>
+                    read()
+                    compare_clicked = false;
+                    window1_clicked = false;
+                    window2_clicked = false;
+                    window3_clicked = false;
+                    window4_clicked = false;
+                    var boolcount = 0;
+                </script>
             </div>
             <div id="Ansicht"> 
                 <div id="Dendrogramme">Dendrogramme</div>
