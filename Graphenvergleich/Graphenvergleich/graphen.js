@@ -761,7 +761,7 @@ function dendrogram(){
         split_window("#k4", "dendrok4");
    }
 
-   if(marked.length > 4){ return window.alert("Please select no more then four knodes for the comparrisson.");}
+   if(marked.length > 4){ return window.alert("Please select no more then four nodes for the comparison.");}
 
 
  //in jedem div müssen auch noch einteilungen für die einzelnen Knoten vorgenommen werden.
