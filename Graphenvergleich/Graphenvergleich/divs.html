@@ -1,0 +1,52 @@
+<html>
+    <head >
+        <style>
+           @import url("style.css") screen;
+    </style>
+    </head>
+    <body>
+         <div id="container" style="font-family:helvetica,arial,courier; font-size:80%;color:#4d4d4d;"> 
+            <div id="Taskbar">
+                <script src="https://d3js.org/d3.v5.min.js"></script>
+                <input type="file" id="files" multiple accept=".json">	
+                <button id ="start" disabled = true onclick="darstellung()">Start</button>
+                <script type="text/javascript" src="input.js"></script>
+                <script type="text/javascript" src="graphen.js"></script>
+                <button id = "center" disabled = true onclick = "center_all()">Center</button>
+                <button id = "hide" disabled = true>Hide Unmarked</button>
+                <div class= "dropdown_menu">
+                    <button id = "sync" disabled = true onclick = "sync()">Sync</button>
+                    <div class="dropdown_divs">
+                        <!-- Abfrage nach Anzahl fehlt noch -->
+                        <button id= "compare" onclick = 'is_clicked("compare", compare_clicked)'>Vergleich</button>
+                        <button id= "window1" onclick = 'is_clicked("window1", window1_clicked)'>Graph 1</button>
+                        <button id= "window2" onclick = 'is_clicked("window2", window2_clicked)'>Graph 2</button>
+                        <button id= "window3" onclick = 'is_clicked("window3", window3_clicked)'>Graph 3</button>
+                        <button id= "window4" onclick = 'is_clicked("window4", window4_clicked)'>Graph 4</button>
+                    </div>
+                </div>
+                <button id = "reset" disabled = true onclick="reset()">Reset</button>
+                <script>
+                    read()
+                    compare_clicked = false;
+                    window1_clicked = false;
+                    window2_clicked = false;
+                    window3_clicked = false;
+                    window4_clicked = false;
+                    var boolcount = 0;
+                </script>
+            </div>
+            <div id="Ansicht"> 
+                <div id="Dendrogramme">Dendrogramme</div>
+                <div id="Mitte"> 
+                   <!-- <div id="line_window"></div>  -->
+                    <div id="Vergleich1">Vergleich1
+                        </div>
+                    <div id="Vergleich2">Vergleich2</div>
+                </div>
+                <div id= "prob_window"></div>
+                <div id="CPT">CPT</div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -2,31 +2,21 @@ var marked = new Array();
 
 // function will be called by clicking the "Start"-button in Taskbar
 function darstellung(){
-   /*
-      graphs jedes mal nach graphen hochladen ins gleiche array gepushed,
-      -> button "Start" ausgrauen und resetbutton einfügen
-   */
 
-   /*
-   document.getElementById("Dendrogramme").innerHTML = graphs;
-   document.getElementById("Einzelgraphen").innerHTML = graphs;
-   document.getElementById("Mainwindow").innerHTML = graphs;
-   document.getElementById("CondProbTables").innerHTML = graphs;
-   console.log(graphs[0].B.parents[0]);
-*/  
+      // delete default display, activate/disable buttons
+   document.getElementById("reset").disabled = false;
+   document.getElementById("start").disabled = true;
+   document.getElementById("center").disabled = false;   
+   document.getElementsByClassName("sync").disabled = false;
+   d3.select("#Vergleich2").text("");
+   d3.select("#Vergleich1").text("");
+   d3.select("#CPT").text("");
+   d3.select("#Dendrogramme").text("");
+
    /*
       separates source nodes from others for every graph and
       create divs depending on the number of graphs for the separate display
    */
-
-      // delete default display
-   document.getElementById("reset").disabled = false;
-   document.getElementById("start").disabled = true;
-   document.getElementById("center").disabled = false;   
-  d3.select("#Vergleich2").text("");
-  d3.select("#Vergleich1").text("");
-  d3.select("#CPT").text("");
-  d3.select("#Dendrogramme").text("");
 
       // more than 1 graph
    if(graphs.length>=1){
@@ -34,9 +24,8 @@ function darstellung(){
       child1 = new Array();
       link1 = new Array();
    graph1(graphs[0], parent1, child1);
-   transform(parent1,child1,link1);
+   get_links(parent1,child1,link1);
    console.log(parent1);
-   //console.log(child1);
    }
 
       // more than 2 graphs
@@ -45,13 +34,8 @@ function darstellung(){
       child2 = new Array();
       link2 = new Array();
    graph1(graphs[1], parent2, child2);
-   transform(parent2,child2,link2);
+   get_links(parent2,child2,link2);
    console.log(parent2);
-   //console.log(child2);
-   //var div1 = document.createElement("div");
-   //var div2 = document.createElement("div");
-   //document.getElementById("Vergleich2").appendChild(div1);
-   //document.getElementById("Vergleich2").appendChild(div2);
    }
 
       // more than 3 graphs
@@ -60,9 +44,7 @@ function darstellung(){
       child3 = new Array();
       link3 = new Array();
    graph1(graphs[2], parent3, child3);
-   transform(parent3,child3,link3);
-   console.log(parent3);
-   //console.log(child3);
+   get_links(parent3,child3,link3);
    }
 
       // exactly 4 graphs
@@ -71,87 +53,93 @@ function darstellung(){
       child4 = new Array();
       link4 = new Array();
    graph1(graphs[3], parent4, child4);
-   transform(parent4,child4,link4);
+   get_links(parent4,child4,link4);
    console.log(parent4);
-   //console.log(child4);
    }
+
+   //for splitting divs
    singledisplay();
+   // for draw comparison graph
    multidisplay();
-   //dendrogram();
-   cpt();
-      // more than 4 graphs -> hint that only 4 will be considered
+
+   // more than 4 graphs -> hint that only 4 will be considered
    // if(graphs.length>4){}
 };
 
-function singledisplay(){
-
+// split div -> number of graphs
+function split_window(Target, id_){
    if(graphs.length == 2){
-      var g1 = d3.select("#Vergleich2").append("div").attr("id","g1");
+      var g1 = d3.select(Target).append("div").attr("id", id_ + "_g1");
       g1 .style("width","100%")
-         .style("height","calc(50% - 1 px)")
+         .style("height","calc(50% - 1px")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey");
 
-      var g2 = d3.select("#Vergleich2").append("div").attr("id","g2");
+      var g2 = d3.select(Target).append("div").attr("id", id_ + "_g2");
       g2 .style("width","100%")
-         .style("height","calc(100% - 1 px)")
+         .style("height","calc(50% - 1px")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey");
-
-      draw(parent1, child1, "g1", link1);
-      draw(parent2, child2, "g2", link2);
    }
 
-   /*
-   bei 2 Graphen horizontal teilen -> bei 4 Graphen gleiche leserichtung lo, lu, ro, ru
-   */
-
    if(graphs.length == 3 || graphs.length == 4){
-      var cont1 = d3.select("#Vergleich2").append("div").attr("id","cont1");
+      var cont1 = d3.select(Target).append("div").attr("id",id_ + "_cont1");
       cont1.style("width","100%").style("height","50%").style("flex","1");
       cont1.style("display", "flex").style("flex-direction", "row");
-      var cont2 = d3.select("#Vergleich2").append("div").attr("id","cont2");
+      var cont2 = d3.select(Target).append("div").attr("id",id_ + "_cont2");
       cont2.style("width","100%").style("height","50%").style("flex","1");
       cont2.style("display", "flex").style("flex-direction", "row");
 
-      var g1 = d3.select("#cont1").append("div").attr("id","g1");
+      var g1 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g1");
       g1 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
          .style("border-right", "1px solid lightgrey");
          //.style("overflow", "auto");//.text("graph 1");
-      var g3 = d3.select("#cont1").append("div").attr("id","g3");
+      var g3 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g3");
       g3 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-bottom", "1px solid lightgrey")
          .style("border-left", "1px solid lightgrey");
          //.style("overflow", "auto");//.text("graph 3");
-      var g2 = d3.select("#cont2").append("div").attr("id","g2");
+      var g2 = d3.select("#" + id_ + "_cont2").append("div").attr("id", id_ + "_g2");
       g2 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey")
          .style("border-right", "1px solid lightgrey");
          //.style("overflow", "auto");//.text("graph 2");
-      var g4 = d3.select("#cont2").append("div").attr("id","g4");
+      var g4 = d3.select("#" + id_ + "_cont2").append("div").attr("id",id_ + "_g4");
       g4 .style("width","calc(50% - 1 px)")
          .style("height","calc(100% - 1 px)")
          .style("flex","1")
          .style("border-top", "1px solid lightgrey")
          .style("border-left", "1px solid lightgrey");
-         //.style("overflow", "auto");//.text("graph 4");
-
-      draw(parent1, child1, "g1", link1);
-      draw(parent2, child2, "g2", link2);
-      draw(parent3, child3, "g3", link3);
-      if(graphs.length == 4){
-      draw(parent4, child4, "g4", link4);}
    }
 };
 
-// separate-function
+//call draw, for each single graph to display
+function singledisplay(){
+
+   split_window("#Vergleich2", "s");
+
+   if(graphs.length == 2){
+      draw(parent1, child1, "s_g1", link1);
+      draw(parent2, child2, "s_g2", link2);
+   }
+
+   if(graphs.length >=3){
+      draw(parent1, child1, "s_g1", link1);
+      draw(parent2, child2, "s_g2", link2);
+      draw(parent3, child3, "s_g3", link3);
+      if(graphs.length == 4){
+      draw(parent4, child4, "s_g4", link4);}
+   }
+};
+
+// separate-function for parent/child differentiation
 function graph1(g, parent,child){
    var key,prob;
    for(key in g){
@@ -161,27 +149,27 @@ function graph1(g, parent,child){
    }
 };
 
-   // draw graphs separatly
+// draw graphs separatly in own div
 function draw(parent,child,divs, link){
-
+    //console.log(document.getElementById("s_g1"));
    var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
    var height = document.getElementById(divs).offsetHeight;
    var title;
 
    // colors for links
-   if(divs == "g1"){
+   if(divs == "s_g1"){
       var color = "#386cb0";
       title = "Graph 1";
    }
-   if(divs == "g2"){
+   if(divs == "s_g2"){
       var color = "#7fc97f";
       title = "Graph 2";
    }
-   if(divs == "g3"){
+   if(divs == "s_g3"){
       var color = "#fdc086";
       title = "Graph 3";
    }
-   if(divs == "g4"){
+   if(divs == "s_g4"){
       var color = "#beaed4";
       title = "Graph 4";
    }
@@ -200,7 +188,7 @@ function draw(parent,child,divs, link){
    .attr("height", "calc(100% - 16px)")
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
-   }))
+   })).on("dblclick.zoom", null)
    .append("g")
    .attr("id", "single_" + divs);
 
@@ -312,8 +300,8 @@ var simulation = d3.forceSimulation(nodes)
         });
 
    };
-
-function transform(parent, child, link){
+// get link array with source and target node from every link
+function get_links(parent, child, link){
 
    for(var i=0; i<parent.length; i++){
       if(parent[i].children.length >= 1){
@@ -338,7 +326,7 @@ function transform(parent, child, link){
    }
 };
 
-
+//draw comparison graph
 function multidisplay(){
    var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
    var height = document.getElementById("Vergleich1").offsetHeight;
@@ -349,7 +337,7 @@ function multidisplay(){
    .attr("height", "100%")
    .call(d3.zoom().on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
-   }))
+   })).on("dblclick.zoom", null)
    .append("g")
    .attr("id", "compare_g");
 
@@ -476,7 +464,7 @@ function multidisplay(){
 
    if(graphs.length >= 1){
       var l1 = new Array();
-      transform(parent1, child1, l1);
+      get_links(parent1, child1, l1);
       for(var i=0; i< l1.length; i++){
          l1[i].g = 1;
          link.push(l1[i]);
@@ -484,7 +472,7 @@ function multidisplay(){
    }
    if(graphs.length >= 2){
       var l2 = new Array(); 
-      transform(parent2, child2, l2);
+      get_links(parent2, child2, l2);
       for(var i=0; i< l2.length; i++){
          l2[i].g = 2;
          link.push(l2[i]);
@@ -492,7 +480,7 @@ function multidisplay(){
    }
    if(graphs.length >= 3){
       var l3 = new Array();
-      transform(parent3, child3, l3);
+      get_links(parent3, child3, l3);
       for(var i=0; i< l3.length; i++){
          l3[i].g = 3;
          link.push(l3[i]);
@@ -500,12 +488,15 @@ function multidisplay(){
    }
    if(graphs.length == 4){
       var l4 = new Array();
-      transform(parent4, child4, l4);
+      get_links(parent4, child4, l4);
       for(var i=0; i< l4.length; i++){
          l4[i].g = 4;
          link.push(l4[i]);
       }
    }
+
+   d3 .select("#hide")
+      .on("click", hide(n, link));
 
    var nodes = n;
    var links = link;
@@ -521,13 +512,14 @@ function multidisplay(){
          .enter()
          .append("g")
          .attr("class", "node")
+         .attr("id", function(d){ return "node_"+d.node[0];})
          .attr("transform", function (d) {
                return "translate("+ d.x +", "+ d.y +" )";
          });
 
        r_width = 20;
        r_height = 20;
-      var node_color = "lightgray";
+      var node_color;
 
       var node_rect = n.append("rect")
          .attr("width", r_width)
@@ -537,26 +529,7 @@ function multidisplay(){
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
          .attr("id", function(d){ return "NodeButton_"+ d.node;})
-         .on("click",function(d){console.log("Click !!!");
-                                 node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                 var curr = d3.select("#NodeButton_"+ d.node);
-                                 curr.transition().style("fill", node_color);
-                                 if(node_color == "lightblue"){
-                                    marked.push(d);
-                                    dendrogram(d);
-                                    cpt(d);
-                                 }
-                                 if(node_color == "lightgrey"){
-                                    var index;
-                                       for(var i = 0; i< marked.length; i++){
-                                          if(d.node[0] == marked[i].node[0]){
-                                          index = i;
-                                          console.log(marked[i]);
-                                          marked.splice(index,1);
-                                          }
-                                       }
-                                 }
-                                 });
+         .on("click",function(d){ return node_selection(d);});
 
       var text = canvas.append("g")
          .attr("class", "labels")
@@ -574,32 +547,7 @@ function multidisplay(){
             .attr("dominant-baseline", "middle")
             .attr("x", function(d){return d.x + (20/2);})
             .attr("y", function(d){return d.y + (20/2);})
-            .on("click",function(d){console.log("Click !!!");
-                                    console.log("textclick");
-                                    console.log(d);
-                                    node_color = node_color == "lightgrey" ? "lightblue" : "lightgrey";
-                                    var curr = d3.select("#NodeButton_"+ d.node);
-                                    console.log(curr);
-                                    curr.transition().style("fill", node_color);
-                                    if(node_color == "lightblue"){
-                                       marked.push(d);
-                                       dendrogram(d);
-                                       cpt(d);
-                                    }
-                                       if(node_color == "lightgrey"){
-                                       var index;
-                                          for(var i = 0; i< marked.length; i++){
-                                             if(curr.node[0] == marked[i].node[0]){
-                                                console.log(marked[i]);
-                                             index = i;
-                                             marked.splice(index,1);
-                                             }
-                                          }
-                                       }
-                                    dendrogram(d);
-                                    cpt(d);
-                                    }
-                                    );
+            .on("click", function(d){ return node_selection(d);});
 
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
@@ -639,36 +587,69 @@ function multidisplay(){
             kann ich das ursprünglich auf 0 px stellen und vllt ist es dann schon weg
          */
          .on("mouseover", function(d){
+                           d3.select(this).style("stroke-width", 3.5)
                            var coord = d3.mouse(this);
                            var t = "";
-                           if(d.g == 1) d3 .select("#line_window").text("---").style("color", "#386cb0");
-                           if(d.g == 2) d3 .select("#line_window").text("---").style("color", "#7fc97f");
-                           if(d.g == 3) d3 .select("#line_window").text("---").style("color", "#fdc086");
-                           if(d.g == 4) d3 .select("#line_window").text("---").style("color", "#beaed4");
-                           d3 .select("#line_window")
-                              .style("left", coord[0])
-                              .style("top", coord[1])
-                              .style("font-size", 20)
-                              //.text(t)
+                           if(d.g == 1) t+=" Graph1";
+                           if(d.g == 2) t+=" Graph2";
+                           if(d.g == 3) t+=" Graph3";
+                           if(d.g == 4) t+=" Graph4";
+                           var text_length = t.length;
+                           d3 .select("#link_hint")
+                              .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-10) + ")")
+                              .style("background-color", "lightgrey")   //bitte Farbe wählen
+                              .style("font-size", 15)
+                              .text(t)
                               .transition()
+                              .attr("width", (t.length* 10 + "px"))
                               .style("visibility", "visible");
                            })
          .on("mouseout", function(d){
-                           d3 .select("#line_window")
+                           d3.select(this).style("stroke-width", 2.0);
+                           d3 .select("#link_hint")
                               .transition()
                               .style("visibility", "hidden");
          });
 
+         var link_hint = d3.select("#compare_g").append("foreignObject")
+                                             .attr("id", "link_hint")
+                                             .attr("width", "20px")
+                                             .attr("height", "20px")
+                                             .style("border", "1px solid black")
+                                             .attr("transform", "translate(10,10)")
+                                             .style("visibility", "hidden");
+                                             //.attr("id", "link_hint")
+
 };
 
+// color and push clicked node in an array for cpt and dendrogramm display
+function node_selection(d){
+   console.log("Click !!!");
+   var elem = false;
+   var i = 0;
+   for(i; i<marked.length; i++){
+      if(d.node[0]==marked[i].node[0]){elem =true; break;}
+   }
+   if(elem == false){
+      marked.push(d);
+      d3.select("#NodeButton_"+ d.node).transition().style("fill", "lightblue");
+   }
+   if(elem == true){
+      marked.splice(i, 1);
+      d3.select("#NodeButton_"+ d.node).transition().style("fill", "lightgrey");
+   }
+   if(marked.length > 0) document.getElementById("hide").disabled = false;
+   if(marked.length == 0) document.getElementById("hide").disabled = true;
+   dendrogram();
+   cpt();
+};
 
+// dendrogramm display of marked nodes
 var isDived = false; //asking if #dendrogram has divs already
-function dendrogram(clicked_node){
-
-//console.log(clicked_node);
+function dendrogram(){
 
    if(isDived == true){ //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
-        for (var s = 1; s < 7; s++){
+        for (var s = 0; s < 7; s++){
             if(document.getElementById("k" + s) !== null){
             //console.log(document.getElementById("k" + s));
             document.getElementById("k" + s).remove();
@@ -677,7 +658,6 @@ function dendrogram(clicked_node){
         isDived =false;
    }
 
-   //console.log(document.getElementById("k1") + "_after_removal");
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
@@ -689,73 +669,113 @@ function dendrogram(clicked_node){
       .append("g");
 
 */
-//console.log(marked);
    //Anzeige in Divs aufteilen je nach Knotenanzahl
+   if (marked.length == 1){
+        var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
+              k1 .style("width", "100%")
+                 .style("height", "100%")
+                 .style("flex","1")
+                 //.style("border-bottom", "2px solid lightgrey");
+        isDived = true;
+        split_window("#k1", "dendrok1");
+   }
+
    if(marked.length == 2){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width", "100%")
-                 .style("height", "calc(50% - 1px)")
+                 .style("height", "calc(50% - 2px)")
                  .style("flex","1")
-                 .style("border-bottom", "1px solid lightgrey");
+                 .style("border-bottom", "2px solid lightgrey");
 
         var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
               k2 .style("width","100%")
-                 .style("height", "calc(50% - 1px)")
+                 .style("height", "calc(50% - 2px)")
                  .style("flex","1")
-                 .style("border-top", "1px solid lightgrey");
+                 .style("border-top", "2px solid lightgrey");
 
         isDived = true;
+        console.log(d3.select("k1"));
+        split_window("#k1", "dendrok1");
+        split_window("#k2", "dendrok2");
+
        // console.log(document.getElementById("k1"));
    }
-/*
-   if(clicked_node.length == 3){
+
+   if(marked.length == 3){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width","100%")
-                 .style("height","1/3")
+                 .style("height", "calc(33% - 2px)")
                  .style("flex","1")
-                 .style("border-bottom", "1px solid lightgrey");
+                 .style("border-bottom", "2px solid lightgrey");
 
         var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
               k2 .style("width","100%")
-                 .style("height","1/3")
+                 .style("height", "calc(34% - 4px)")
                  .style("flex","1")
-                 .style("border-top", "1px solid lightgrey")
+                 .style("border-top", "2px solid lightgrey")
+                 .style("border-bottom", "2px solid lightgrey")
 
         var k3 = d3.select("#Dendrogramme").append("div").attr("id","k3");
-              k2 .style("width","100%")
-                 .style("height","calc(100% - 1 px)")
+              k3 .style("width","100%")
+                 .style("height", "calc(33% - 2px)")
                  .style("flex","1")
-                 .style("border-top", "1px solid lightgrey");}
+                 .style("border-top", "2px solid lightgrey");
 
-   if(clicked_node.length == 4){
+        isDived = true;
+        split_window("#k1", "dendrok1");
+        split_window("#k2", "dendrok2");
+        split_window("#k3", "dendrok3");
+   }
+
+   if(marked.length == 4){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
               k1 .style("width","100%")
-                 .style("height","50%")
+                 .style("height", "calc(25% - 2px)")
                  .style("flex","1")
-                 .style("border-bottom", "1px solid lightgrey");
+                 .style("border-bottom", "2px solid lightgrey");
 
         var k2 = d3.select("#Dendrogramme").append("div").attr("id","k2");
-              g2 .style("width","100%")
-                 .style("height","calc(100% - 1 px)")
+              k2 .style("width","100%")
+                 .style("height", "calc(25% - 4px)")
                  .style("flex","1")
-                 .style("border-top", "1px solid lightgrey");}
+                 .style("border-top", "2px solid lightgrey")
+                 .style("border-bottom", "2px solid lightgrey");
 
-*/
+        var k3 = d3.select("#Dendrogramme").append("div").attr("id","k3");
+              k3 .style("width","100%")
+                 .style("height", "calc(25% - 3px)")
+                 .style("flex","1")
+                 .style("border-bottom", "2px solid lightgrey")
+                 .style("border-top", "1px solid lightgrey");
+
+        var k4 = d3.select("#Dendrogramme").append("div").attr("id","k4");
+              k4 .style("width","100%")
+                 .style("height", "calc(25% - 2px)")
+                 .style("flex","1")
+                 .style("border-top", "2px solid lightgrey");
+
+        isDived = true;
+        split_window("#k1", "dendrok1");
+        split_window("#k2", "dendrok2");
+        split_window("#k3", "dendrok3");
+        split_window("#k4", "dendrok4");
+   }
+
+   if(marked.length > 4){ return window.alert("Please select no more then four knodes for the comparrisson.");}
+
+
  //in jedem div müssen auch noch einteilungen für die einzelnen Knoten vorgenommen werden.
  //4 knoten sollten es maximal sein bei 4 vergleichsgraphen.
  //dann haben wir 4*4 fenster und 4*4 graphen, das sollte vergleichbarkeit genug sein
 
-      //
       // ist glaube als übergabeparameter besser und die beiden 
       // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
       // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
 
 
-      // falls ganze teilbäume dargestellt werden sollen könntest du
-      // mit ner schleife über die Eingabe, dann als Array, iterieren
-
 };
 
+// cpt's of marked nodes
 function cpt(clicked_node){
    console.log(clicked_node.node);
    console.log(marked);

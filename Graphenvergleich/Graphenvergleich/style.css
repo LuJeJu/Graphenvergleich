@@ -103,6 +103,16 @@ body {
    /* border-bottom: 1px solid lightgrey;*/
   
 }
+/*
+#line_window {
+    background-color: white;
+    position: relative;
+    visibility: hidden;
+    height: auto;
+    width: 50px;
+    border: 1px solid black;
+}
+*/
 
 #prob_window {
     background-color: white;
@@ -115,31 +125,29 @@ body {
 
 }
 
-  
-
 #compare {
     width: 80px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 #window1 {
     width: 80px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 #window2 {
     width: 80px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 #window3 {
     width: 80px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 #window4 {
     width: 80px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 .dropdown_menu {
@@ -156,7 +164,15 @@ body {
     z-index: 1;
 }
 
+/* -> darf nicht sonst ist es beim clicken ja immer gleich und abfrage geht nicht
+        schade wäre hübsch gewesen
+#compare:hover {background-color: lightgray;}
+#window1:hover {background-color: lightgray;}
+#window2:hover {background-color: lightgray;}
+#window3:hover {background-color: lightgray;}
+#window4:hover {background-color: lightgray;}
+*/
 
- .dropdown_divs a:hover {background-color: lightslategray;}
+.dropdown_divs :hover {background-color: lightslategray;}
 
 .dropdown_menu:hover .dropdown_divs {display: block;}
