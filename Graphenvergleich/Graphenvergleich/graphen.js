@@ -25,7 +25,6 @@ function darstellung(){
       link1 = new Array();
    graph1(graphs[0], parent1, child1);
    get_links(parent1,child1,link1);
-   console.log(parent1);
    }
 
       // more than 2 graphs
@@ -35,7 +34,6 @@ function darstellung(){
       link2 = new Array();
    graph1(graphs[1], parent2, child2);
    get_links(parent2,child2,link2);
-   console.log(parent2);
    }
 
       // more than 3 graphs
@@ -54,7 +52,6 @@ function darstellung(){
       link4 = new Array();
    graph1(graphs[3], parent4, child4);
    get_links(parent4,child4,link4);
-   console.log(parent4);
    }
 
    //for splitting divs
@@ -66,7 +63,7 @@ function darstellung(){
    // if(graphs.length>4){}
 };
 
-// split div -> number of graphs
+// split div depending on number of graphs
 function split_window(Target, id_){
    if(graphs.length == 2){
       var g1 = d3.select(Target).append("div").attr("id", id_ + "_g1");
@@ -120,7 +117,7 @@ function split_window(Target, id_){
    }
 };
 
-//call draw, for each single graph to display
+//call split & draw, for each single graph to display
 function singledisplay(){
 
    split_window("#Vergleich2", "s");
@@ -205,7 +202,6 @@ function draw(parent,child,divs, link){
    }
    var nodes = n;
    var links = link;
-   console.log(nodes);
 
 var simulation = d3.forceSimulation(nodes)
       //.force("linkForce", d3.forceLink().distance(30).strength(10));
@@ -351,7 +347,6 @@ function multidisplay(){
       n.push(parent1[i]);
    }
    if(graphs.length >= 2){
-      console.log(2);
       var element;
       for(var i =0; i<parent2.length;i++){
          for(var j=0; j<n.length; j++){
@@ -366,7 +361,6 @@ function multidisplay(){
       }
    }
    if(graphs.length >= 3){
-      console.log(3);
       var element;
       for(var i =0; i<parent3.length;i++){
          for(var j=0; j<n.length; j++){
@@ -381,7 +375,6 @@ function multidisplay(){
       }
    }
    if(graphs.length == 4){
-      console.log(4);
       var element;
       for(var i =0; i<parent4.length;i++){
          for(var j=0; j<n.length; j++){
@@ -395,7 +388,7 @@ function multidisplay(){
          }
       }
    }
-   console.log(n);
+
    var count = 0;
 
    //children iteration
@@ -414,7 +407,6 @@ function multidisplay(){
       }
 
    if(graphs.length >= 2){
-      console.log(2);
       var element;
       for(var i =0; i<child2.length;i++){
          for(var j=0; j<n.length; j++){
@@ -430,7 +422,6 @@ function multidisplay(){
       }
    }
    if(graphs.length >= 3){
-      console.log(3);
       var element;
       for(var i =0; i<child3.length;i++){
          for(var j=0; j<n.length; j++){
@@ -446,7 +437,6 @@ function multidisplay(){
       }
    }
    if(graphs.length == 4){
-      console.log(4);
       var element;
       for(var i =0; i<child4.length;i++){
          for(var j=0; j<n.length; j++){
@@ -526,6 +516,7 @@ function multidisplay(){
          .attr("height", r_height)
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray")
+         .attr("visibility", "visible")
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
          .attr("id", function(d){ return "NodeButton_"+ d.node;})
@@ -624,7 +615,7 @@ function multidisplay(){
 
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d){
-   console.log("Click !!!");
+   //console.log("Click !!!");
    var elem = false;
    var i = 0;
    for(i; i<marked.length; i++){
@@ -694,7 +685,7 @@ function dendrogram(){
                  .style("border-top", "2px solid lightgrey");
 
         isDived = true;
-        console.log(d3.select("k1"));
+        //console.log(d3.select("k1"));
         split_window("#k1", "dendrok1");
         split_window("#k2", "dendrok2");
 
@@ -795,7 +786,7 @@ function cpt(){
     ];
 
    function f(elem, direction="col") {
-      console.log(i);
+      //console.log(i);
       if (typeof(elem) === "number") {
          var div = document.createElement("div");
          div.innerHTML = elem.toString();

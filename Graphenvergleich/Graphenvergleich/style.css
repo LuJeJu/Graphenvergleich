@@ -1,7 +1,8 @@
 body {
     margin:0;
     padding:0;
-    }         
+}     
+
 #container {
     height: 100%;
     width: 100%;
@@ -17,7 +18,7 @@ body {
     border-left: 1px solid lightgrey;
     background-color: lightgrey;
     flex: 1
- }
+}
  
 #Ansicht {
     flex: 15;
@@ -86,6 +87,7 @@ body {
     border-right: 1px solid lightgrey;
     
 }
+
 #Vergleich2 {
     background-color: white;
     /*overflow: auto;*/

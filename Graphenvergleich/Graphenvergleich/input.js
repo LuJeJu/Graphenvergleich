@@ -115,6 +115,7 @@ function is_clicked(id){
 };
 
 function hide(n,l){
+	
 	for(var i = 0; i<n.length; i++){
 		for(var j = 0; j< marked.length; i++){
 			if(marked[j].node[0] == n[i].node[0]){
@@ -123,8 +124,10 @@ function hide(n,l){
 		}
 	}
 
+	console.log(n);
+
 	for(var i = 0; i< n.length; i++){
-		d3.select("#node_"+n[i].node).select("#NodeButton"+n[i].node).transition().style("visibility", "hidden");
+		d3.select("#NodeButton"+n[i].node).attr("visibility", "hidden");
 	}
 
 	/*
