@@ -776,9 +776,7 @@ function dendrogram(){
 };
 
 // cpt's of marked nodes
-function cpt(clicked_node){
-   console.log(clicked_node.node);
-   console.log(marked);
+function cpt(){
    d3.select("#CPT").text("");
 
    var width = document.getElementById("CPT").offsetWidth;
@@ -787,37 +785,29 @@ function cpt(clicked_node){
    var canvas = d3.select("CPT").append("svg")
       .attr("width", "100%")
       .attr("height", "100%")
-      .append("g"); 
+      .append("g");
 
-   //console.log(marked[0].node);
-   
-   const data = 
-      [
-         ["Graph1", clicked_node.prob[0], clicked_node.prob[1]],
-			["Graph2", clicked_node.prob[0], clicked_node.prob[1]],
-			["Graph3", clicked_node.prob[0], clicked_node.prob[1]],
-			["Graph4", clicked_node.prob[0], clicked_node.prob[1]]
-      ]; 
-
-    colors = [
+   colors = [
       '#386cb0',
       '#7fc97f',
       '#fdc086',
       '#beaed4'
     ];
-         
+
    function f(elem, direction="col") {
+      console.log(i);
       if (typeof(elem) === "number") {
          var div = document.createElement("div");
          div.innerHTML = elem.toString();
+
+         //hover function yee
          div.onmouseover = function(event){
             console.log('Hallo');
             const element = document.getElementById("prob_window");
-            //console.log(event);
             element.style.left = event.pageX;
             element.style.top = event.pageY;
             element.style.visibility = "visible";
-            document.getElementById("prob_window").innerHTML = "Node: " + clicked_node.node;
+            document.getElementById("prob_window").innerHTML = "Node: " + marked[0].node;
          div.onmouseout =function(event){
             const element = document.getElementById("prob_window");
             element.style.visibility = "hidden";
@@ -827,7 +817,6 @@ function cpt(clicked_node){
       } else {
          var table = document.createElement("table");
          table.style.width = "100%";
-         //table.setAttribute("border", "1");
 
          var tbody = document.createElement("tbody");
 
@@ -862,8 +851,8 @@ function cpt(clicked_node){
 
       }
    }
-
-   function g(data) {
+   
+   function g(data, name) {
 
       var table = document.createElement("table");
 
@@ -871,7 +860,7 @@ function cpt(clicked_node){
       var tr_head = document.createElement("tr");
 
       var th_node = document.createElement("th");
-      th_node.innerHTML = clicked_node.node;
+      th_node.innerHTML = name;
       tr_head.appendChild(th_node);
 
       var th_true = document.createElement("th");
@@ -912,10 +901,22 @@ function cpt(clicked_node){
       return table;
 
    }
-
-   document.getElementById("CPT").appendChild(g(data));
-
-// clicked_node für alle 4 Graphen 
-// array für mehrere Tabllen/ mehrere clicked_nodes
+   for (var i=0; i<marked.length; i++) {
+      if(marked.length > 4){
+         return window.alert("Please select no more then four nodes for the comparison.");
+      } else {
+         const data = [
+            ["Graph1", marked[i].prob[0], marked[i].prob[1]],
+            ["Graph2", marked[i].prob[0], marked[i].prob[1]],
+            ["Graph3", marked[i].prob[0], marked[i].prob[1]],
+            ["Graph4", marked[i].prob[0], marked[i].prob[1]]
+         ];
+         document.getElementById("CPT").appendChild(g(data, marked[i].node));
+      }
+   }
+// node für alle 4 Graphen 
 //hover fkt fertig stellen
 };
+
+
+

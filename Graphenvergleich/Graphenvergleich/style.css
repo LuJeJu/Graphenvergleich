@@ -35,9 +35,6 @@ body {
 
 }
 
-
-
-
 #CPT {
     flex: 1;
     /*wenn man Flex rausnimmt, funktioniert die Skalierung,
@@ -45,7 +42,6 @@ body {
 
     resize: horizontal;
     background-color: rgb(238, 238, 238);
-    display: flex;   
     width: 25%;
     border-left: 1px solid lightgrey;
     overflow: auto;
@@ -103,16 +99,6 @@ body {
    /* border-bottom: 1px solid lightgrey;*/
   
 }
-/*
-#line_window {
-    background-color: white;
-    position: relative;
-    visibility: hidden;
-    height: auto;
-    width: 50px;
-    border: 1px solid black;
-}
-*/
 
 #prob_window {
     background-color: white;
