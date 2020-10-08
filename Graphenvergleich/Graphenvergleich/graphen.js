@@ -24,6 +24,8 @@ function darstellung(){
       parent1 = new Array();
       child1 = new Array();
       link1 = new Array();
+      d3.select("#compare").style("display", "block");
+		d3.select("#window1").style("display", "block");
    graph1(graphs[0], parent1, child1);
    get_links(parent1,child1,link1);
    }
@@ -33,6 +35,7 @@ function darstellung(){
       parent2 = new Array();
       child2 = new Array();
       link2 = new Array();
+      d3.select("#window2").style("display", "block");
    graph1(graphs[1], parent2, child2);
    get_links(parent2,child2,link2);
    }
@@ -42,15 +45,17 @@ function darstellung(){
       parent3 = new Array();
       child3 = new Array();
       link3 = new Array();
+      d3.select("#window3").style("display", "block");
    graph1(graphs[2], parent3, child3);
    get_links(parent3,child3,link3);
    }
 
       // exactly 4 graphs
-   if(graphs.length >= 4){
+   if(graphs.length == 4){
       parent4 = new Array();
       child4 = new Array();
       link4 = new Array();
+      d3.select("#window4").style("display", "block");
    graph1(graphs[3], parent4, child4);
    get_links(parent4,child4,link4);
    }

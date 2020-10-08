@@ -25,10 +25,30 @@
                         <button id= "window4" onclick = 'is_clicked("window4", window4_clicked)'>Graph 4</button>
                     </div>
                 </div>
+                <input type="string" id = "states" onclick = "this.select();">
                 <button id = "reset" disabled = true onclick="reset()">Reset</button>
                 <button id = "help" disabled = true onclick =" window.open('help.html','_blank')">Help!</button>
                 
                 <script>
+                    var state_input = document.getElementById("states");
+                    state_input.defaultValue = "True,False";
+                    states = state_input.value.split(",");
+
+                    state_input.onchange = (event) =>{
+                        var text = state_input.value.replace(/\s/g, '');
+                        // states ist das globale Array für die Abfrage
+                        states = text.split(",");
+                        if(text == ""){
+                            state_input.value = "True,False";
+                            states = state_input.value.split(",");
+                        }
+                        if(states.length > 4){
+                            state_input.value = "True,False";
+                            states = state_input.value.split(",");
+                            console.log(states);
+                            return window.alert("Please select no more then four states.");
+                        }
+                    }
                     read()
                     compare_clicked = false;
                     window1_clicked = false;

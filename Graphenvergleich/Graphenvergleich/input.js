@@ -1,7 +1,14 @@
 var graphs = new Array();
 // function is called by Taskbar and is waiting for input JSON
 function read(){            
-                //read json, parse all graphs in one array
+				//read json, parse all graphs in one array
+				if(graphs.length == 0){
+					d3.select("#window1").style("display", "none");
+					d3.select("#window2").style("display", "none");
+					d3.select("#window3").style("display", "none");
+					d3.select("#window4").style("display", "none");
+					d3.select("#compare").style("display", "none");
+				}
 				const fileObj = document.getElementById("files");
 				fileObj.onchange = (event) => {
 					document.getElementById("start").disabled = false;
@@ -21,7 +28,7 @@ function read(){
 					}
 				}
 				graphs.onchange = console.log(graphs);
-			}
+		};
 			
 function reset(){
 	// all graph-arrays 
@@ -69,6 +76,10 @@ function center_all(){
 };
 
 function sync(){
+
+	var div_midX = parseInt(d3.select("#Vergleich1").style("width"))/2;
+	var div_midY = parseInt(d3.select("#Vergleich1").style("height"))/2;
+
 	/*
 		node, 
 		die am nächsten am center vom div ist nehme und die dann in den
