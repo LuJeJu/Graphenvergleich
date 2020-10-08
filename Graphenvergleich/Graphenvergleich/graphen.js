@@ -8,6 +8,7 @@ function darstellung(){
    document.getElementById("start").disabled = true;
    document.getElementById("center").disabled = false;   
    document.getElementsByClassName("sync").disabled = false;
+   document.getElementById("help").disabled = false;
    d3.select("#Vergleich2").text("");
    d3.select("#Vergleich1").text("");
    d3.select("#CPT").text("");
@@ -786,7 +787,10 @@ function cpt(){
     ];
 
    function f(elem, direction="col") {
+<<<<<<< HEAD
       //console.log(i);
+=======
+>>>>>>> c6d94eef61ce92213bd0bc03959c2f478c36494b
       if (typeof(elem) === "number") {
          var div = document.createElement("div");
          div.innerHTML = elem.toString();
@@ -798,7 +802,7 @@ function cpt(){
             element.style.left = event.pageX;
             element.style.top = event.pageY;
             element.style.visibility = "visible";
-            document.getElementById("prob_window").innerHTML = "Node: " + marked[0].node;
+            document.getElementById("prob_window").innerHTML = "-> Help-Button";
          div.onmouseout =function(event){
             const element = document.getElementById("prob_window");
             element.style.visibility = "hidden";
@@ -896,6 +900,7 @@ function cpt(){
       if(marked.length > 4){
          return window.alert("Please select no more then four nodes for the comparison.");
       } else {
+         console.log(marked[i].node);
          const data = [
             ["Graph1", marked[i].prob[0], marked[i].prob[1]],
             ["Graph2", marked[i].prob[0], marked[i].prob[1]],
