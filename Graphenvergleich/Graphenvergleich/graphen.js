@@ -457,7 +457,7 @@ function multidisplay(){
          }
       }
    }
-
+   // build linkarray
    if(graphs.length >= 1){
       var l1 = new Array();
       get_links(parent1, child1, l1);
@@ -490,10 +490,7 @@ function multidisplay(){
          link.push(l4[i]);
       }
    }
-
-   d3 .select("#hide")
-      .on("click", hide(n, link));
-
+   console.log(link);
    var nodes = n;
    var links = link;
   
@@ -578,11 +575,7 @@ function multidisplay(){
          .attr("marker-end", "url(#arrow)")
          .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
          .attr("transform", "translate( 20, 10)")
-         /*
-            leider kommt durch das mouseover über die anzeige ein unsichtbares div
-            weiß noch nicht, wie ich das weg bekomme, aber wenn ich das fertig gemacht hab
-            kann ich das ursprünglich auf 0 px stellen und vllt ist es dann schon weg
-         */
+         .attr("id", function(d){ return "link_"+ d.source.node[0]})
          .on("mouseover", function(d){
                            d3.select(this).style("stroke-width", 3.5)
                            var coord = d3.mouse(this);
@@ -616,6 +609,45 @@ function multidisplay(){
                                              .attr("transform", "translate(10,10)")
                                              .style("visibility", "hidden");
                                              //.attr("id", "link_hint")
+   
+   d3 .select("#hide")
+   .on("click", //hide(n, link));
+         function(){
+            //hide nodes
+            var diff = n.filter(x => !marked.includes(x));
+	         for(var i = 0; i< diff._groups[0].length; i++){
+               var t = "";
+               t += diff._groups[0][i].id;
+               var name = t.slice(5,6);
+               var link_diff = link.filter(function(d){
+                  if((d.source.node[0] == name) || (d.target.node[0] == name))
+                  return d;
+               })
+               console.log("link_diff");
+               console.log(link_diff);
+               if(hide == true){
+                  d3.select("#NodeButton_"+name)
+                     .attr("visibility", "visible");
+                  d3.select("#Nodetext_"+name)
+                     .attr("visibility", "visible");
+                     //for(var j = 0; j< link_diff.length; j++){}
+                  d3.selectAll("#link_"+name)
+                     .attr("visibility", "visible");
+               }
+               if(hide == false){
+                  d3.select("#NodeButton_"+name)
+                     .attr("visibility", "hidden");
+                  d3.select("#Nodetext_"+name)
+                     .attr("visibility", "hidden");
+                  d3.selectAll("#link_"+name)
+                     .attr("visibility", "hidden");
+               }
+            }
+
+            //hide links
+
+            hide = hide == true ? false : true;
+         });
 
 };
 
@@ -927,6 +959,3 @@ function cpt(){
 // node für alle 4 Graphen 
 //hover fkt fertig stellen
 };
-
-
-

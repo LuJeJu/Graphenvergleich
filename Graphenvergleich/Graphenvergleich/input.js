@@ -37,6 +37,7 @@ function reset(){
 	document.getElementById("reset").disabled = true;
 	document.getElementById("center").disabled = true;
 	document.getElementById("hide").disabled = true;
+	document.getElementById("states").value = "True,False";
 	parent1 = [];
 	child1 = [];
 	link1 = [];
@@ -91,8 +92,6 @@ function sync(){
 function is_clicked(id){
 
 	var button = d3.select("#"+id);
-	console.log(button);
-	console.log(button.style("background-color"));
 
 	if(button.style("background-color") == "rgb(255, 255, 255)"){
 		button.transition().style("background-color", "lightgrey");
@@ -119,31 +118,4 @@ function is_clicked(id){
 		 document.getElementById("sync").disabled = false;
 		}
 
-};
-
-function hide(n,l){
-	
-	for(var i = 0; i<n.length; i++){
-		for(var j = 0; j< marked.length; i++){
-			if(marked[j].node[0] == n[i].node[0]){
-				n.splice(i,1);
-			}
-		}
-	}
-
-	console.log(n);
-
-	for(var i = 0; i< n.length; i++){
-		d3.select("#NodeButton"+n[i].node).attr("visibility", "hidden");
-	}
-
-	/*
-	var svg = d3.select("#Vergleich1").select("svg")
-	var rect =	svg.select("g")
-				.selectAll("rect").data(n);
-	/*
-	-> 	muss das iwie neu rendern lassen, weiß nur noch nicht wie, ohne den ganzen code 
-		zu kopieren
-		oder halt nur die visibility ändern, aber iwie will das nicht... 
-	*/
 };
