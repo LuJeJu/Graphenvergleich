@@ -62,22 +62,18 @@ function reset(){
 
 function center_all(){
 	d3.select("#compare_g").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_g1").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_g2").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_g3").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_g4").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_s_g1").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_s_g2").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_s_g3").transition().attr("transform", "translate(0,0)");
+	d3.select("#single_s_g4").transition().attr("transform", "translate(0,0)");
 };
 
 function sync(){
 	/*
-		ich weiß nicht, wie ich das hier machen soll,
-		wir verschieben ja das svg im div...
-		mein einziger ansatz wäre, dass ich ne node, 
+		node, 
 		die am nächsten am center vom div ist nehme und die dann in den
 		anderen divs/svg auch mittig packe, aber eben nur durch den click
-		auf den button, sonst könnte das glaube ich mehr zu bugs führen,
-		weil die nodes evtl in jedem graphen ja woanders sind oder gar nicht
-		existieren... 
+		auf den button
 	*/
 };
 

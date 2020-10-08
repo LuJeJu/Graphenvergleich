@@ -786,13 +786,13 @@ function cpt(){
       '#beaed4'
     ];
 
-   function f(elem, direction="col") {
-<<<<<<< HEAD
+   function f(elem, direction="col", node) {
       //console.log(i);
-=======
->>>>>>> c6d94eef61ce92213bd0bc03959c2f478c36494b
+
       if (typeof(elem) === "number") {
-         var div = document.createElement("div");
+         var div = 
+         //d3.select("#CPT").append("div").attr("id", node);
+         document.createElement("div");
          div.innerHTML = elem.toString();
 
          //hover function yee
@@ -898,9 +898,18 @@ function cpt(){
    }
    for (var i=0; i<marked.length; i++) {
       if(marked.length > 4){
-         return window.alert("Please select no more then four nodes for the comparison.");
+         //return window.alert("Please select no more then four nodes for the comparison.");
       } else {
-         console.log(marked[i].node);
+         //console.log(marked);
+/*
+         for(var i=0; i<graphs[0].length; i++){
+            for(var j=0; j<marked.length; j++){
+               if(marked[j].node[0] == graphs[0][i].node[0]){
+                  //... var node = graphs[0][i].prob;
+               }
+            }
+         }
+*/
          const data = [
             ["Graph1", marked[i].prob[0], marked[i].prob[1]],
             ["Graph2", marked[i].prob[0], marked[i].prob[1]],
