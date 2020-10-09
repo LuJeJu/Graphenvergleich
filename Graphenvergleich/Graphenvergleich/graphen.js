@@ -675,6 +675,7 @@ function node_selection(d){
 
 // dendrogramm display of marked nodes
 var isDived = false; //asking if #dendrogram has divs already
+
 function dendrogram(){
 
    if(isDived == true){ //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
@@ -690,14 +691,6 @@ function dendrogram(){
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
-  // console.log(clicked_node);
-/*
-   var canvas = d3.select("#Dendrogramme").append("svg")
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .append("g");
-
-*/
    //Anzeige in Divs aufteilen je nach Knotenanzahl
    if (marked.length == 1){
         var k1 = d3.select("#Dendrogramme").append("div").attr("id","k1");
@@ -706,7 +699,11 @@ function dendrogram(){
                  .style("flex","1")
                  //.style("border-bottom", "2px solid lightgrey");
         isDived = true;
+
         split_window("#k1", "dendrok1");
+        for(var t = 0; t < graphs.length; t++){
+        one_dendro("k1", "g" + t);
+        }
    }
 
    if(marked.length == 2){
@@ -723,10 +720,13 @@ function dendrogram(){
                  .style("border-top", "2px solid lightgrey");
 
         isDived = true;
-        //console.log(d3.select("k1"));
-        split_window("#k1", "dendrok1");
-        split_window("#k2", "dendrok2");
 
+        for(var s = 0; s < 3; s++){
+        split_window("#k" + s, "dendrok" + s);
+            for(var t = 0; t < graphs.length; t++){
+                one_dendro("k" + s, "g" + t);
+            }
+        }
        // console.log(document.getElementById("k1"));
    }
 
@@ -751,9 +751,12 @@ function dendrogram(){
                  .style("border-top", "2px solid lightgrey");
 
         isDived = true;
-        split_window("#k1", "dendrok1");
-        split_window("#k2", "dendrok2");
-        split_window("#k3", "dendrok3");
+        for(var s = 0; s < 4; s++){
+        split_window("#k" + s, "dendrok" + s);
+            for(var t = 0; t < graphs.length; t++){
+                one_dendro("k" + s, "g" + t);
+            }
+        }
    }
 
    if(marked.length == 4){
@@ -784,22 +787,35 @@ function dendrogram(){
                  .style("border-top", "2px solid lightgrey");
 
         isDived = true;
-        split_window("#k1", "dendrok1");
-        split_window("#k2", "dendrok2");
-        split_window("#k3", "dendrok3");
-        split_window("#k4", "dendrok4");
+
+        for(var s = 0; s < 5; s++){
+        split_window("#k" + s, "dendrok" + s);
+            for(var t = 0; t < graphs.length; t++){
+                one_dendro("k" + s, "g" + t);
+            }
+        }
    }
 
+// no more than 4 nodes
    if(marked.length > 4){ return window.alert("Please select no more then four nodes for the comparison.");}
 
+ // ist glaube als übergabeparameter besser und die beiden
+ // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
+ // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
 
- //in jedem div müssen auch noch einteilungen für die einzelnen Knoten vorgenommen werden.
- //4 knoten sollten es maximal sein bei 4 vergleichsgraphen.
- //dann haben wir 4*4 fenster und 4*4 graphen, das sollte vergleichbarkeit genug sein
+//constructing the dendrogram
+ //for (var i < /*anzahl der Zustände*/* marked()){}
+ console.log(marked);
 
-      // ist glaube als übergabeparameter besser und die beiden 
-      // funktionen werden beim klicken aufgerufen und zeigen auch erst dann etwas
-      // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
+ function one_dendro(nodeNum, graphNum){
+    var canvas = d3.select("#dendro" + nodeNum + "_" + graphNum).append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("id", "dendro_" + nodeNum + "_" + graphNum)
+    .call(d3.zoom().on("zoom", function(){
+       canvas.attr("transform", d3.event.transform)
+    })).on("dblclick.zoom", null);
+ };
 
 
 };
