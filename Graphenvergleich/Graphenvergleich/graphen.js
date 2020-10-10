@@ -575,7 +575,7 @@ function multidisplay(){
          .attr("marker-end", "url(#arrow)")
          .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
          .attr("transform", "translate( 20, 10)")
-         .attr("id", function(d){ return "link_"+ d.source.node[0]})
+         .attr("id", function(d){ return "link_";})
          .on("mouseover", function(d){
                            d3.select(this).style("stroke-width", 3.5)
                            var coord = d3.mouse(this);
@@ -611,7 +611,7 @@ function multidisplay(){
                                              //.attr("id", "link_hint")
    
    d3 .select("#hide")
-   .on("click", //hide(n, link));
+   .on("click",
          function(){
             //hide nodes
             var diff = n.filter(x => !marked.includes(x));
@@ -620,32 +620,33 @@ function multidisplay(){
                t += diff._groups[0][i].id;
                var name = t.slice(5,6);
                var link_diff = link.filter(function(d){
-                  if((d.source.node[0] == name) || (d.target.node[0] == name))
-                  return d;
+                  if((d.source.node[0] == name) || (d.target.node[0] == name)){
+                     return d;
+                  }
                })
-               console.log("link_diff");
-               console.log(link_diff);
                if(hide == true){
                   d3.select("#NodeButton_"+name)
                      .attr("visibility", "visible");
                   d3.select("#Nodetext_"+name)
                      .attr("visibility", "visible");
-                     //for(var j = 0; j< link_diff.length; j++){}
-                  d3.selectAll("#link_"+name)
-                     .attr("visibility", "visible");
+                  d3.selectAll(".link").filter(
+                     function(d){
+                        if((d.source.node[0] == name) || (d.target.node[0] == name))
+                        return d;
+                     }).attr("visibility", "visible"); 
                }
                if(hide == false){
                   d3.select("#NodeButton_"+name)
                      .attr("visibility", "hidden");
                   d3.select("#Nodetext_"+name)
                      .attr("visibility", "hidden");
-                  d3.selectAll("#link_"+name)
-                     .attr("visibility", "hidden");
+                  d3.selectAll(".link").filter(
+                     function(d){
+                        if((d.source.node[0] == name) || (d.target.node[0] == name))
+                        return d;
+                     }).attr("visibility", "hidden"); 
                }
             }
-
-            //hide links
-
             hide = hide == true ? false : true;
          });
 
