@@ -337,7 +337,8 @@ function multidisplay(){
    .attr("id", "compare_svg")
    .attr("width", "100%")
    .attr("height", "100%")
-   .call(d3.zoom().on("zoom", function(){
+   .call(d3.zoom().filter(function() {
+      return !d3.event.ctrlKey;}).on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
    })).on("dblclick.zoom", null)
    .append("g")
@@ -649,6 +650,47 @@ function multidisplay(){
             }
             hide = hide == true ? false : true;
          });
+
+   d3.select("#compare_svg")
+   .on( "mousedown", function() {  
+      if(d3.event.ctrlKey){
+      var p = d3.mouse( this); 
+      canvas.append( "rect")
+      .attr({
+          rx      : 6,
+          ry      : 6,
+          class   : "selection",
+          x       : p[0],
+          y       : p[1],
+          width   : 0,
+          height  : 0
+      })
+   }
+  })
+   .on( "mousemove", function() {
+      var s = canvas.select( "rect.selection");  
+      if(d3.event.ctrlKey){
+      if( !s.empty()) {
+         var p = d3.mouse( this),
+             d = {
+                 x       : parseInt( s.attr( "x"), 10),
+                 y       : parseInt( s.attr( "y"), 10),
+                 width   : parseInt( s.attr( "width"), 10),
+                 height  : parseInt( s.attr( "height"), 10)
+             },
+             move = {
+                 x : p[0] - d.x,
+                 y : p[1] - d.y
+             };
+          
+           s.attr("x",d.x).attr("y", d.y).attr("width", d.width).attr("height", d.height);
+         
+      }
+   }
+   })
+   .on( "mouseup", function() {
+      canvas.select( ".selection").remove();
+  });
 
 };
 
