@@ -701,8 +701,8 @@ function dendrogram(){
         isDived = true;
 
         split_window("#k1", "dendrok1");
-        for(var t = 0; t < graphs.length; t++){
-        one_dendro("k1", "g" + t);
+        for(var t = 0; t < graphs.length+1; t++){
+        oneDendro(/*k*/"1", /*g*/ t);
         }
    }
 
@@ -723,11 +723,10 @@ function dendrogram(){
 
         for(var s = 0; s < 3; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length; t++){
-                one_dendro("k" + s, "g" + t);
+            for(var t = 0; t < graphs.length+1; t++){
+                oneDendro(/*k*/ s, /*g*/ t);
             }
         }
-       // console.log(document.getElementById("k1"));
    }
 
    if(marked.length == 3){
@@ -749,12 +748,11 @@ function dendrogram(){
                  .style("height", "calc(33% - 2px)")
                  .style("flex","1")
                  .style("border-top", "2px solid lightgrey");
-
         isDived = true;
         for(var s = 0; s < 4; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length; t++){
-                one_dendro("k" + s, "g" + t);
+            for(var t = 0; t < graphs.length +1; t++){
+                oneDendro(/*k*/ s, /*g*/ t);
             }
         }
    }
@@ -787,11 +785,11 @@ function dendrogram(){
                  .style("border-top", "2px solid lightgrey");
 
         isDived = true;
-
+        console.log(graphs.length);
         for(var s = 0; s < 5; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length; t++){
-                one_dendro("k" + s, "g" + t);
+            for(var t = 0; t < graphs.length +1 ; t++){
+                oneDendro(/*k*/ s, /*g*/ t);
             }
         }
    }
@@ -804,19 +802,37 @@ function dendrogram(){
  // müsstest halt nur die node.name in allen graphs[i] raussuchen zum vergleichen
 
 //constructing the dendrogram
- //for (var i < /*anzahl der Zustände*/* marked()){}
+
  console.log(marked);
 
- function one_dendro(nodeNum, graphNum){
-    var canvas = d3.select("#dendro" + nodeNum + "_" + graphNum).append("svg")
+ function oneDendro(nodeNum, graphNum){
+    var canvas = d3.select("#dendrok" + nodeNum + "_g" + graphNum).append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
-    .attr("id", "dendro_" + nodeNum + "_" + graphNum)
+    .attr("id", "dendro_k" + nodeNum + "_g" + graphNum)
     .call(d3.zoom().on("zoom", function(){
        canvas.attr("transform", d3.event.transform)
     })).on("dblclick.zoom", null);
+//console.log(marked[nodeNum-1]);
+//wird 5 mal ausgegeben => soll nur 4 mal aufgerufen werden?! oder auch nicht?
+//d.node[0]==marked[i].node[0]
+// Erstellung der benötigten Anzahl von Dendrogram Balken
+/*
+    if(marked[nodeNum-1].parents.length != 0){
+    for (var i=0; i < /*Anzahl der Zustände2 ^ marked[nodeNum-1].parents.length; i++){
+    var bar = canvas.append("rect")
+             .attr("width", r_width)
+             .attr("height", r_height)
+             .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+             .attr("fill", "lightgray")
+             .attr("visibility", "visible")
+             .attr("cursor", "pointer")
+             .attr("pointer-events", "all")
+             .attr("id", function(d){ return canvas.id + "_rect" + i;})
+             //.on("click",function(d){ return node_selection(d);});
+    }
+    }*/
  };
-
 
 };
 
