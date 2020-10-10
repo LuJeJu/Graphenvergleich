@@ -701,7 +701,7 @@ function dendrogram(){
         isDived = true;
 
         split_window("#k1", "dendrok1");
-        for(var t = 0; t < graphs.length+1; t++){
+        for(var t = 0; t < graphs.length; t++){
         oneDendro(/*k*/"1", /*g*/ t);
         }
    }
@@ -723,7 +723,7 @@ function dendrogram(){
 
         for(var s = 0; s < 3; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length+1; t++){
+            for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
         }
@@ -751,7 +751,7 @@ function dendrogram(){
         isDived = true;
         for(var s = 0; s < 4; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length +1; t++){
+            for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
         }
@@ -788,7 +788,7 @@ function dendrogram(){
         console.log(graphs.length);
         for(var s = 0; s < 5; s++){
         split_window("#k" + s, "dendrok" + s);
-            for(var t = 0; t < graphs.length +1 ; t++){
+            for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
         }
@@ -816,10 +816,21 @@ function dendrogram(){
 //console.log(marked[nodeNum-1]);
 //wird 5 mal ausgegeben => soll nur 4 mal aufgerufen werden?! oder auch nicht?
 //d.node[0]==marked[i].node[0]
+
+var currObj;
+//Knoten in graphs(graphNum) finden
+for(var k = 0; k < graphs. length; k++){
+console.log("graphs_" + graphs[k]);}
+/*
+    for(var i = 0; i < graphs[graphNum-1].node.length + 1; i++){
+        if(marked[nodeNum - 1] == graphs[graphNum-1].node[i]){
+        currObj = graphs[graphNum-1].node[i];
+        }
+    }*/
 // Erstellung der benötigten Anzahl von Dendrogram Balken
 /*
     if(marked[nodeNum-1].parents.length != 0){
-    for (var i=0; i < /*Anzahl der Zustände2 ^ marked[nodeNum-1].parents.length; i++){
+    for (var i=0; i < /*Anzahl der Zustände2 ^ currObj[].parents.length; i++){
     var bar = canvas.append("rect")
              .attr("width", r_width)
              .attr("height", r_height)
