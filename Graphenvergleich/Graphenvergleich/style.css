@@ -167,9 +167,3 @@ body {
 
 #states:hover {background-color: rgb(238, 238, 238);}
 
-rect.selection {
-    stroke          : gray;
-    stroke-dasharray: 4px;
-    stroke-opacity  : 0.5;
-    fill            : transparent;
-}

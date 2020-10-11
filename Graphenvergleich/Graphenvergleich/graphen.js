@@ -217,6 +217,8 @@ var simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
       //simulation.stop();
 
+//var simulation = d3.tree(nodes);
+
       var n = canvas.selectAll(".node")
          .data(nodes)
          .enter()
@@ -230,7 +232,6 @@ var simulation = d3.forceSimulation(nodes)
        r_height = 20;
 
       n.append("rect")
-      //.attr("r", 30)
          .attr("width", r_width)
          .attr("height", r_height)
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
@@ -262,7 +263,7 @@ var simulation = d3.forceSimulation(nodes)
          .projection(function (d) {
             return [d.y, d.x];
          });
-        */
+      */  
 
        canvas.append("svg:defs").selectAll("marker")
        .data(["end"])
@@ -281,6 +282,11 @@ var simulation = d3.forceSimulation(nodes)
        .append("svg:path")
        .attr("d", "M0,-5L10,0L0,5");
 
+      /* anstelle von diagonal
+      var horizontal = d3  .linkHorizontal()
+                           .x(function(d){return d.source.x;})
+                           .y(function(d){return d.source.y;});
+      */
       var l =canvas.selectAll(".link")
          .data(links)
          .enter()
@@ -294,14 +300,11 @@ var simulation = d3.forceSimulation(nodes)
          //.attr("x2", function(d) { return d.target.x; })
          //.attr("y2", function(d) { return d.target.y+20/2; })
          .attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
+                     // horizontal(links));
          //.attr("transform", "translate( 20, 10)");
          //.attr("d", diagonal);
-
-         simulation.on("tick",function() {
-            n.attr("x",function(d){ return d.x;}).attr("y",function(d){return d.y;});
-        });
-
    };
+   
 // get link array with source and target node from every link
 function get_links(parent, child, link){
 
@@ -337,10 +340,44 @@ function multidisplay(){
    .attr("id", "compare_svg")
    .attr("width", "100%")
    .attr("height", "100%")
+   .on("mousedown", function(d){
+      // ist immer true ???
+      var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
+      console.log(ctrl);
+      if(ctrl){
+         console.log("ctrl key is used");
+         var m = d3.mouse(this);
+         console.log(m);
+         d3.select("#compare_svg") .append("rect")
+                     .attr("id", "selection")
+                     .attr("x", m[0])
+                     .attr("y", m[1])
+                     .attr("height", 0)
+                     .attr("width", 0)
+                     .attr("stroke", "gray")
+                     .attr("stroke-dasharray", "4px")
+                     .attr("fill", "transparent");            
+      }
+      })
+   .on("mousemove", function(){
+      // da ctrl immer true auch immer mousemove abfrage und selection existiert
+      // nicht immer -> fehlermeldungen, die noch gefixt werden
+      var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
+      if(ctrl){
+         var m2 = d3.mouse(this);
+         d3.select("#selection")
+               .attr("width", Math.max(0, m2[0] - d3.select("#selection").attr("x")))
+               .attr("height", Math.max(0, m2[1] - d3.select("#selection").attr("y")))
+      }
+      })
+      //denke mal funktioniert nicht immer, weil ctrl immer true
+   .on("mouseup", function(){
+      d3.select("#compare_svg").select("#selection").remove();
+      })
    .call(d3.zoom().filter(function() {
       return !d3.event.ctrlKey;}).on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
-   })).on("dblclick.zoom", null)
+      })).on("dblclick.zoom", null)
    .append("g")
    .attr("id", "compare_g");
 
@@ -491,7 +528,6 @@ function multidisplay(){
          link.push(l4[i]);
       }
    }
-   console.log(link);
    var nodes = n;
    var links = link;
   
@@ -650,48 +686,6 @@ function multidisplay(){
             }
             hide = hide == true ? false : true;
          });
-
-   d3.select("#compare_svg")
-   .on( "mousedown", function() {  
-      if(d3.event.ctrlKey){
-      var p = d3.mouse( this); 
-      canvas.append( "rect")
-      .attr({
-          rx      : 6,
-          ry      : 6,
-          class   : "selection",
-          x       : p[0],
-          y       : p[1],
-          width   : 0,
-          height  : 0
-      })
-   }
-  })
-   .on( "mousemove", function() {
-      var s = canvas.select( "rect.selection");  
-      if(d3.event.ctrlKey){
-      if( !s.empty()) {
-         var p = d3.mouse( this),
-             d = {
-                 x       : parseInt( s.attr( "x"), 10),
-                 y       : parseInt( s.attr( "y"), 10),
-                 width   : parseInt( s.attr( "width"), 10),
-                 height  : parseInt( s.attr( "height"), 10)
-             },
-             move = {
-                 x : p[0] - d.x,
-                 y : p[1] - d.y
-             };
-          
-           s.attr("x",d.x).attr("y", d.y).attr("width", d.width).attr("height", d.height);
-         
-      }
-   }
-   })
-   .on( "mouseup", function() {
-      canvas.select( ".selection").remove();
-  });
-
 };
 
 // color and push clicked node in an array for cpt and dendrogramm display
