@@ -283,10 +283,13 @@ var simulation = d3.forceSimulation(nodes)
        .attr("d", "M0,-5L10,0L0,5");
 
       /* anstelle von diagonal
-      var horizontal = d3  .linkHorizontal()
-                           .x(function(d){return d.source.x;})
-                           .y(function(d){return d.source.y;});
-      */
+     var diagonal = function link(d) {
+      return "M" + d.source.y + "," + d.source.x
+          + "C" + (d.source.y + d.target.y) / 2 + "," + d.source.x
+          + " " + (d.source.y + d.target.y) / 2 + "," + d.target.x
+          + " " + d.target.y + "," + d.target.x;
+    };*/
+
       var l =canvas.selectAll(".link")
          .data(links)
          .enter()
@@ -304,7 +307,7 @@ var simulation = d3.forceSimulation(nodes)
          //.attr("transform", "translate( 20, 10)");
          //.attr("d", diagonal);
    };
-   
+
 // get link array with source and target node from every link
 function get_links(parent, child, link){
 
