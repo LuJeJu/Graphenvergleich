@@ -421,6 +421,7 @@ function multidisplay(){
       //parent1[i].x = 10;
       //parent1[i].y = i*110 +10;
       parent1[i].parents = ["root"];
+      root.children.push(parent1[i]);
       n.push(parent1[i]);
    }
    if(graphs.length >= 2){
@@ -434,6 +435,7 @@ function multidisplay(){
          //parent2[i].x = 10;
          //parent2[i].y = (n.length)*110 +10;
          parent2[i].parents = ["root"];
+         root.children.push(parent2[i]);
          n.push(parent2[i]);
          }
       }
@@ -449,6 +451,7 @@ function multidisplay(){
          //parent3[i].x = 10;
          //parent3[i].y = (n.length)*110 +10;
          parent3[i].parents = ["root"];
+         root.children.push(parent3[i]);
          n.push(parent3[i]);
          }
       }
@@ -464,6 +467,7 @@ function multidisplay(){
          //parent4[i].x = 10;
          //parent4[i].y = (n.length)*110 +10;
          parent4[i].parents = ["root"];
+         root.children.push(parent4[i]);
          n.push(parent4[i]);
          }
       }
@@ -564,6 +568,8 @@ function multidisplay(){
          link.push(l4[i]);
       }
    }
+
+   //get_intergraph_links(n, link);
    var nodes = n;
    var links = link;
 
@@ -592,7 +598,9 @@ function multidisplay(){
          .attr("id", function(d){ return "node_"+d.data.node;})
          .attr("transform", function (d) {
                return "translate("+ d.y +", "+ d.x +" )";
-         });
+         })
+         .attr("x", (d) => d.x)
+         .attr("y", (d) => d.y);
 
        r_width = 20;
        r_height = 20;
@@ -616,7 +624,11 @@ function multidisplay(){
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.data.node;
-         });
+         })
+         .attr("cursor", "pointer")
+         .attr("pointer-events", "all")
+         .attr("id", function(d){ return "Nodetext_"+d.node;})
+         .on("click", function(d){ return node_selection(d);});
 /*
       var text = canvas.append("g")
          .attr("class", "labels")
@@ -654,21 +666,31 @@ function multidisplay(){
          .attr("orient", "auto-start-reverse")
          .append("svg:path")
          .attr("d", "M0,-5L10,0L0,5");
-
+/*
       var diagonal = function link(d) {
             return "M" + (d.y - r_width) + "," + (d.x)
                 + "C" + (d.y + d.parent.y) / 2 + "," + d.x
                 + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
                 + " " + (d.parent.y) + "," + (d.parent.x);
       };
+*/
+
+      var diagonal = function link(d){
+         var source = d3.select("#node_"+ d.source);
+         var target = d3.select("#node_"+ d.target);
+         return  "M" + (source.attr("y") - r_width) + "," + source.attr("x")
+               + "C" + (source.attr("y") + target.attr("y"))/2 + "," + source.attr("x")
+               + " " + (source.attr("y") + target.attr("y"))/2 + "," + target.attr("x")
+               + " " + (target.attr("y")) + "," + target.attr("x");
+      }   
 
       var l =canvas.selectAll(".link")
-         .data(tree.descendants().slice(1))
+         .data(links)
+            //tree.descendants().slice(1))
          .enter()
          .append("path")
          .attr("class", "link")
-         .style("stroke", function(d){ //if(d.g ==1) 
-            return "#386cb0";
+         .style("stroke", function(d){ if(d.g ==1) return "#386cb0";
                                        if(d.g ==2) return "#7fc97f";
                                        if(d.g ==3) return "#fdc086";
                                        if(d.g ==4) return "#beaed4";})
@@ -753,6 +775,17 @@ function multidisplay(){
             hide = hide == true ? false : true;
          });
 };
+
+function get_intergraph_links(n, l){
+   for(var i = 0; i< n.length; i++){
+      for(var j = 0; j< l.length; j++){
+         if((n[i].node[0] == l[j].target) && (!n[i].parents.includes(l[j].source)))
+         n[i].parents.push(l[j].source);
+      }
+   }
+   console.log(n);
+}
+
 
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d){
