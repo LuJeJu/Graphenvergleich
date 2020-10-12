@@ -343,6 +343,7 @@ function multidisplay(){
    .attr("id", "compare_svg")
    .attr("width", "100%")
    .attr("height", "100%")
+   /*
    .on("mousedown", function(d){
       // ist immer true ???
       var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
@@ -377,6 +378,7 @@ function multidisplay(){
    .on("mouseup", function(){
       d3.select("#compare_svg").select("#selection").remove();
       })
+      */
    .call(d3.zoom().filter(function() {
       return !d3.event.ctrlKey;}).on("zoom", function(){
       canvas.attr("transform", d3.event.transform)
@@ -742,7 +744,7 @@ function dendrogram(){
 
         split_window("#k1", "dendrok1");
         for(var t = 0; t < graphs.length; t++){
-        oneDendro(/*k*/"1", /*g*/ t);
+        oneDendro(/*k*/ 0 , /*g*/ t);
         }
    }
 
@@ -761,7 +763,7 @@ function dendrogram(){
 
         isDived = true;
 
-        for(var s = 0; s < 3; s++){
+        for(var s = 0; s < marked.length+1; s++){
         split_window("#k" + s, "dendrok" + s);
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
@@ -789,7 +791,7 @@ function dendrogram(){
                  .style("flex","1")
                  .style("border-top", "2px solid lightgrey");
         isDived = true;
-        for(var s = 0; s < 4; s++){
+        for(var s = 0; s < marked.length+1; s++){
         split_window("#k" + s, "dendrok" + s);
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
@@ -826,7 +828,7 @@ function dendrogram(){
 
         isDived = true;
         console.log(graphs.length);
-        for(var s = 0; s < 5; s++){
+        for(var s = 0; s < marked.length+1; s++){
         split_window("#k" + s, "dendrok" + s);
             for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
@@ -846,35 +848,40 @@ function dendrogram(){
  console.log(marked);
 
  function oneDendro(nodeNum, graphNum){
-    var canvas = d3.select("#dendrok" + nodeNum + "_g" + graphNum).append("svg")
+    var canvas = d3.select("#dendrok" + (nodeNum+1) + "_g" + (graphNum+1)).append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
-    .attr("id", "dendro_k" + nodeNum + "_g" + graphNum)
+    .attr("id", "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
     .call(d3.zoom().on("zoom", function(){
        canvas.attr("transform", d3.event.transform)
-    })).on("dblclick.zoom", null);
+    })).on("dblclick.zoom", null)
+    .append("g")
+    .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
 //console.log(marked[nodeNum-1]);
 //wird 5 mal ausgegeben => soll nur 4 mal aufgerufen werden?! oder auch nicht?
 //d.node[0]==marked[i].node[0]
 
 var currObj;
 //Knoten in graphs(graphNum) finden
-for(var k = 0; k < graphs. length; k++){
-console.log("graphs_" + graphs[k]);}
 /*
-    for(var i = 0; i < graphs[graphNum-1].node.length + 1; i++){
-        if(marked[nodeNum - 1] == graphs[graphNum-1].node[i]){
-        currObj = graphs[graphNum-1].node[i];
+for(var k in graphs){
+console.log("graphs_" + graphs[graphNum-1][k]);}
+*/
+    for(var i in graphs[graphNum]){
+        if(marked[nodeNum].node[0] == graphs[graphNum][i].node[0]){
+        currObj = graphs[graphNum][i];
         }
-    }*/
+    }
 // Erstellung der benötigten Anzahl von Dendrogram Balken
-/*
-    if(marked[nodeNum-1].parents.length != 0){
-    for (var i=0; i < /*Anzahl der Zustände2 ^ currObj[].parents.length; i++){
-    var bar = canvas.append("rect")
+    console.log(currObj.parents.length);
+    //was gibt parents.length bei [] aus?
+    if(currObj.parents.length > 0){
+    for (var i=0; i < states.length^currObj.parents.length; i++){
+    var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
              .attr("width", r_width)
              .attr("height", r_height)
              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+             //.attr("transform", "translate(10,10)")
              .attr("fill", "lightgray")
              .attr("visibility", "visible")
              .attr("cursor", "pointer")
@@ -882,7 +889,7 @@ console.log("graphs_" + graphs[k]);}
              .attr("id", function(d){ return canvas.id + "_rect" + i;})
              //.on("click",function(d){ return node_selection(d);});
     }
-    }*/
+    }
  };
 
 };
