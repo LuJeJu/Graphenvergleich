@@ -867,6 +867,10 @@ var currObj;
 for(var k in graphs){
 console.log("graphs_" + graphs[graphNum-1][k]);}
 */
+
+
+/* _______________________________
+
     for(var i in graphs[graphNum]){
         if(marked[nodeNum].node[0] == graphs[graphNum][i].node[0]){
         currObj = graphs[graphNum][i];
@@ -890,6 +894,8 @@ console.log("graphs_" + graphs[graphNum-1][k]);}
              //.on("click",function(d){ return node_selection(d);});
     }
     }
+_______________________________________*/
+
  };
 
 };
@@ -912,8 +918,56 @@ function cpt(){
       '#fdc086',
       '#beaed4'
     ];
+    for(var i = 0; i<marked.length; i++){
+    data_write(marked[i]);
+    }
 
-   function f(elem, direction="col", node) {
+    function data_write(marked_node){
+
+    var data = [];
+    var node_name = "";
+
+    for(var i = 0; i<graphs.length; i++){
+    for(var key in graphs[i]){
+       var push_array = [];
+       push_array.push("Graph"+(i+1));
+
+          if(marked_node.node[0] == graphs[i][key].node[0]){
+             node_name = marked_node.node[0]; 
+              var node11 = graphs[i][key].prob[0];
+              var node12 = graphs[i][key].prob[1];
+              push_array.push(node11);
+              push_array.push(node12);
+              data.push(push_array);
+          }
+          /*
+          if(marked[m].node[0] == graphs[1][key].node[0]){
+              var node21 = marked[m].prob[0];
+              var node22 = marked[m].prob[1];
+          }
+          if(marked[m].node[0] == graphs[2][key].node[0]){
+              var node31 = marked[m].prob[0];
+              var node32 = marked[m].prob[1];
+          }
+          if(marked[m].node[0] == graphs[3][key].node[0]){
+              var node41 = marked[m].prob[0];
+              var node42 = marked[m].prob[1];
+          } */    
+    }
+    }
+    /*
+    const data = [
+       ["Graph1", node11, node12],
+       ["Graph2", node21, node22],
+       ["Graph3", node31, node32],
+       ["Graph4", node41, node42]
+    ];
+    */
+   console.log(data);
+   if(data.length >0) document.getElementById("CPT").appendChild(g(data, node_name)); 
+    };
+
+   function f(elem, direction="col") {
       //console.log(i);
 
       if (typeof(elem) === "number") {
@@ -1022,51 +1076,17 @@ function cpt(){
       table.append(tbody);
       return table;
 
-   }
-   for (var i=0; i<marked.length; i++) {
-      if(marked.length > 4){
-         //return window.alert("Please select no more then four nodes for the comparison.");
-      } else {
-         nodee = new Array();
-         var key;
+   };
+   //for (var i=0; i<marked.length; i++) {
          /*for(key in graphs[0]){
             if(graphs[0][key].node.length==0) nodee.push(graphs[0][key]);
          }*/
          //console.log(graphs[0][key].node[0]);
          //console.log(marked[i].node[0]);
 
-
-         for(key in graphs[0]){
-            for(var m=0; m<marked.length; m++){
-               if(graphs[0][key].node.length==0) nodee.push(graphs[0][key]);
-               if(marked[m].node[0] == graphs[0][key].node[0]){   
-                  console.log(graphs[0][key].node[0]);
-                   var node11 = marked[m].prob[0];
-                   var node12 = marked[m].prob[1];
-               }
-               if(marked[m].node[0] == graphs[1][key].node[0]){
-                   var node21 = marked[m].prob[0];
-                   var node22 = marked[m].prob[1];
-               }
-               if(marked[m].node[0] == graphs[2][key].node[0]){
-                   var node31 = marked[m].prob[0];
-                   var node32 = marked[m].prob[1];
-               }
-               if(marked[m].node[0] == graphs[3][key].node[0]){
-                   var node41 = marked[m].prob[0];
-                   var node42 = marked[m].prob[1];
-               }
-            }
-         }
-         const data = [
-            ["Graph1", node11, node12],
-            ["Graph2", node21, node22],
-            ["Graph3", node31, node32],
-            ["Graph4", node41, node42]
-         ];
-         document.getElementById("CPT").appendChild(g(data, marked[i].node));
-      }
-   }
+         
+      //}
+   
 // node für alle 4 Graphen 
 //hover fkt fertig stellen
 };
