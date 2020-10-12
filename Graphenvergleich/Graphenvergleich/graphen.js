@@ -195,20 +195,34 @@ function draw(parent,child,divs, link){
    .append("g")
    .attr("id", "single_" + divs);
 
+   var root = {
+      children : [],
+      node : ["root"],
+      parents : [],
+      prob : []
+};
+
    var n = new Array();
+   n.push(root);
    for(var i =0; i<parent.length;i++){
-      parent[i].x = 10;
-      parent[i].y = i*100+10;
+      //parent[i].x = 10;
+      //parent[i].y = i*100+10;
+      parent[i].parents = ["root"];
+      var root_link = {
+         source: "root",
+         target: parent[i].node[0]
+      };
+      link.push(root_link);
       n.push(parent[i]);
    }
    for(var i =0; i<child.length;i++){
-      child[i].x = 110;
-      child[i].y = i*100+10;
+      //child[i].x = 110;
+      //child[i].y = i*100+10;
       n.push(child[i]);
    }
    var nodes = n;
    var links = link;
-
+/*
 var simulation = d3.forceSimulation(nodes)
       //.force("linkForce", d3.forceLink().distance(30).strength(10));
       .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
@@ -216,16 +230,20 @@ var simulation = d3.forceSimulation(nodes)
       .force("collide", d3.forceCollide().radius(100))
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
       //simulation.stop();
-
-//var simulation = d3.tree(nodes);
+*/
+var simulation = d3.tree().size([width, height]);
+var treedata = d3.stratify().id(function(d){return d.node[0];})
+                  .parentId(function(d){return d.parents[0];})(nodes);
+var tree = d3.hierarchy(treedata, function(d){return d.children;});
+   tree = simulation(tree);
 
       var n = canvas.selectAll(".node")
-         .data(nodes)
+         .data(tree.descendants())
          .enter()
          .append("g")
          .attr("class", "node")
          .attr("transform", function (d) {
-               return "translate("+ d.x +", "+ d.y +" )";
+               return "translate("+ d.y +", "+ d.x +" )";
          });
 
        r_width = 20;
@@ -234,9 +252,18 @@ var simulation = d3.forceSimulation(nodes)
       n.append("rect")
          .attr("width", r_width)
          .attr("height", r_height)
-         .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+         //.attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray");
 
+         n.append("text")
+         .style("font-size", 14)
+         .attr("x", r_width/2)
+         .attr("y", r_height/2+ 5)
+         .attr("text-anchor", "middle")
+         .text(function (d) {
+            return d.data.id;
+         });
+/*
       var text = canvas.append("g")
             .attr("class", "labels")
             .selectAll("text")
@@ -253,17 +280,10 @@ var simulation = d3.forceSimulation(nodes)
          .attr("x", function(d){
             return d.x + (20/2);})
          .attr("y", function(d){return d.y + (20/2);});
-
+*/
          // gibt textgröße aus
       //var r_width = n.select("text").node().getBoundingClientRect().width;
-      //var r_height = n.select("text").node().getBoundingClientRect().height;
-
-      /*
-      var diagonal = d3.svg.diagonal()
-         .projection(function (d) {
-            return [d.y, d.x];
-         });
-      */  
+      //var r_height = n.select("text").node().getBoundingClientRect().height;  
 
        canvas.append("svg:defs").selectAll("marker")
        .data(["end"])
@@ -278,34 +298,33 @@ var simulation = d3.forceSimulation(nodes)
                                  if(d.g ==2) return "#7fc97f";
                                  if(d.g ==3) return "#fdc086";
                                  if(d.g ==4) return "#beaed4";})  //warum wird alles schwarz????
-       .attr("orient", "auto")
+       .attr("orient", "auto-start-reverse")
        .append("svg:path")
        .attr("d", "M0,-5L10,0L0,5");
 
-      /* anstelle von diagonal
+      // anstelle von diagonal
      var diagonal = function link(d) {
-      return "M" + d.source.y + "," + d.source.x
-          + "C" + (d.source.y + d.target.y) / 2 + "," + d.source.x
-          + " " + (d.source.y + d.target.y) / 2 + "," + d.target.x
-          + " " + d.target.y + "," + d.target.x;
-    };*/
+      return "M" + d.y + "," + (d.x + r_height/2)
+          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+          + " " + (d.parent.y + r_width) + "," + (d.parent.x + r_height/2);
+    };
 
       var l =canvas.selectAll(".link")
-         .data(links)
+         .data(tree.descendants().slice(1))
          .enter()
          .append("path")
          .attr("class", "link")
          .style("stroke", color)
+         .style("fill", "none")
          .style("stroke-width", 2.0)
-         .attr("marker-end", "url(#arrow)")
+         .attr("marker-start", "url(#arrow)")
          //.attr("x1", function(d) { return d.source.x+20; })
          //.attr("y1", function(d) { return d.source.y+20/2; })
          //.attr("x2", function(d) { return d.target.x; })
          //.attr("y2", function(d) { return d.target.y+20/2; })
-         .attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
-                     // horizontal(links));
-         //.attr("transform", "translate( 20, 10)");
-         //.attr("d", diagonal);
+         //.attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
+         .attr("d", function(d){return diagonal(d);});
    };
 
 // get link array with source and target node from every link
@@ -389,10 +408,19 @@ function multidisplay(){
    var n = new Array();
    var link = new Array();
 
+   var root = {
+      children : [],
+      node : ["root"],
+      parents : [],
+      prob : []
+};
+   n.push(root);
+
    //parent iteration
    for(var i =0; i< parent1.length; i++){
-      parent1[i].x = 10;
-      parent1[i].y = i*110 +10;
+      //parent1[i].x = 10;
+      //parent1[i].y = i*110 +10;
+      parent1[i].parents = ["root"];
       n.push(parent1[i]);
    }
    if(graphs.length >= 2){
@@ -403,8 +431,9 @@ function multidisplay(){
             else element = false;
          }
          if(element == false){
-         parent2[i].x = 10;
-         parent2[i].y = (n.length)*110 +10;
+         //parent2[i].x = 10;
+         //parent2[i].y = (n.length)*110 +10;
+         parent2[i].parents = ["root"];
          n.push(parent2[i]);
          }
       }
@@ -417,8 +446,9 @@ function multidisplay(){
             else element = false;
          }
          if(element == false){
-         parent3[i].x = 10;
-         parent3[i].y = (n.length)*110 +10;
+         //parent3[i].x = 10;
+         //parent3[i].y = (n.length)*110 +10;
+         parent3[i].parents = ["root"];
          n.push(parent3[i]);
          }
       }
@@ -431,8 +461,9 @@ function multidisplay(){
             else element = false;
          }
          if(element == false){
-         parent4[i].x = 10;
-         parent4[i].y = (n.length)*110 +10;
+         //parent4[i].x = 10;
+         //parent4[i].y = (n.length)*110 +10;
+         parent4[i].parents = ["root"];
          n.push(parent4[i]);
          }
       }
@@ -535,21 +566,32 @@ function multidisplay(){
    }
    var nodes = n;
    var links = link;
-  
+
+   var simulation = d3.tree().size([width, height]);
+   var treedata = d3.stratify().id(function(d){return d.node[0];})
+                  .parentId(function(d){return d.parents[0];})(nodes);
+       treedata.each(function(d){
+          d.node = d.id;
+       })
+       console.log(treedata);
+   var tree = d3.hierarchy(treedata, function(d){return d.children;});
+       tree = simulation(tree);
+   
+  /*
    var simulation = d3.forceSimulation(nodes)
       .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("collide", d3.forceCollide().radius(100))
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
-
+*/
       var n = canvas.selectAll(".node")
-         .data(nodes)
+         .data(tree.descendants())
          .enter()
          .append("g")
          .attr("class", "node")
-         .attr("id", function(d){ return "node_"+d.node[0];})
+         .attr("id", function(d){ return "node_"+d.data.node;})
          .attr("transform", function (d) {
-               return "translate("+ d.x +", "+ d.y +" )";
+               return "translate("+ d.y +", "+ d.x +" )";
          });
 
        r_width = 20;
@@ -564,9 +606,18 @@ function multidisplay(){
          .attr("visibility", "visible")
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
-         .attr("id", function(d){ return "NodeButton_"+ d.node;})
+         .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
          .on("click",function(d){ return node_selection(d);});
 
+         n.append("text")
+         .style("font-size", 14)
+         .attr("x", r_width/2)
+         .attr("y", r_height/2+ 5)
+         .attr("text-anchor", "middle")
+         .text(function (d) {
+            return d.data.node;
+         });
+/*
       var text = canvas.append("g")
          .attr("class", "labels")
          .selectAll("text")
@@ -584,7 +635,7 @@ function multidisplay(){
             .attr("x", function(d){return d.x + (20/2);})
             .attr("y", function(d){return d.y + (20/2);})
             .on("click", function(d){ return node_selection(d);});
-
+*/
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
          .enter().append("svg:marker")
@@ -600,22 +651,32 @@ function multidisplay(){
                                     if(d.g == 2) return "#7fc97f";
                                     if(d.g == 1) return "#386cb0";
                   	               })
-         .attr("orient", "auto")
+         .attr("orient", "auto-start-reverse")
          .append("svg:path")
          .attr("d", "M0,-5L10,0L0,5");
 
+      var diagonal = function link(d) {
+            return "M" + (d.y - r_width) + "," + (d.x)
+                + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+                + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+                + " " + (d.parent.y) + "," + (d.parent.x);
+      };
+
       var l =canvas.selectAll(".link")
-         .data(links)
+         .data(tree.descendants().slice(1))
          .enter()
          .append("path")
          .attr("class", "link")
-         .style("stroke", function(d){ if(d.g ==1) return "#386cb0";
+         .style("stroke", function(d){ //if(d.g ==1) 
+            return "#386cb0";
                                        if(d.g ==2) return "#7fc97f";
                                        if(d.g ==3) return "#fdc086";
                                        if(d.g ==4) return "#beaed4";})
+         .style("fill", "none")
          .style("stroke-width", 2.0)
-         .attr("marker-end", "url(#arrow)")
-         .attr( "d", (d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
+         .attr("marker-start", "url(#arrow)")
+         .attr( "d", function(d){return diagonal(d);}) 
+         //(d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
          .attr("transform", "translate( 20, 10)")
          .attr("id", function(d){ return "link_";})
          .on("mouseover", function(d){
