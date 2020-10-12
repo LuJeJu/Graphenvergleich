@@ -1027,21 +1027,42 @@ function cpt(){
       if(marked.length > 4){
          //return window.alert("Please select no more then four nodes for the comparison.");
       } else {
-         //console.log(marked);
-/*
-         for(var i=0; i<graphs[0].length; i++){
-            for(var j=0; j<marked.length; j++){
-               if(marked[j].node[0] == graphs[0][i].node[0]){
-                  //... var node = graphs[0][i].prob;
+         nodee = new Array();
+         var key;
+         /*for(key in graphs[0]){
+            if(graphs[0][key].node.length==0) nodee.push(graphs[0][key]);
+         }*/
+         //console.log(graphs[0][key].node[0]);
+         //console.log(marked[i].node[0]);
+
+
+         for(key in graphs[0]){
+            for(var m=0; m<marked.length; m++){
+               if(graphs[0][key].node.length==0) nodee.push(graphs[0][key]);
+               if(marked[m].node[0] == graphs[0][key].node[0]){   
+                  console.log(graphs[0][key].node[0]);
+                   var node11 = marked[m].prob[0];
+                   var node12 = marked[m].prob[1];
+               }
+               if(marked[m].node[0] == graphs[1][key].node[0]){
+                   var node21 = marked[m].prob[0];
+                   var node22 = marked[m].prob[1];
+               }
+               if(marked[m].node[0] == graphs[2][key].node[0]){
+                   var node31 = marked[m].prob[0];
+                   var node32 = marked[m].prob[1];
+               }
+               if(marked[m].node[0] == graphs[3][key].node[0]){
+                   var node41 = marked[m].prob[0];
+                   var node42 = marked[m].prob[1];
                }
             }
          }
-*/
          const data = [
-            ["Graph1", marked[i].prob[0], marked[i].prob[1]],
-            ["Graph2", marked[i].prob[0], marked[i].prob[1]],
-            ["Graph3", marked[i].prob[0], marked[i].prob[1]],
-            ["Graph4", marked[i].prob[0], marked[i].prob[1]]
+            ["Graph1", node11, node12],
+            ["Graph2", node21, node22],
+            ["Graph3", node31, node32],
+            ["Graph4", node41, node42]
          ];
          document.getElementById("CPT").appendChild(g(data, marked[i].node));
       }
