@@ -615,7 +615,7 @@ function multidisplay(){
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
          .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
-         .on("click",function(d){ return node_selection(d);});
+         .on("click",function(d){ return node_selection(d, nodes);});
 
          n.append("text")
          .style("font-size", 14)
@@ -627,8 +627,8 @@ function multidisplay(){
          })
          .attr("cursor", "pointer")
          .attr("pointer-events", "all")
-         .attr("id", function(d){ return "Nodetext_"+d.node;})
-         .on("click", function(d){ return node_selection(d);});
+         .attr("id", function(d){ return "Nodetext_"+d.data.node;})
+         .on("click", function(d){ return node_selection(d, nodes);});
 /*
       var text = canvas.append("g")
          .attr("class", "labels")
@@ -788,8 +788,16 @@ function get_intergraph_links(n, l){
 
 
 // color and push clicked node in an array for cpt and dendrogramm display
-function node_selection(d){
+function node_selection(d, nodes){
    //console.log("Click !!!");
+   console.log(d.data.id);
+   var node_name = d.data.id;
+   console.log(node_name);
+   for(var i = 0; i< nodes.length; i++){
+      if(node_name == 
+         nodes[i].node[0])
+         d = nodes[i];
+   }
    var elem = false;
    var i = 0;
    for(i; i<marked.length; i++){
@@ -797,11 +805,12 @@ function node_selection(d){
    }
    if(elem == false){
       marked.push(d);
-      d3.select("#NodeButton_"+ d.node).transition().style("fill", "lightblue");
+      console.log(marked);
+      d3.select("#NodeButton_"+ d.node[0]).transition().style("fill", "lightblue");
    }
    if(elem == true){
       marked.splice(i, 1);
-      d3.select("#NodeButton_"+ d.node).transition().style("fill", "lightgrey");
+      d3.select("#NodeButton_"+ d.node[0]).transition().style("fill", "lightgrey");
    }
    if(marked.length > 0) document.getElementById("hide").disabled = false;
    if(marked.length == 0) document.getElementById("hide").disabled = true;
