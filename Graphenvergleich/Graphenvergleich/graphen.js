@@ -318,10 +318,26 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          var sy = Math.round(source.attr("y"));
          var tx = Math.round(target.attr("x"));
          var ty = Math.round(target.attr("y"));
-         return  "M" + (sy + r_width) + "," + (sx + r_height/2) 
-               + "C" + (sy + ty)/2 + "," + sx
-               + " " + (sy + ty)/2 + "," + tx
-               + " " + ty + "," + (tx + r_height/2);
+         if(ty == sy){
+            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty) + "," + (tx + r_height/2);
+               }    
+         if(ty > sy){
+            var t = "M" + (sy + r_width) + "," + (sx+ r_height/2)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty) + "," + (tx + r_height/2);
+            }
+         if(ty < sy){
+            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty + r_width) + "," + (tx + r_width/2);
+            }
+    
+            return t;
       }; 
 
       var l =canvas.selectAll(".link")
@@ -662,30 +678,110 @@ function multidisplay(){
       var color_array = ["#386cb0" , "#7fc97f" , "#fdc086" , "#beaed4"]
       //["#beaed4", "#fdc086", "#7fc97f", "#386cb0"]
       
+      //blue Arrow
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
          .enter().append("svg:marker")
-         .attr("id", "arrow")
+         .attr("id", 'arrow_#386cb0')
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "#386cb0")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+
+      //green Arrow
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", 'arrow_#7fc97f')
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "#7fc97f")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+       
+      //orange Arrow   
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", 'arrow_#fdc086')
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "#fdc086")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+      
+      //purple Arrow
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", "arrow_#beaed4")
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "#beaed4")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+
+      //lightgrey Arrow
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", "arrow_lightgrey")
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "lightgrey")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+      
+      //grey Arrow
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", "arrow_grey")
+         .attr("viewBox", "0 -5 10 10")
+         .attr("refX", 10)
+         .attr("refY", 0.0)
+         .attr("markerWidth", 6)
+         .attr("markerHeight", 6)
+         .attr("fill", "grey")
+         .attr("orient", "auto")
+         .append("svg:path")
+         .attr("d", "M0,-5L10,0L0,5");
+
+      //black Arrow
+      canvas.append("svg:defs").selectAll("marker")
+         .data(["end"])
+         .enter().append("svg:marker")
+         .attr("id", "arrow_black")
          .attr("viewBox", "0 -5 10 10")
          .attr("refX", 10)
          .attr("refY", 0.0)
          .attr("markerWidth", 6)
          .attr("markerHeight", 6)
          .attr("fill", "black")
-         .style("opacity", 0.5)
          .attr("orient", "auto")
          .append("svg:path")
          .attr("d", "M0,-5L10,0L0,5");
-
-         //d3.selectAll("#arrow").style("opacity", 0.5);
-/*
-      var diagonal = function link(d) {
-            return "M" + (d.y - r_width) + "," + (d.x)
-                + "C" + (d.y + d.parent.y) / 2 + "," + d.x
-                + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
-                + " " + (d.parent.y) + "," + (d.parent.x);
-      };
-*/
 
       var diagonal = function link(d){
          var source = d3.select("#node_"+ d.source);
@@ -694,22 +790,25 @@ function multidisplay(){
          var sy = Math.round(source.attr("y"));
          var tx = Math.round(target.attr("x"));
          var ty = Math.round(target.attr("y"));
-         var t = "M" + (sy) + "," + (sx)
-               + "C" + (sy + ty)/2 + "," + sx
-               + " " + (sy + ty)/2 + "," + tx;
          if(ty == sy){
-                  t += " " + (ty) + "," + (tx);
+            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty) + "," + (tx + r_height/2);
                }    
          if(ty > sy){
-               t += " " + (ty - r_height) + "," + (tx);
-               console.log("ty>sy")
+            var t = "M" + (sy + r_width) + "," + (sx+ r_height/2)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty) + "," + (tx + r_height/2);
             }
          if(ty < sy){
-               t += " " + (ty) + "," + (tx);
-               console.log("ty<sy")
-            }
-    
-            return t;         
+            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                  + "C" + (sy + ty)/2 + "," + sx
+                  + " " + (sy + ty)/2 + "," + tx;
+            t += " " + (ty + r_width) + "," + (tx + r_width/2);
+            }   
+            return t;      
       };   
 
       var l =canvas.selectAll(".link")
@@ -718,7 +817,7 @@ function multidisplay(){
          .enter()
          .append("path")
          .attr("class", "link")
-         .style("stroke", function(d){
+         .attr("stroke", function(d){
             var count = 0;
             for(var i = 0; i < link.length; i++){
                if(link[i].target == d.target && link[i].source == d.source)
@@ -731,10 +830,11 @@ function multidisplay(){
             }) 
          .style("fill", "none")
          .style("stroke-width", 2.0)
-         .attr("marker-end", "url(#arrow)")
+         .attr("marker-end", function(d){
+                              var stroke_color = d3.select(this).attr("stroke"); 
+                              return "url(#arrow_" +stroke_color+ ")"})
          .attr( "d", function(d){return diagonal(d);}) 
          //(d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
-         .attr("transform", "translate( 20, 10)")
          .attr("id", function(d){ return "link_";})
          .on("mouseover", function(d){
                            d3.select(this).style("stroke-width", 3.5)
