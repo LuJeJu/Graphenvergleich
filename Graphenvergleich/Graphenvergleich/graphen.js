@@ -181,10 +181,14 @@ function draw(parent,child,divs, link){
    .attr("width", "50")
    .attr("height", "15")
    .attr("transform", "translate(0,0)")
-   .style("background-color", "lightgrey")
+   .style("background-color", color)
    .style("border-right", "1px solid lightgrey")
    .style("border-bottom", "1px solid lightgrey");
-   rect.append("text").attr("id", "graphnumbertext").attr("x", 1).attr("y", 11).text(title);
+   rect.append("text")  .attr("id", "graphnumbertext")
+                        .attr("x", 1)
+                        .attr("y", 11)
+                        .style("font-weight", "bold")
+                        .text(title);
 
    var canvas = d3.select("#"+divs).append("svg")
    .attr("width", "100%")
@@ -208,11 +212,6 @@ function draw(parent,child,divs, link){
       //parent[i].x = 10;
       //parent[i].y = i*100+10;
       parent[i].parents = ["root"];
-      var root_link = {
-         source: "root",
-         target: parent[i].node[0]
-      };
-      link.push(root_link);
       n.push(parent[i]);
    }
    for(var i =0; i<child.length;i++){
@@ -234,6 +233,10 @@ var simulation = d3.forceSimulation(nodes)
 var simulation = d3.tree().size([width, height]);
 var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
+                  treedata.each(function(d){
+                     d.node = d.id;
+                  })
+
 var tree = d3.hierarchy(treedata, function(d){return d.children;});
    tree = simulation(tree);
 
@@ -242,9 +245,12 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          .enter()
          .append("g")
          .attr("class", "node")
+         .attr("id", function(d){ return divs+"node_"+d.data.node;})
          .attr("transform", function (d) {
-               return "translate("+ d.y +", "+ d.x +" )";
-         });
+               return "translate("+ (d.y - 50) +", "+ d.x +" )";
+         })
+         .attr("x", (d) => d.x)
+         .attr("y", (d) => d.y - 50);
 
        r_width = 20;
        r_height = 20;
@@ -252,17 +258,22 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
       n.append("rect")
          .attr("width", r_width)
          .attr("height", r_height)
-         //.attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+         .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
+         .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray");
 
          n.append("text")
          .style("font-size", 14)
+         .attr("id", function(d){ return "Nodetext_"+ d.data.node;})
          .attr("x", r_width/2)
          .attr("y", r_height/2+ 5)
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.data.id;
          });
+
+         d3.selectAll("#Nodetext_root").style("visibility", "hidden");
+         d3.selectAll("#NodeButton_root").style("visibility", "hidden");
 /*
       var text = canvas.append("g")
             .attr("class", "labels")
@@ -288,37 +299,40 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
        canvas.append("svg:defs").selectAll("marker")
        .data(["end"])
        .enter().append("svg:marker")
-       .attr("id", "arrow")
+       .attr("id", "arrow"+divs)
        .attr("viewBox", "0 -5 10 10")
        .attr("refX", 10)
        .attr("refY", 0)
        .attr("markerWidth", 6)
        .attr("markerHeight", 6)
-       .attr("fill", function(d){if(d.g ==1) return "#386cb0";
-                                 if(d.g ==2) return "#7fc97f";
-                                 if(d.g ==3) return "#fdc086";
-                                 if(d.g ==4) return "#beaed4";})  //warum wird alles schwarz????
-       .attr("orient", "auto-start-reverse")
+       .attr("orient", "auto")
        .append("svg:path")
-       .attr("d", "M0,-5L10,0L0,5");
+       .attr("d", "M0,-5L10,0L0,5")
+       .style("fill", color);  //warum wird alles schwarz????
 
       // anstelle von diagonal
-     var diagonal = function link(d) {
-      return "M" + d.y + "," + (d.x + r_height/2)
-          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
-          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
-          + " " + (d.parent.y + r_width) + "," + (d.parent.x + r_height/2);
-    };
+      var diagonal = function link(d){
+         var source = d3.select("#"+divs+"node_"+ d.source);
+         var target = d3.select("#"+divs+"node_"+ d.target);
+         var sx = Math.round(source.attr("x"));
+         var sy = Math.round(source.attr("y"));
+         var tx = Math.round(target.attr("x"));
+         var ty = Math.round(target.attr("y"));
+         return  "M" + (sy + r_width) + "," + (sx + r_height/2) 
+               + "C" + (sy + ty)/2 + "," + sx
+               + " " + (sy + ty)/2 + "," + tx
+               + " " + ty + "," + (tx + r_height/2);
+      }; 
 
       var l =canvas.selectAll(".link")
-         .data(tree.descendants().slice(1))
+         .data(links)
          .enter()
          .append("path")
          .attr("class", "link")
          .style("stroke", color)
          .style("fill", "none")
          .style("stroke-width", 2.0)
-         .attr("marker-start", "url(#arrow)")
+         .attr("marker-end", "url(#arrow"+ divs + ")")
          //.attr("x1", function(d) { return d.source.x+20; })
          //.attr("y1", function(d) { return d.source.y+20/2; })
          //.attr("x2", function(d) { return d.target.x; })
@@ -412,7 +426,7 @@ function multidisplay(){
       children : [],
       node : ["root"],
       parents : [],
-      prob : []
+      prob : [],
 };
    n.push(root);
 
@@ -569,9 +583,12 @@ function multidisplay(){
       }
    }
 
-   //get_intergraph_links(n, link);
    var nodes = n;
-   var links = link;
+   var links = link.filter((v,i,a) =>
+          a.findIndex(t =>
+               (t.source == v.source && t.target == v.target)) === i);
+
+               console.log(links);
 
    var simulation = d3.tree().size([width, height]);
    var treedata = d3.stratify().id(function(d){return d.node[0];})
@@ -579,17 +596,9 @@ function multidisplay(){
        treedata.each(function(d){
           d.node = d.id;
        })
-       console.log(treedata);
    var tree = d3.hierarchy(treedata, function(d){return d.children;});
        tree = simulation(tree);
    
-  /*
-   var simulation = d3.forceSimulation(nodes)
-      .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
-      .force("charge", d3.forceManyBody().strength(-1000))
-      .force("collide", d3.forceCollide().radius(100))
-      .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
-*/
       var n = canvas.selectAll(".node")
          .data(tree.descendants())
          .enter()
@@ -597,14 +606,13 @@ function multidisplay(){
          .attr("class", "node")
          .attr("id", function(d){ return "node_"+d.data.node;})
          .attr("transform", function (d) {
-               return "translate("+ d.y +", "+ d.x +" )";
+               return "translate("+ (d.y-150) +", "+ d.x +" )";
          })
          .attr("x", (d) => d.x)
-         .attr("y", (d) => d.y);
+         .attr("y", (d) => d.y - 150);
 
        r_width = 20;
        r_height = 20;
-      var node_color;
 
       var node_rect = n.append("rect")
          .attr("width", r_width)
@@ -629,6 +637,9 @@ function multidisplay(){
          .attr("pointer-events", "all")
          .attr("id", function(d){ return "Nodetext_"+d.data.node;})
          .on("click", function(d){ return node_selection(d, nodes);});
+
+         d3.select("#node_root").style("visibility", "hidden");
+         d3.select("#NodeButton_root").style("visibility", "hidden");
 /*
       var text = canvas.append("g")
          .attr("class", "labels")
@@ -648,24 +659,25 @@ function multidisplay(){
             .attr("y", function(d){return d.y + (20/2);})
             .on("click", function(d){ return node_selection(d);});
 */
+      var color_array = ["#386cb0" , "#7fc97f" , "#fdc086" , "#beaed4"]
+      //["#beaed4", "#fdc086", "#7fc97f", "#386cb0"]
+      
       canvas.append("svg:defs").selectAll("marker")
          .data(["end"])
          .enter().append("svg:marker")
          .attr("id", "arrow")
          .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 15)
-         .attr("refY", -1.5)
+         .attr("refX", 10)
+         .attr("refY", 0.0)
          .attr("markerWidth", 6)
          .attr("markerHeight", 6)
-         .attr("fill", function(d){ 
-                                    if(d.g == 4) return "#beaed4";
-                                    if(d.g == 3) return "#fdc086";
-                                    if(d.g == 2) return "#7fc97f";
-                                    if(d.g == 1) return "#386cb0";
-                  	               })
-         .attr("orient", "auto-start-reverse")
+         .attr("fill", "black")
+         .style("opacity", 0.5)
+         .attr("orient", "auto")
          .append("svg:path")
          .attr("d", "M0,-5L10,0L0,5");
+
+         //d3.selectAll("#arrow").style("opacity", 0.5);
 /*
       var diagonal = function link(d) {
             return "M" + (d.y - r_width) + "," + (d.x)
@@ -678,11 +690,15 @@ function multidisplay(){
       var diagonal = function link(d){
          var source = d3.select("#node_"+ d.source);
          var target = d3.select("#node_"+ d.target);
-         return  "M" + (source.attr("y") - r_width) + "," + source.attr("x")
-               + "C" + (source.attr("y") + target.attr("y"))/2 + "," + source.attr("x")
-               + " " + (source.attr("y") + target.attr("y"))/2 + "," + target.attr("x")
-               + " " + (target.attr("y")) + "," + target.attr("x");
-      }   
+         var sx = Math.round(source.attr("x"));
+         var sy = Math.round(source.attr("y"));
+         var tx = Math.round(target.attr("x"));
+         var ty = Math.round(target.attr("y"));
+         return  "M" + (sy) + "," + sx
+               + "C" + (sy + ty)/2 + "," + sx
+               + " " + (sy + ty)/2 + "," + tx
+               + " " + (ty - r_width) + "," + tx;
+      };   
 
       var l =canvas.selectAll(".link")
          .data(links)
@@ -690,13 +706,20 @@ function multidisplay(){
          .enter()
          .append("path")
          .attr("class", "link")
-         .style("stroke", function(d){ if(d.g ==1) return "#386cb0";
-                                       if(d.g ==2) return "#7fc97f";
-                                       if(d.g ==3) return "#fdc086";
-                                       if(d.g ==4) return "#beaed4";})
+         .style("stroke", function(d){
+            var count = 0;
+            for(var i = 0; i < link.length; i++){
+               if(link[i].target == d.target && link[i].source == d.source)
+                  count++;
+            }
+            if(count == 1){ return color_array[(d.g-1)];}
+            if(count == 2){ return "lightgrey";}
+            if(count == 3){ return "grey";}
+            if(count == 4){ return "black";}
+            }) 
          .style("fill", "none")
          .style("stroke-width", 2.0)
-         .attr("marker-start", "url(#arrow)")
+         .attr("marker-end", "url(#arrow)")
          .attr( "d", function(d){return diagonal(d);}) 
          //(d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
          .attr("transform", "translate( 20, 10)")
@@ -705,18 +728,21 @@ function multidisplay(){
                            d3.select(this).style("stroke-width", 3.5)
                            var coord = d3.mouse(this);
                            var t = "";
-                           if(d.g == 1) t+=" Graph1";
-                           if(d.g == 2) t+=" Graph2";
-                           if(d.g == 3) t+=" Graph3";
-                           if(d.g == 4) t+=" Graph4";
+                           for(var i = 0; i < link.length; i++){
+                              if((link[i].target==d.target) && (link[i].source==d.source)){
+                                 if(link[i].g == 1) t+=" Graph1";
+                                 if(link[i].g == 2) t+=" Graph2";
+                                 if(link[i].g == 3) t+=" Graph3";
+                                 if(link[i].g == 4) t+=" Graph4";
+                              }
+                           }
                            var text_length = t.length;
                            d3 .select("#link_hint")
                               .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-10) + ")")
                               .style("background-color", "lightgrey")   //bitte Farbe wählen
                               .style("font-size", 15)
                               .text(t)
-                              .transition()
-                              .attr("width", (t.length* 10 + "px"))
+                              .attr("width", (t.length *8 + "px"))
                               .style("visibility", "visible");
                            })
          .on("mouseout", function(d){
@@ -730,6 +756,7 @@ function multidisplay(){
                                              .attr("id", "link_hint")
                                              .attr("width", "20px")
                                              .attr("height", "20px")
+                                             .style("z-index", "1")
                                              .style("border", "1px solid black")
                                              .attr("transform", "translate(10,10)")
                                              .style("visibility", "hidden");
@@ -739,35 +766,37 @@ function multidisplay(){
    .on("click",
          function(){
             //hide nodes
-            var diff = n.filter(x => !marked.includes(x));
-	         for(var i = 0; i< diff._groups[0].length; i++){
-               var t = "";
-               t += diff._groups[0][i].id;
-               var name = t.slice(5,6);
+            var diff = nodes.filter(x => !marked.includes(x));
+            console.log(marked);
+            console.log(diff);
+	         for(var i = 1; i< diff.length; i++){
+               //var t = "";
+               var name = diff[i].node[0];
+               //var name = t;
                var link_diff = link.filter(function(d){
-                  if((d.source.node[0] == name) || (d.target.node[0] == name)){
+                  if((d.source == name) || (d.target == name)){
                      return d;
                   }
                })
                if(hide == true){
-                  d3.select("#NodeButton_"+name)
+                  d3.selectAll("#NodeButton_"+name)
                      .attr("visibility", "visible");
-                  d3.select("#Nodetext_"+name)
+                  d3.selectAll("#Nodetext_"+name)
                      .attr("visibility", "visible");
                   d3.selectAll(".link").filter(
                      function(d){
-                        if((d.source.node[0] == name) || (d.target.node[0] == name))
+                        if((d.source == name) || (d.target == name))
                         return d;
                      }).attr("visibility", "visible"); 
                }
                if(hide == false){
-                  d3.select("#NodeButton_"+name)
+                  d3.selectAll("#NodeButton_"+name)
                      .attr("visibility", "hidden");
-                  d3.select("#Nodetext_"+name)
+                  d3.selectAll("#Nodetext_"+name)
                      .attr("visibility", "hidden");
                   d3.selectAll(".link").filter(
                      function(d){
-                        if((d.source.node[0] == name) || (d.target.node[0] == name))
+                        if((d.source == name) || (d.target == name))
                         return d;
                      }).attr("visibility", "hidden"); 
                }
@@ -776,23 +805,10 @@ function multidisplay(){
          });
 };
 
-function get_intergraph_links(n, l){
-   for(var i = 0; i< n.length; i++){
-      for(var j = 0; j< l.length; j++){
-         if((n[i].node[0] == l[j].target) && (!n[i].parents.includes(l[j].source)))
-         n[i].parents.push(l[j].source);
-      }
-   }
-   console.log(n);
-}
-
-
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d, nodes){
    //console.log("Click !!!");
-   console.log(d.data.id);
    var node_name = d.data.id;
-   console.log(node_name);
    for(var i = 0; i< nodes.length; i++){
       if(node_name == 
          nodes[i].node[0])
@@ -806,11 +822,11 @@ function node_selection(d, nodes){
    if(elem == false){
       marked.push(d);
       console.log(marked);
-      d3.select("#NodeButton_"+ d.node[0]).transition().style("fill", "lightblue");
+      d3.selectAll("#NodeButton_"+ d.node[0]).transition().style("fill", "lightblue");
    }
    if(elem == true){
       marked.splice(i, 1);
-      d3.select("#NodeButton_"+ d.node[0]).transition().style("fill", "lightgrey");
+      d3.selectAll("#NodeButton_"+ d.node[0]).transition().style("fill", "lightgrey");
    }
    if(marked.length > 0) document.getElementById("hide").disabled = false;
    if(marked.length == 0) document.getElementById("hide").disabled = true;
@@ -1006,7 +1022,7 @@ _______________________________________*/
 // cpt's of marked nodes
 function cpt(){
    d3.select("#CPT").text("");
-
+   if(marked.length > 4) return;
    var width = document.getElementById("CPT").offsetWidth;
    var height = document.getElementById("CPT").offsetHeight;
 
@@ -1066,7 +1082,7 @@ function cpt(){
        ["Graph4", node41, node42]
     ];
     */
-   console.log(data);
+   //console.log(data);
    if(data.length >0) document.getElementById("CPT").appendChild(g(data, node_name)); 
     };
 
