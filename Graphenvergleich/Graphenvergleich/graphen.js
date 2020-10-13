@@ -694,10 +694,22 @@ function multidisplay(){
          var sy = Math.round(source.attr("y"));
          var tx = Math.round(target.attr("x"));
          var ty = Math.round(target.attr("y"));
-         return  "M" + (sy) + "," + sx
+         var t = "M" + (sy) + "," + (sx)
                + "C" + (sy + ty)/2 + "," + sx
-               + " " + (sy + ty)/2 + "," + tx
-               + " " + (ty - r_width) + "," + tx;
+               + " " + (sy + ty)/2 + "," + tx;
+         if(ty == sy){
+                  t += " " + (ty) + "," + (tx);
+               }    
+         if(ty > sy){
+               t += " " + (ty - r_height) + "," + (tx);
+               console.log("ty>sy")
+            }
+         if(ty < sy){
+               t += " " + (ty) + "," + (tx);
+               console.log("ty<sy")
+            }
+    
+            return t;         
       };   
 
       var l =canvas.selectAll(".link")
