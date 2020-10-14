@@ -14,6 +14,22 @@ function darstellung(){
    d3.select("#CPT").text("");
    d3.select("#Dendrogramme").text("");
 
+
+   /*
+      prepare for scaling nodewidth on longest nodename
+   */
+   test_string = document.createElement("span");
+   document.body.appendChild(test_string);
+   test_string.id = "t_width";
+   test_string.style.fontFamily = "sans-serif"
+   test_string.style.width = "auto";
+   test_string.style.height = "20px";
+   test_string.style.fontSize = "14px";
+   test_string.style.visibility = "hidden"; 
+   
+  r_width = 40;
+  r_height = 40;
+
    /*
       separates source nodes from others for every graph and
       create divs depending on the number of graphs for the separate display
@@ -59,6 +75,8 @@ function darstellung(){
    graph1(graphs[3], parent4, child4);
    get_links(parent4,child4,link4);
    }
+
+   test_string.parentNode.removeChild(test_string);
 
    //for splitting divs
    singledisplay();
@@ -144,8 +162,12 @@ function singledisplay(){
 
 // separate-function for parent/child differentiation
 function graph1(g, parent,child){
-   var key,prob;
+   var key;
    for(key in g){
+      var text = document.getElementById("t_width");
+      text.innerHTML = g[key].node[0];
+      console.log(text.getBoundingClientRect().width);
+      r_width = Math.max(r_width, (text.getBoundingClientRect().width + 20));
       if(g[key].parents.length==0) parent.push(g[key]);
       else child.push(g[key]);
       //graphs[0][key].parents
@@ -230,7 +252,7 @@ var simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
       //simulation.stop();
 */
-var simulation = d3.tree().size([width, height]);
+var simulation = d3.tree().nodeSize([r_height*2, r_width+(2*40)]);
 var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
                   treedata.each(function(d){
@@ -252,12 +274,11 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          .attr("x", (d) => d.x)
          .attr("y", (d) => d.y - 50);
 
-       r_width = 20;
-       r_height = 20;
-
       n.append("rect")
          .attr("width", r_width)
          .attr("height", r_height)
+         //.attr("cursor", "pointer")
+         //.attr("pointer-events", "all")
          .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray");
@@ -267,6 +288,8 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          .attr("id", function(d){ return "Nodetext_"+ d.data.node;})
          .attr("x", r_width/2)
          .attr("y", r_height/2+ 5)
+         //.attr("cursor", "pointer")
+         //.attr("pointer-events", "all")
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.data.id;
@@ -318,27 +341,28 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          var sy = Math.round(source.attr("y"));
          var tx = Math.round(target.attr("x"));
          var ty = Math.round(target.attr("y"));
+         var t = "";
+         var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
          if(ty == sy){
-            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty) + "," + (tx + r_height/2);
-               }    
+            if(tx > sx) t +=  "M"   + (sy + r_width/2) + "," + (sx + r_height) 
+                                    + m
+                                    + " " + (ty) + "," + (tx + r_height/2);
+            if(tx < sx) t +=  "M"   + (sy + r_width/2) + "," + (sx)
+                                    + m
+                                    + " " + (ty + r_width/2) + "," + (tx + r_height);
+            }    
          if(ty > sy){
-            var t = "M" + (sy + r_width) + "," + (sx+ r_height/2)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty) + "," + (tx + r_height/2);
+            t += "M"    + (sy + r_width) + "," + (sx + r_height/2)
+                        + m
+                        + " " + (ty) + "," + (tx + r_height/2);
             }
          if(ty < sy){
-            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty + r_width) + "," + (tx + r_width/2);
-            }
-    
-            return t;
-      }; 
+               t += "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                        + m
+                        + " " + (ty + r_width) + "," + (tx + r_height/2);
+         }   
+         return t;      
+   };   
 
       var l =canvas.selectAll(".link")
          .data(links)
@@ -394,7 +418,6 @@ function multidisplay(){
    .attr("height", "100%")
    /*
    .on("mousedown", function(d){
-      // ist immer true ???
       var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
       console.log(ctrl);
       if(ctrl){
@@ -606,7 +629,7 @@ function multidisplay(){
 
                console.log(links);
 
-   var simulation = d3.tree().size([width, height]);
+   var simulation = d3.tree().nodeSize([r_height*2, r_width+(2*40)]);
    var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
        treedata.each(function(d){
@@ -627,32 +650,43 @@ function multidisplay(){
          .attr("x", (d) => d.x)
          .attr("y", (d) => d.y - 150);
 
-       r_width = 20;
-       r_height = 20;
-
       var node_rect = n.append("rect")
          .attr("width", r_width)
          .attr("height", r_height)
          .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
          .attr("fill", "lightgray")
          .attr("visibility", "visible")
-         .attr("cursor", "pointer")
-         .attr("pointer-events", "all")
+         .attr("cursor", function(d){
+                  var node_name = d.data.node;
+                  console.log(node_name == "root"); 
+                  if(node_name =="root") return "none"; 
+                  else return "pointer";})
          .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
-         .on("click",function(d){ return node_selection(d, nodes);});
+         .on("click",function(d){ return node_selection(d, nodes);})
+         .attr("pointer-events", "all")
+         .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
+         .attr("pointer-events", "none");
 
          n.append("text")
          .style("font-size", 14)
          .attr("x", r_width/2)
-         .attr("y", r_height/2+ 5)
+         .attr("y", r_height/2)
+         .attr("dominant-baseline", "middle")
          .attr("text-anchor", "middle")
          .text(function (d) {
             return d.data.node;
          })
-         .attr("cursor", "pointer")
-         .attr("pointer-events", "all")
+         .attr("cursor", function(d){
+            var node_name = d.data.node;
+            console.log(node_name == "root"); 
+            if(node_name =="root") return "none"; 
+            else return "pointer";})
          .attr("id", function(d){ return "Nodetext_"+d.data.node;})
-         .on("click", function(d){ return node_selection(d, nodes);});
+         .on("click", function(d){ return node_selection(d, nodes);})  
+         .attr("pointer-events", "all")
+         .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
+         .attr("pointer-events", "none");
+
 
          d3.select("#node_root").style("visibility", "hidden");
          d3.select("#NodeButton_root").style("visibility", "hidden");
@@ -790,23 +824,25 @@ function multidisplay(){
          var sy = Math.round(source.attr("y"));
          var tx = Math.round(target.attr("x"));
          var ty = Math.round(target.attr("y"));
+         var t = "";
+         var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
          if(ty == sy){
-            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty) + "," + (tx + r_height/2);
+            if(tx > sx) t +=  "M"   + (sy + r_width/2) + "," + (sx + r_height) 
+                                    + m
+                                    + " " + (ty) + "," + (tx + r_height/2);
+            if(tx < sx) t +=  "M"   + (sy + r_width/2) + "," + (sx)
+                                    + m
+                                    + " " + (ty + r_width/2) + "," + (tx + r_height);
                }    
          if(ty > sy){
-            var t = "M" + (sy + r_width) + "," + (sx+ r_height/2)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty) + "," + (tx + r_height/2);
+             t += "M"   + (sy + r_width) + "," + (sx + r_height/2)
+                        + m
+                        + " " + (ty) + "," + (tx + r_height/2);
             }
          if(ty < sy){
-            var t = "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                  + "C" + (sy + ty)/2 + "," + sx
-                  + " " + (sy + ty)/2 + "," + tx;
-            t += " " + (ty + r_width) + "," + (tx + r_width/2);
+            t += "M" + (sy + r_width/2) + "," + (sx+ r_height)
+                     + m
+                     + " " + (ty + r_width) + "," + (tx + r_height/2);
             }   
             return t;      
       };   
