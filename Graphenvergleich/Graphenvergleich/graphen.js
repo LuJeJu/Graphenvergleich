@@ -166,7 +166,6 @@ function graph1(g, parent,child){
    for(key in g){
       var text = document.getElementById("t_width");
       text.innerHTML = g[key].node[0];
-      console.log(text.getBoundingClientRect().width);
       r_width = Math.max(r_width, (text.getBoundingClientRect().width + 20));
       if(g[key].parents.length==0) parent.push(g[key]);
       else child.push(g[key]);
@@ -199,6 +198,9 @@ function draw(parent,child,divs, link){
       title = "Graph 4";
    }
 
+   var zoom = d3.zoom().on("zoom", function(d){
+                  d3.select("#single_"+ divs).attr("transform", d3.event.transform);});
+
    var rect = d3.select("#"+divs).append("rect")
    .attr("width", "50")
    .attr("height", "15")
@@ -213,12 +215,19 @@ function draw(parent,child,divs, link){
                         .text(title);
 
    var canvas = d3.select("#"+divs).append("svg")
+   .attr("id", "svg_"+divs)
    .attr("width", "100%")
    .attr("height", "calc(100% - 16px)")
-   .call(d3.zoom().on("zoom", function(){
-      canvas.attr("transform", d3.event.transform)
-   })).on("dblclick.zoom", null)
+   .call(zoom)
+   .on("dblclick.zoom", null)
+   .call(zoom.transform, d3.zoomIdentity
+      .translate(-50,50)
+      .scale(.3,.3))
    .append("g")
+   .attr("transform",
+                     "translate(" + -50 + "," + 
+                     50 +")scale("+ .3 + "," +
+                      .3 + ")")
    .attr("id", "single_" + divs);
 
    var root = {
@@ -252,7 +261,7 @@ var simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
       //simulation.stop();
 */
-var simulation = d3.tree().nodeSize([r_height*2, r_width+(2*40)]);
+var simulation = d3.tree().nodeSize([r_height*2, r_width*2+40]);
 var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
                   treedata.each(function(d){
@@ -379,6 +388,28 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
          //.attr("y2", function(d) { return d.target.y+20/2; })
          //.attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
          .attr("d", function(d){return diagonal(d);});
+
+         /*
+         var g_width = d3.select("#single_"+divs).node().getBoundingClientRect().width;
+         var g_heigth = d3.select("#single_"+divs).node().getBoundingClientRect().height;
+         var svg_width = d3.select("#svg_" + divs).node().getBoundingClientRect().width;
+         var svg_heigth = d3.select("#svg_" + divs).node().getBoundingClientRect().height;
+         var sg_width = svg_width >= g_width ?
+                                    (g_width/svg_width) :
+                                    (svg_width/g_width);
+         var sg_heigth = svg_heigth <= g_heigth ?
+                                    (svg_heigth/g_heigth) :
+                                    (g_heigth/svg_heigth);
+         d3.select("#svg_"+divs).call(zoom.transform, d3.zoomIdentity
+                     .translate(g_width/2-r_width*2,g_heigth/2 - r_height)
+                     .scale(sg_width,sg_heigth));
+         d3.select("#single_"+ divs)
+                     .attr("transform",
+                     "translate(" + (g_width/2-r_width*2) + "," + 
+                     (g_heigth/2 - r_height) +")scale("+ sg_width + "," +
+                      sg_heigth + ")")
+         */
+
    };
 
 // get link array with source and target node from every link
@@ -411,6 +442,10 @@ function get_links(parent, child, link){
 function multidisplay(){
    var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
    var height = document.getElementById("Vergleich1").offsetHeight;
+
+   var zoom = d3.zoom().on("zoom", function(d){
+      d3.select("#compare_g").attr("transform", d3.event.transform);});
+
 
    var canvas = d3.select("#Vergleich1").append("svg")
    .attr("id", "compare_svg")
@@ -451,11 +486,15 @@ function multidisplay(){
       d3.select("#compare_svg").select("#selection").remove();
       })
       */
-   .call(d3.zoom().filter(function() {
-      return !d3.event.ctrlKey;}).on("zoom", function(){
-      canvas.attr("transform", d3.event.transform)
-      })).on("dblclick.zoom", null)
+   .call(zoom).on("dblclick.zoom", null)
+   .call(zoom.transform, d3.zoomIdentity
+      .translate(50,150)
+      .scale(.7,.7))
    .append("g")
+   .attr("transform",
+                     "translate(" + 50 + "," + 
+                     150 +")scale("+ .7 + "," +
+                      .7 + ")")
    .attr("id", "compare_g");
 
    var n = new Array();
@@ -627,8 +666,6 @@ function multidisplay(){
           a.findIndex(t =>
                (t.source == v.source && t.target == v.target)) === i);
 
-               console.log(links);
-
    var simulation = d3.tree().nodeSize([r_height*2, r_width+(2*40)]);
    var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
@@ -658,7 +695,6 @@ function multidisplay(){
          .attr("visibility", "visible")
          .attr("cursor", function(d){
                   var node_name = d.data.node;
-                  console.log(node_name == "root"); 
                   if(node_name =="root") return "none"; 
                   else return "pointer";})
          .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
@@ -951,6 +987,20 @@ function multidisplay(){
             }
             hide = hide == true ? false : true;
          });
+         /*
+         var g_width = d3.select("#compare_g").node().getBoundingClientRect().width;
+         var g_heigth = d3.select("#compare_g").node().getBoundingClientRect().height;
+         var svg_width = d3.select("#compare_svg").node().getBoundingClientRect().width;
+         var svg_heigth = d3.select("#compare_svg").node().getBoundingClientRect().height;
+         d3.select("#compare_svg").call(zoom.transform, d3.zoomIdentity
+                     .translate(g_width/2-r_width*2,g_heigth/2 - r_height)
+                     .scale(svg_width/g_width,svg_heigth/g_heigth));
+         d3.select("#compare_g")
+                     .attr("transform",
+                     "translate(" + (g_width/2 - r_width*2) + "," + 
+                     (g_heigth/2 - r_height) +")scale("+ svg_width/g_width + "," +
+                      svg_heigth/g_heigth + ")")
+                      */
 };
 
 // color and push clicked node in an array for cpt and dendrogramm display
