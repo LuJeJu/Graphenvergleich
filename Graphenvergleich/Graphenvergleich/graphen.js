@@ -1080,8 +1080,8 @@ function dendrogram(){
 
         isDived = true;
 
-        for(var s = 0; s < marked.length+1; s++){
-        split_window("#k" + s, "dendrok" + s);
+        for(var s = 0; s < marked.length; s++){
+        split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
@@ -1108,8 +1108,8 @@ function dendrogram(){
                  .style("flex","1")
                  .style("border-top", "2px solid lightgrey");
         isDived = true;
-        for(var s = 0; s < marked.length+1; s++){
-        split_window("#k" + s, "dendrok" + s);
+        for(var s = 0; s < marked.length; s++){
+        split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
@@ -1145,8 +1145,8 @@ function dendrogram(){
 
         isDived = true;
         console.log(graphs.length);
-        for(var s = 0; s < marked.length+1; s++){
-        split_window("#k" + s, "dendrok" + s);
+        for(var s = 0; s < marked.length; s++){
+        split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
             }
@@ -1162,7 +1162,7 @@ function dendrogram(){
 
 //constructing the dendrogram
 
- console.log(marked);
+
 
  function oneDendro(nodeNum, graphNum){
     var canvas = d3.select("#dendrok" + (nodeNum+1) + "_g" + (graphNum+1)).append("svg")
@@ -1179,41 +1179,62 @@ function dendrogram(){
 //d.node[0]==marked[i].node[0]
 
 var currObj;
+//console.log(marked[nodeNum]);
 //Knoten in graphs(graphNum) finden
-/*
-for(var k in graphs){
-console.log("graphs_" + graphs[graphNum-1][k]);}
-*/
-
-
-/* _______________________________
-
+var NodeName = marked[nodeNum].node[0];
+//console.log(marked[nodeNum]);
     for(var i in graphs[graphNum]){
-        if(marked[nodeNum].node[0] == graphs[graphNum][i].node[0]){
+    //console.log(marked);
+
+   // console.log(NodeName);
+        if(NodeName
+        == graphs[graphNum][i].node[0]){
         currObj = graphs[graphNum][i];
         }
     }
+
+//console.log(currObj);
+//currObj.node[0]
+
+/* _______________________________
+function treeChild(parentX, parentY, NumOfChild, ){
+for()
+};
+_______________________________________*/
 // Erstellung der benötigten Anzahl von Dendrogram Balken
-    console.log(currObj.parents.length);
-    //was gibt parents.length bei [] aus?
     if(currObj.parents.length > 0){
-    for (var i=0; i < states.length^currObj.parents.length; i++){
-    var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-             .attr("width", r_width)
-             .attr("height", r_height)
+        for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
+        var XCoor = currObj.parents.length*10;
+        var YCoor = 20;
+
+        var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+             .attr("width", 100)
+             .attr("height", 20)
              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
              //.attr("transform", "translate(10,10)")
-             .attr("fill", "lightgray")
+             .attr("x", XCoor)
+             .attr("y", function(d){return(YCoor+(i*50));})
+             .attr("fill", "gray")
              .attr("visibility", "visible")
              .attr("cursor", "pointer")
              .attr("pointer-events", "all")
-             .attr("id", function(d){ return canvas.id + "_rect" + i;})
+             .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + i;});
              //.on("click",function(d){ return node_selection(d);});
-    }
-    }
-_______________________________________*/
 
- };
+            for(var j=0; j<states.length; j++){
+            var Rect_id = d3.select(("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)) + "_rect" + i);
+            Rect_id.append("rect")
+            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[j]};)
+            .attr("width", function(d){currObj.prob[j]*100})
+            .attr("height", 20);
+            }
+
+        }
+
+    };
+
+
+ }
 
 };
 
