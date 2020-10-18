@@ -1224,7 +1224,7 @@ _______________________________________*/
             for(var j=0; j<states.length; j++){
             var Rect_id = d3.select(("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)) + "_rect" + i);
             Rect_id.append("rect")
-            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[j]};)
+            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[j];})
             .attr("width", function(d){currObj.prob[j]*100})
             .attr("height", 20);
             }
