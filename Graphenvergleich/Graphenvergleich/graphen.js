@@ -1019,7 +1019,6 @@ function node_selection(d, nodes){
    }
    if(elem == false){
       marked.push(d);
-      console.log(marked);
       d3.selectAll("#NodeButton_"+ d.node[0]).transition().style("fill", "lightblue");
    }
    if(elem == true){
@@ -1202,7 +1201,39 @@ for()
 };
 _______________________________________*/
 // Erstellung der benötigten Anzahl von Dendrogram Balken
-    if(currObj.parents.length > 0){
+    if(currObj.parents.length == 1 && 
+      currObj.parents[0] == "root"){
+
+         var XCoor = 10;
+         var YCoor = 20; 
+         var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+              .attr("width", 100)
+              .attr("height", 20)
+              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+              //.attr("transform", "translate(10,10)")
+              .attr("x", XCoor)
+              .attr("y", 20)
+              .attr("fill", "gray")
+              .attr("visibility", "visible")
+              .attr("cursor", "pointer")
+              .attr("pointer-events", "all")
+              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + 0;});
+              
+              for(var j = 0; j< currObj.prob.length; j++){
+               var Rect_id = d3.select(("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)) + "_rect" + 0);
+               var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
+               g_id.append("rect")
+               .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + 0) +"_" + states[0];})
+               .attr("width", function(d){return currObj.prob[j]*100;})
+               .attr("height", 20)
+               .attr("x", function(){ return Rect_id.attr("x");})
+               .attr("y", function(){ return Rect_id.attr("y");})
+               .attr("fill", "red");
+               }
+
+    }
+
+    if(currObj.parents.length > 0 && currObj.parents[0] != "root"){
         for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
         var XCoor = currObj.parents.length*10;
         var YCoor = 20;
@@ -1220,20 +1251,37 @@ _______________________________________*/
              .attr("pointer-events", "all")
              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + i;});
              //.on("click",function(d){ return node_selection(d);});
-
-            for(var j=0; j<states.length; j++){
-            var Rect_id = d3.select(("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)) + "_rect" + i);
-            Rect_id.append("rect")
-            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[j];})
-            .attr("width", function(d){currObj.prob[j]*100})
-            .attr("height", 20);
-            }
-
         }
+         if(currObj.parents.length == 1){
+            for(var j = 0; j< currObj.prob.length; j++){
+            var Rect_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + j);
+            var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
+            g_id.append("rect")
+            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + j) +"_" + states[j];})
+            .attr("width", function(d){return currObj.prob[j][0]*100;})
+            .attr("height", 20)
+            .attr("x", function(){ return Rect_id.attr("x");})
+            .attr("y", function(){ return Rect_id.attr("y");})
+            .attr("fill", "red");
+            }
+         }
 
-    };
-
-
+         if(currObj.parents.length > 1){
+            for(var j=0; j< currObj.prob.length ; j++){
+               for(var k = 0; k < states.length; k++){
+                  var Rect_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i);
+            var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
+            g_id.append("rect")
+            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[i];})
+            .attr("width", function(d){return currObj.prob[j][k]*100;})
+            .attr("height", 20)
+            .attr("x", function(){ return Rect_id.attr("x");})
+            .attr("y", function(){ return Rect_id.attr("y");})
+            .attr("fill", "red");
+               }
+            }
+         }
+    }
  }
 
 };
