@@ -1191,7 +1191,8 @@ var NodeName = marked[nodeNum].node[0];
         currObj = graphs[graphNum][i];
         }
     }
-
+if (typeof currObj == 'undefined'){
+return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}
 //console.log(currObj);
 //currObj.node[0]
 
@@ -1200,12 +1201,21 @@ function treeChild(parentX, parentY, NumOfChild, ){
 for()
 };
 _______________________________________*/
+/*colorbrewer code
+library(RColorBrewer)
+
+display.brewer.all(colorblindFriendly = TRUE)
+display.brewer.pal(6, "Dark2")
+brewer.pal(6, "Dark2")
+#brewer.pal.info*/
+
+
 // Erstellung der benötigten Anzahl von Dendrogram Balken
-    if(currObj.parents.length == 1 && 
-      currObj.parents[0] == "root"){
+    if(currObj.parents[0] == "root" && currObj.parents.length == 1){
 
          var XCoor = 10;
-         var YCoor = 20; 
+         var YCoor = 20;
+         /*
          var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
               .attr("width", 100)
               .attr("height", 20)
@@ -1230,9 +1240,28 @@ _______________________________________*/
                .attr("y", function(){ return Rect_id.attr("y");})
                .attr("fill", "red");
                }
+*/
 
+//neuer Versuch
+        for(var j = 0; j< currObj.prob.length; j++){
+         var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+              .attr("width", function(d){return currObj.prob[j]*100;})
+              .attr("height", 20)
+              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+              //.attr("transform", "translate(10,10)")
+              .attr("x", XCoor)
+              .attr("y", 20)
+              .attr("fill", "gray")
+              .attr("visibility", "visible")
+              .attr("cursor", "pointer")
+              .attr("pointer-events", "all")
+              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];});
+
+              var XCoor = XCoor + 1 + currObj.prob[j]*100;
+
+        }
     }
-
+/*
     if(currObj.parents.length > 0 && currObj.parents[0] != "root"){
         for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
         var XCoor = currObj.parents.length*10;
@@ -1252,6 +1281,8 @@ _______________________________________*/
              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + i;});
              //.on("click",function(d){ return node_selection(d);});
         }
+        }
+
          if(currObj.parents.length == 1){
             for(var j = 0; j< currObj.prob.length; j++){
             var Rect_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + j);
@@ -1280,11 +1311,9 @@ _______________________________________*/
             .attr("fill", "red");
                }
             }
-         }
+         } */
     }
- }
-
-};
+ };
 
 // cpt's of marked nodes
 function cpt(){
