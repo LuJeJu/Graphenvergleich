@@ -1061,6 +1061,7 @@ function dendrogram(){
         split_window("#k1", "dendrok1");
         for(var t = 0; t < graphs.length; t++){
         oneDendro(/*k*/ 0 , /*g*/ t);
+        fillDendro(1,(t+1));
         }
    }
 
@@ -1083,6 +1084,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1111,6 +1113,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1148,6 +1151,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1167,7 +1171,7 @@ function dendrogram(){
     var canvas = d3.select("#dendrok" + (nodeNum+1) + "_g" + (graphNum+1)).append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
-    .attr("id", "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
+    .attr("id", "svg_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
     .call(d3.zoom().on("zoom", function(){
        canvas.attr("transform", d3.event.transform)
     })).on("dblclick.zoom", null)
@@ -1243,7 +1247,7 @@ brewer.pal(6, "Dark2")
 */
 
 //neuer Versuch
-        for(var j = 0; j< currObj.prob.length; j++){
+        for(var j = 0; j < currObj.prob.length; j++){
          var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
               .attr("width", function(d){return currObj.prob[j]*100;})
               .attr("height", 20)
@@ -1261,12 +1265,49 @@ brewer.pal(6, "Dark2")
 
         }
     }
-/*
-    if(currObj.parents.length > 0 && currObj.parents[0] != "root"){
-        for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
+//ein Array abfangen, weil prob als []
+    if(currObj.parents.length == 1 && currObj.parents[0] != "root"){
+        //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
+
+        for(var i = 0; i < currObj.prob.length; i++){
+
+        var XCoor = 10;
+        var YCoor = 20;
+
+            for(var j = 0; j < states.length; j++){
+            var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+              .attr("width", function(d){return currObj.prob[i][j]*100;})
+              .attr("height", 20)
+              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+              //.attr("transform", "translate(10,10)")
+              .attr("x", XCoor)
+              .attr("y", YCoor+(i*50))
+              .attr("fill", "gray")
+              .attr("visibility", "visible")
+              .attr("cursor", "pointer")
+              .attr("pointer-events", "all")
+              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];});
+
+                var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+            }
+        }
+    }
+
+ //restliche Abfrage, prob [][]
+    if(currObj.parents.length > 1){
+
+        for(var i = 0; i < currObj.prob.length; i++){
+
         var XCoor = currObj.parents.length*10;
         var YCoor = 20;
 
+            for(var j = 0; i < states.length; j++){
+
+                var XCoor = XCoor + 1 + currObj.prob[j]*100;
+            }
+        }
+    }
+/*
         var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
              .attr("width", 100)
              .attr("height", 20)
@@ -1310,9 +1351,26 @@ brewer.pal(6, "Dark2")
             .attr("y", function(){ return Rect_id.attr("y");})
             .attr("fill", "red");
                }
+            }*/
+
+  }
+    // graphen farblich markieren???
+
+    function fillDendro(fillnode, fillgraph){/*
+    console.log(d3.select("#g_dendrok" + (fillnode) + "_g" + fillgraph));
+        if(fillgraph = 1){
+            d3.select("svg_dendrok" + (fillnode) + "_g" + fillgraph).style("color", "#386cb0");
+            //.attr("fill", "none");
+            //.attr("fill", "#386cb0")
             }
-         } */
-    }
+        if(fillgraph = 2){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#7fc97f");}
+        if(fillgraph = 3){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#fdc086");}
+        if(fillgraph = 4){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#beaed4");}
+        */}
+
  };
 
 // cpt's of marked nodes
