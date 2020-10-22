@@ -1279,7 +1279,7 @@ brewer.pal(6, "Dark2")
          for(var i = 0; i < currObj.prob.length; i++){
   
             var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-              .attr("width", function(d){return currObj.prob[j][i]*100;})
+              .attr("width", function(d){return currObj.prob[i][j]*100;})
               .attr("height", 20)
               .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
               //.attr("transform", "translate(10,10)")
@@ -1291,7 +1291,7 @@ brewer.pal(6, "Dark2")
               .attr("pointer-events", "all")
               .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                var XCoor = XCoor + 1 + currObj.prob[j][i]*100;
+                var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
             }
         }
     }
