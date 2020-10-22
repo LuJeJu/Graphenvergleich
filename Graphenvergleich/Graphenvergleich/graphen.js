@@ -1369,7 +1369,7 @@ brewer.pal(6, "Dark2")
             d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#fdc086");}
         if(fillgraph = 4){
             d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#beaed4");}
-        */}
+        neueer Test*/}
 
  };
 
