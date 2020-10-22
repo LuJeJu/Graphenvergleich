@@ -666,7 +666,7 @@ function multidisplay(){
           a.findIndex(t =>
                (t.source == v.source && t.target == v.target)) === i);
 
-   var simulation = d3.tree().nodeSize([r_height*2, r_width+(2*40)]);
+   var simulation = d3.tree().nodeSize([r_height*3, r_width+(3*40)]);
    var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
        treedata.each(function(d){
@@ -1001,7 +1001,129 @@ function multidisplay(){
                      (g_heigth/2 - r_height) +")scale("+ svg_width/g_width + "," +
                       svg_heigth/g_heigth + ")")
                       */
+
+   glyph(nodes);
 };
+
+function glyph(nodes){
+
+   //draw glyph if node is element of graphs[i]
+   for(var key=1; key < nodes.length; key++){
+      var node_name = nodes[key].node[0];
+      var curr_node = d3.select("#compare_g").select("#node_"+ node_name);
+
+      //graph 2
+      for(var i in graphs[1]){
+         if(node_name == graphs[1][i].node[0]){
+            curr_node.append("circle")
+               .attr("r", (r_height/2-1))
+               .attr("transform", "translate(0," + r_height + ")")
+               .style("fill", "white")
+               .style("stroke", "black")
+               .attr("x", (d) => d.x)
+               .attr("y", (d) => d.y)
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g2"});
+               glyph_split("node_"+ node_name + "_" + "g2", graphs[1][i], node_name, 2);
+            curr_node.append("circle")
+               .attr("r", 5)
+               .attr("transform", "translate(0," + r_height + ")")
+               .style("fill", "white")
+               .style("stroke", "black")
+            curr_node.append("text")
+               .attr("dominant-baseline", "middle")
+               .attr("text-anchor", "middle")
+               .style("font-size", 8)
+               .attr("x",0)
+               .attr("y", r_height+1)
+               //.style("stroke", "black")
+               .text("2").attr("id", "glyphnum");
+            
+         }
+      }
+
+      // graph 3
+      for(var i in graphs[2]){
+         if(node_name == graphs[2][i].node[0]){
+            curr_node.append("circle")
+               .attr("r", (r_height/2-1))
+               .attr("transform", "translate(" + r_width + ",0)")
+               .style("fill", "white")
+               .style("stroke", "black")
+               .attr("x", (d) => d.x)
+               .attr("y", (d) => d.y)
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g3"});
+               glyph_split("node_"+ node_name + "_" + "g3", graphs[2][i], node_name, 3);
+            curr_node.append("circle")
+               .attr("r", 5)
+               .attr("transform", "translate(" + r_width + ",0)")
+               .style("fill", "white")
+               .style("stroke", "black")
+            curr_node.append("text")
+               .attr("dominant-baseline", "middle")
+               .attr("text-anchor", "middle")
+               .style("font-size", 8)
+               .attr("x", r_width)
+               .attr("y", 1)
+               //.style("stroke", "black")
+               .text("3").attr("id", "glyphnum");
+            
+         }
+      }
+
+      // graph 4
+      for(var i in graphs[3]){
+         if(node_name == graphs[3][i].node[0]){
+            curr_node.append("circle")
+               .attr("r", (r_height/2-1))
+               .attr("transform", "translate(" + r_width + "," + r_height + ")")
+               .style("fill", "white")
+               .style("stroke", "black")
+               .attr("x", (d) => d.x)
+               .attr("y", (d) => d.y)
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g4"});
+               glyph_split("node_"+ node_name + "_" + "g4", graphs[3][i], node_name, 4);
+            curr_node.append("circle")
+               .attr("r", 5)
+               .attr("transform", "translate(" + r_width + "," + r_height + ")")
+               .style("fill", "white")
+               .style("stroke", "black")
+            curr_node.append("text")
+               .attr("dominant-baseline", "middle")
+               .attr("text-anchor", "middle")
+               .style("font-size", 8)
+               .attr("x", r_width)
+               .attr("y", r_height+1)
+               //.style("stroke", "black")
+               .text("4").attr("id", "glyphnum");
+            
+         }
+      }
+   }
+
+   function glyph_split(id, glyph_node, node_name, graph_num){
+      var curr_glyph = d3.select("#"+ id);
+      /*
+      var arc =d3.arc().innerRadius((r_height/2-1))
+                           .outerRadius((r_height/2-1))
+                           .startAngle(45* (Math.PI/180))
+                           .endAngle(3);
+                           */
+      d3.select("#node_" + node_name).append("path").attr("id", "path").attr("d", //arc)
+      function(d){
+         var r = 20;
+            var t  = `M -${r} 0 A ${r} ${r} 0 0 1 0 -${r} L 0 0`;
+            return t;})
+            .attr("transform", function(d){
+               if(graph_num == 2) return "translate(0," + r_height + ")";
+               if(graph_num == 3) return "translate(" + r_width + ",0)";
+               if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";
+            })
+      .attr( "stroke-width", 1.0);
+      //.style("fill", "none");
+   };
+
+};
+
 
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d, nodes){
