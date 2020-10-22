@@ -1350,7 +1350,7 @@ brewer.pal(6, "Dark2")
             .attr("x", function(){ return Rect_id.attr("x");})
             .attr("y", function(){ return Rect_id.attr("y");})
             .attr("fill", "red");
-               }
+               } hallo test
             }*/
 
   }
