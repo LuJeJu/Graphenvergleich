@@ -1196,6 +1196,10 @@ var NodeName = marked[nodeNum].node[0];
         }
     }
 if (typeof currObj == 'undefined'){
+   canvas.append("text").text( function(d){return "there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum})
+   .style("font-size", 14)
+         .attr("x", 20)
+         .attr("y", 20);
 return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}
 //console.log(currObj);
 //currObj.node[0]
@@ -1267,28 +1271,27 @@ brewer.pal(6, "Dark2")
     }
 //ein Array abfangen, weil prob als []
     if(currObj.parents.length == 1 && currObj.parents[0] != "root"){
+      var YCoor = 20;
         //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
-
-        for(var i = 0; i < currObj.prob.length; i++){
-
-        var XCoor = 10;
-        var YCoor = 20;
-
-            for(var j = 0; j < states.length; j++){
+         for(var j = 0; j < states.length; j++){
+            var XCoor = 10;
+            YCoor = YCoor+(j*50);
+         for(var i = 0; i < currObj.prob.length; i++){
+  
             var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-              .attr("width", function(d){return currObj.prob[i][j]*100;})
+              .attr("width", function(d){return currObj.prob[j][i]*100;})
               .attr("height", 20)
               .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
               //.attr("transform", "translate(10,10)")
               .attr("x", XCoor)
-              .attr("y", YCoor+(i*50))
+              .attr("y", YCoor)
               .attr("fill", "gray")
               .attr("visibility", "visible")
               .attr("cursor", "pointer")
               .attr("pointer-events", "all")
-              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];});
+              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+                var XCoor = XCoor + 1 + currObj.prob[j][i]*100;
             }
         }
     }
