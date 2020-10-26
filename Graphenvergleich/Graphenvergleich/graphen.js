@@ -1372,7 +1372,6 @@ display.brewer.pal(6, "Dark2")
 brewer.pal(6, "Dark2")
 #brewer.pal.info*/
 
-console.log(currObj.parents[0]);
 // Erstellung der benötigten Anzahl von Dendrogram Balken
     if(currObj.parents[0] == "root" && currObj.parents.length == 1 || currObj.parents.length == 0){
          var XCoor = 10;
@@ -1390,7 +1389,24 @@ console.log(currObj.parents[0]);
               .attr("visibility", "visible")
               .attr("cursor", "pointer")
               .attr("pointer-events", "all")
-              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];});
+              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];})
+              .on("mouseover", function(d){
+               var coord = d3.mouse(this);
+               var t = "";
+               t+= d3.select(this).attr("id").slice(19);
+               console.log(t);
+               d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                  .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
+                  .style("background-color", "lightgrey")   //bitte Farbe wählen
+                  .style("font-size", 15)
+                  .text(t)
+                  .attr("width", (t.length *8 + "px"))
+                  .style("visibility", "visible");
+              })
+              .on("mouseout", function(d){
+               d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                  .transition()
+                  .style("visibility", "hidden")});
 
               XCoor = XCoor + 1 + currObj.prob[j]*100;
 
@@ -1416,7 +1432,24 @@ console.log(currObj.parents[0]);
                   .attr("visibility", "visible")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
-                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
+                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];})
+                  .on("mouseover", function(d){
+                     var coord = d3.mouse(this);
+                     var t = "";
+                     t+= d3.select(this).attr("id").slice(19);
+                     console.log(t);
+                     d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                        .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
+                        .style("background-color", "lightgrey")   //bitte Farbe wählen
+                        .style("font-size", 15)
+                        .text(t)
+                        .attr("width", (t.length *8 + "px"))
+                        .style("visibility", "visible");
+                    })
+                    .on("mouseout", function(d){
+                     d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                        .transition()
+                        .style("visibility", "hidden")});
 
                     XCoor = XCoor + 1 + currObj.prob[i][j]*100;
             }
@@ -1443,7 +1476,24 @@ console.log(currObj.parents[0]);
                   .attr("visibility", "visible")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
-                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
+                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];})
+                  .on("mouseover", function(d){
+                     var coord = d3.mouse(this);
+                     var t = "";
+                     t+= d3.select(this).attr("id").slice(19);
+                     console.log(t);
+                     d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                        .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
+                        .style("background-color", "lightgrey")   //bitte Farbe wählen
+                        .style("font-size", 15)
+                        .text(t)
+                        .attr("width", (t.length *8 + "px"))
+                        .style("visibility", "visible");
+                    })
+                    .on("mouseout", function(d){
+                     d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
+                        .transition()
+                        .style("visibility", "hidden")});
 
                     XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
                 }
@@ -1454,6 +1504,16 @@ console.log(currObj.parents[0]);
     function MakeDendroTree(){
 
     }
+
+    var dendro_hint = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
+    .append("foreignObject")
+    .attr("id", "dendro_hint")
+    .attr("width", "20px")
+    .attr("height", "20px")
+    .style("z-index", "1")
+    .style("border", "1px solid black")
+    .attr("transform", "translate(10,10)")
+    .style("visibility", "hidden");
  }
     // graphen farblich markieren???
 
