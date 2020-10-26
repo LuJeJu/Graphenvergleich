@@ -1364,6 +1364,7 @@ for()
 };
 _______________________________________*/
 /*colorbrewer code
+https://rdrr.io/snippets/
 library(RColorBrewer)
 
 display.brewer.all(colorblindFriendly = TRUE)
@@ -1371,40 +1372,12 @@ display.brewer.pal(6, "Dark2")
 brewer.pal(6, "Dark2")
 #brewer.pal.info*/
 
-
+console.log(currObj.parents[0]);
 // Erstellung der benötigten Anzahl von Dendrogram Balken
-    if(currObj.parents[0] == "root" && currObj.parents.length == 1){
-
+    if(currObj.parents[0] == "root" && currObj.parents.length == 1 || currObj.parents.length == 0){
          var XCoor = 10;
          var YCoor = 20;
-         /*
-         var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-              .attr("width", 100)
-              .attr("height", 20)
-              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-              //.attr("transform", "translate(10,10)")
-              .attr("x", XCoor)
-              .attr("y", 20)
-              .attr("fill", "gray")
-              .attr("visibility", "visible")
-              .attr("cursor", "pointer")
-              .attr("pointer-events", "all")
-              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + 0;});
-              
-              for(var j = 0; j< currObj.prob.length; j++){
-               var Rect_id = d3.select(("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)) + "_rect" + 0);
-               var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
-               g_id.append("rect")
-               .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + 0) +"_" + states[0];})
-               .attr("width", function(d){return currObj.prob[j]*100;})
-               .attr("height", 20)
-               .attr("x", function(){ return Rect_id.attr("x");})
-               .attr("y", function(){ return Rect_id.attr("y");})
-               .attr("fill", "red");
-               }
-*/
 
-//neuer Versuch
         for(var j = 0; j < currObj.prob.length; j++){
          var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
               .attr("width", function(d){return currObj.prob[j]*100;})
@@ -1419,7 +1392,7 @@ brewer.pal(6, "Dark2")
               .attr("pointer-events", "all")
               .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[j];});
 
-              var XCoor = XCoor + 1 + currObj.prob[j]*100;
+              XCoor = XCoor + 1 + currObj.prob[j]*100;
 
         }
     }
@@ -1445,18 +1418,20 @@ brewer.pal(6, "Dark2")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                    var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+                    XCoor = XCoor + 1 + currObj.prob[i][j]*100;
             }
         }
     }
 
  //Abfrage 2 Parents, prob [[][]][[][]]
     if(currObj.parents.length == 2){
-    var XCoor = 10;
+    var YCoor = 20;
         for(var s = 0; s < currObj.prob.length; s++){
-        var YCoor = 20;
+
             for(var j = 0; j < currObj.prob.length; j++){
-            YCoor = YCoor+(j*50);
+            var XCoor = 10;
+                YCoor = YCoor+50;
+
                 for(var i = 0; i < currObj.prob.length; i++){
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
                   .attr("width", function(d){return currObj.prob[i][j][s]*100;})
@@ -1470,10 +1445,14 @@ brewer.pal(6, "Dark2")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                    var XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
+                    XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
                 }
             }
         }
+    }
+
+    function MakeDendroTree(){
+
     }
  }
     // graphen farblich markieren???
