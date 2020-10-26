@@ -1424,15 +1424,11 @@ brewer.pal(6, "Dark2")
     var XCoor = 10;
         for(var s = 0; s < currObj.prob.length; s++){
         var YCoor = 20;
-
-
             for(var j = 0; j < currObj.prob.length; j++){
-
             YCoor = YCoor+(j*50);
                 for(var i = 0; i < currObj.prob.length; i++){
-                if( s > 0){XCoor = XArray[i];}
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-                  .attr("width", function(d){return currObj.prob[s][i][j]*100;})
+                  .attr("width", function(d){return currObj.prob[i][j][s]*100;})
                   .attr("height", 20)
                   .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
                   .attr("x", XCoor)
@@ -1443,8 +1439,7 @@ brewer.pal(6, "Dark2")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                    var XCoor = XCoor + 1 + currObj.prob[0][i][j]*100;
-                    XArray.push(XCoor);
+                    var XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
                 }
             }
         }
