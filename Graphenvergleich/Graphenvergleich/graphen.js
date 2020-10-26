@@ -239,6 +239,42 @@ function draw(parent,child,divs, link){
 
    var n = new Array();
    n.push(root);
+
+   for(var i =0; i<parent1.length;i++){
+      parent1[i].parents = ["root"];
+      n.push(parent1[i]);
+   }
+   for(var i=0; i<child1.length; i++){
+      n.push(child1[i]);
+   }
+      var elem = false;
+      for(var i = 0; i< parent.length; i++){
+         for(var j = 0; j< n.length; j++){
+            if(n[j].node[0] == parent[i].node[0]){
+               elem = true;
+            }
+         }
+         if(elem == false){
+            if(parent[i].parents.length == 0){
+               parent[i].parents.push("root");
+            }
+            n.push(parent[i]);
+         }
+         elem = false;
+   }
+   for(var i = 0; i< child.length; i++){
+      for(var j = 0; j< n.length; j++){
+         if(n[j].node[0] == child[i].node[0]){
+            elem = true;
+         }
+      }
+      if(elem == false){ 
+         if(child[i].parents.length == 0) child[i].parents.push("root");
+         n.push(child[i]);
+      }
+      elem = false;
+   }
+/* altes layout
    for(var i =0; i<parent.length;i++){
       //parent[i].x = 10;
       //parent[i].y = i*100+10;
@@ -250,17 +286,10 @@ function draw(parent,child,divs, link){
       //child[i].y = i*100+10;
       n.push(child[i]);
    }
+   */
    var nodes = n;
    var links = link;
-/*
-var simulation = d3.forceSimulation(nodes)
-      //.force("linkForce", d3.forceLink().distance(30).strength(10));
-      .force("center", d3.forceCenter(width/2, height/2))   //geht nicht
-      .force("charge", d3.forceManyBody().strength(-1000))
-      .force("collide", d3.forceCollide().radius(100))
-      .force("link", d3.forceLink(links).id(function(d){ return d.node;}).strength(2));
-      //simulation.stop();
-*/
+
 var simulation = d3.tree().nodeSize([r_height*2, r_width*2+40]);
 var treedata = d3.stratify().id(function(d){return d.node[0];})
                   .parentId(function(d){return d.parents[0];})(nodes);
@@ -306,27 +335,42 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
 
          d3.selectAll("#Nodetext_root").style("visibility", "hidden");
          d3.selectAll("#NodeButton_root").style("visibility", "hidden");
-/*
-      var text = canvas.append("g")
-            .attr("class", "labels")
-            .selectAll("text")
-            .data(nodes)
-            .enter()
-         .append("text")
-         .attr("text-anchor", "middle")
-         .text(function (d) {
-            return d.node;
-         })
-         .attr("dominant-baseline", "middle")
-         //.attr("x", "50%")
-         //.attr("y", "50%");
-         .attr("x", function(d){
-            return d.x + (20/2);})
-         .attr("y", function(d){return d.y + (20/2);});
-*/
-         // gibt textgröße aus
-      //var r_width = n.select("text").node().getBoundingClientRect().width;
-      //var r_height = n.select("text").node().getBoundingClientRect().height;  
+
+// remove node, if not in graph, but in graph 1
+for(var i = 0; i < parent1.length; i++){
+   var el = false;
+   for(var j = 0; j< parent.length; j++){
+      if(parent1[i].node[0] == parent[j].node[0]) el = true;
+   }
+   for(var j = 0; j< child.length; j++){
+      if(parent1[i].node[0] == child[j].node[0]) el = true;
+   }
+   if(el == false){
+      var node_name = parent1[i].node[0];
+      console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
+      d3 .select("#single_" + divs)
+         .select("#"+ divs + "node_" + node_name)
+         .remove();
+   }
+      el = false;
+}
+for(var i = 0; i < child1.length; i++){
+   var el = false;
+   for(var j = 0; j< parent.length; j++){
+      if(child1[i].node[0] == parent[j].node[0]) el = true;
+   }
+   for(var j = 0; j< child.length; j++){
+      if(child1[i].node[0] == child[j].node[0]) el = true;
+   }
+   if(el == false){
+      var node_name = child1[i].node[0];
+      console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
+      d3 .select("#single_" + divs)
+         .select("#"+ divs + "node_" + node_name)
+         .remove();
+   }
+      el = false;
+}  
 
        canvas.append("svg:defs").selectAll("marker")
        .data(["end"])
@@ -340,9 +384,8 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
        .attr("orient", "auto")
        .append("svg:path")
        .attr("d", "M0,-5L10,0L0,5")
-       .style("fill", color);  //warum wird alles schwarz????
+       .style("fill", color); 
 
-      // anstelle von diagonal
       var diagonal = function link(d){
          var source = d3.select("#"+divs+"node_"+ d.source);
          var target = d3.select("#"+divs+"node_"+ d.target);
@@ -371,7 +414,7 @@ var tree = d3.hierarchy(treedata, function(d){return d.children;});
                         + " " + (ty + r_width) + "," + (tx + r_height/2);
          }   
          return t;      
-   };   
+                     };   
 
       var l =canvas.selectAll(".link")
          .data(links)
@@ -516,6 +559,9 @@ function multidisplay(){
       root.children.push(parent1[i]);
       n.push(parent1[i]);
    }
+   for(var i = 0; i< child1.length; i++){
+      n.push(child1[i]);
+   }
    if(graphs.length >= 2){
       var element;
       for(var i =0; i<parent2.length;i++){
@@ -524,8 +570,6 @@ function multidisplay(){
             else element = false;
          }
          if(element == false){
-         //parent2[i].x = 10;
-         //parent2[i].y = (n.length)*110 +10;
          parent2[i].parents = ["root"];
          root.children.push(parent2[i]);
          n.push(parent2[i]);
@@ -568,19 +612,6 @@ function multidisplay(){
    var count = 0;
 
    //children iteration
-   for(var i =0; i< child1.length; i++){
-      var element;
-         for(var j=0; j<n.length; j++){
-            if(child1[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         child1[i].x = 110;
-         child1[i].y = count*110 +10;
-         count++;
-         n.push(child1[i]);
-         }
-      }
 
    if(graphs.length >= 2){
       var element;
