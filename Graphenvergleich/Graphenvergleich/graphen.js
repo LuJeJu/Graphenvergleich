@@ -6,7 +6,7 @@ function darstellung(){
       // delete default display, activate/disable buttons
    document.getElementById("reset").disabled = false;
    document.getElementById("start").disabled = true;
-   document.getElementById("center").disabled = false;   
+   document.getElementById("center_graph").disabled = false;
    document.getElementsByClassName("sync").disabled = false;
    document.getElementById("help").disabled = false;
    d3.select("#Vergleich2").text("");
@@ -1330,20 +1330,10 @@ function dendrogram(){
     .append("g")
     .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
 
-
-
-    //Set color of canvas
-    //if(graphNum == 1){
-   // canvas.attr("fill", "white");}
-
 var currObj;
 //Knoten in graphs(graphNum) finden
 var NodeName = marked[nodeNum].node[0];
-//console.log(marked[nodeNum]);
     for(var i in graphs[graphNum]){
-    //console.log(marked);
-
-   // console.log(NodeName);
         if(NodeName
         == graphs[graphNum][i].node[0]){
         currObj = graphs[graphNum][i];
@@ -1355,8 +1345,6 @@ if (typeof currObj == 'undefined'){
          .attr("x", 20)
          .attr("y", 20);
 return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}
-//console.log(currObj);
-//currObj.node[0]
 
 /* _______________________________
 function treeChild(parentX, parentY, NumOfChild, ){
@@ -1382,7 +1370,6 @@ brewer.pal(6, "Dark2")
               .attr("width", function(d){return currObj.prob[j]*100;})
               .attr("height", 20)
               .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-              //.attr("transform", "translate(10,10)")
               .attr("x", XCoor)
               .attr("y", 20)
               .attr("fill", "gray")
@@ -1418,7 +1405,7 @@ brewer.pal(6, "Dark2")
         //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
          for(var j = 0; j < states.length; j++){
             var XCoor = 10;
-            YCoor = YCoor+(j*50);
+                YCoor = YCoor+(j*50);
                 for(var i = 0; i < currObj.prob.length; i++){
   
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
@@ -1504,6 +1491,7 @@ brewer.pal(6, "Dark2")
 
     }
 
+    // Hover für Belegung
     var dendro_hint = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
     .append("foreignObject")
     .attr("id", "dendro_hint")
@@ -1514,8 +1502,8 @@ brewer.pal(6, "Dark2")
     .attr("transform", "translate(10,10)")
     .style("visibility", "hidden");
  }
-    // graphen farblich markieren???
 
+    // graphen farblich markieren
     function fillDendro(fillnode, fillgraph){
     console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
         if(fillgraph == 1){
