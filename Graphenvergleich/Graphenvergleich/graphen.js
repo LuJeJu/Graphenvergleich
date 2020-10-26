@@ -1214,7 +1214,7 @@ function dendrogram(){
         split_window("#k1", "dendrok1");
         for(var t = 0; t < graphs.length; t++){
         oneDendro(/*k*/ 0 , /*g*/ t);
-        //fillDendro(1,(t+1));
+        fillDendro(1,(t+1));
         }
    }
 
@@ -1237,7 +1237,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                //fillDendro((s+1),(t+1));
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1266,7 +1266,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                //fillDendro((s+1),(t+1));
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1304,7 +1304,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                //fillDendro((s+1),(t+1));
+                fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1330,6 +1330,7 @@ function dendrogram(){
     })).on("dblclick.zoom", null)
     .append("g")
     .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
+
 
 
     //Set color of canvas
@@ -1481,10 +1482,9 @@ brewer.pal(6, "Dark2")
                      var coord = d3.mouse(this);
                      var t = "";
                      t+= d3.select(this).attr("id").slice(19);
-                     console.log(t);
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
                         .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
-                        .style("background-color", "lightgrey")   //bitte Farbe wählen
+                        .style("background-color", "white")
                         .style("font-size", 15)
                         .text(t)
                         .attr("width", (t.length *8 + "px"))
@@ -1519,17 +1519,22 @@ brewer.pal(6, "Dark2")
 
     function fillDendro(fillnode, fillgraph){
     console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
-        if(fillgraph = 1){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#386cb0");
-            //.attr("fill", "none");
-            //.attr("fill", "#386cb0")
-            }
-        if(fillgraph = 2){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#7fc97f");}
-        if(fillgraph = 3){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#fdc086");}
-        if(fillgraph = 4){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#beaed4");}
+        if(fillgraph == 1){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
+            .style("background-color", "#9bb5d7")
+            ;}
+        if(fillgraph == 2){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
+            .style("background-color", "#bfe4bf")
+            ;}
+        if(fillgraph == 3){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
+            .style("background-color", "#fedfc2")
+            ;}
+        if(fillgraph == 4){
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
+            .style("background-color", "#ded6e9")
+            ;}
         }
 
  };
@@ -1609,10 +1614,10 @@ function cpt(){
          //d3.select("#CPT").append("div").attr("id", node);
          document.createElement("div");
          div.innerHTML = elem.toString();
-
+         /*
          //hover function yee
          div.onmouseover = function(event){
-            console.log('Hallo');
+            //console.log('Hallo');
             const element = document.getElementById("prob_window");
             element.style.left = event.pageX;
             element.style.top = event.pageY;
@@ -1622,7 +1627,7 @@ function cpt(){
             const element = document.getElementById("prob_window");
             element.style.visibility = "hidden";
          };
-         };
+         }; */
          return div;
       } else {
          var table = document.createElement("table");
