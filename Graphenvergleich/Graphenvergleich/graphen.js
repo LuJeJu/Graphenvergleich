@@ -1155,7 +1155,6 @@ function glyph(nodes){
 
 };
 
-
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d, nodes){
    //console.log("Click !!!");

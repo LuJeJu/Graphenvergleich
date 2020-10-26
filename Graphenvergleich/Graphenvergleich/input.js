@@ -76,6 +76,9 @@ function center_all(){
 	d3.select("#single_s_g4").transition().attr("transform", "translate(0,0)");
 };
 
+function center_dendro(){
+};
+
 function sync(){
 
 	var div_midX = parseInt(d3.select("#Vergleich1").style("width"))/2;
