@@ -1183,7 +1183,7 @@ function dendrogram(){
         split_window("#k1", "dendrok1");
         for(var t = 0; t < graphs.length; t++){
         oneDendro(/*k*/ 0 , /*g*/ t);
-        fillDendro(1,(t+1));
+        //fillDendro(1,(t+1));
         }
    }
 
@@ -1206,7 +1206,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                fillDendro((s+1),(t+1));
+                //fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1235,7 +1235,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                fillDendro((s+1),(t+1));
+                //fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1273,7 +1273,7 @@ function dendrogram(){
         split_window("#k" + (s+1), "dendrok" + (s+1));
             for(var t = 0; t < graphs.length ; t++){
                 oneDendro(/*k*/ s, /*g*/ t);
-                fillDendro((s+1),(t+1));
+                //fillDendro((s+1),(t+1));
             }
         }
    }
@@ -1299,12 +1299,13 @@ function dendrogram(){
     })).on("dblclick.zoom", null)
     .append("g")
     .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
-//console.log(marked[nodeNum-1]);
-//wird 5 mal ausgegeben => soll nur 4 mal aufgerufen werden?! oder auch nicht?
-//d.node[0]==marked[i].node[0]
+
+
+    //Set color of canvas
+    //if(graphNum == 1){
+   // canvas.attr("fill", "white");}
 
 var currObj;
-//console.log(marked[nodeNum]);
 //Knoten in graphs(graphNum) finden
 var NodeName = marked[nodeNum].node[0];
 //console.log(marked[nodeNum]);
@@ -1398,103 +1399,73 @@ brewer.pal(6, "Dark2")
          for(var j = 0; j < states.length; j++){
             var XCoor = 10;
             YCoor = YCoor+(j*50);
-         for(var i = 0; i < currObj.prob.length; i++){
+                for(var i = 0; i < currObj.prob.length; i++){
   
-            var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-              .attr("width", function(d){return currObj.prob[i][j]*100;})
-              .attr("height", 20)
-              .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-              //.attr("transform", "translate(10,10)")
-              .attr("x", XCoor)
-              .attr("y", YCoor)
-              .attr("fill", "gray")
-              .attr("visibility", "visible")
-              .attr("cursor", "pointer")
-              .attr("pointer-events", "all")
-              .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
+                var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+                  .attr("width", function(d){return currObj.prob[i][j]*100;})
+                  .attr("height", 20)
+                  .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+                  //.attr("transform", "translate(10,10)")
+                  .attr("x", XCoor)
+                  .attr("y", YCoor)
+                  .attr("fill", "gray")
+                  .attr("visibility", "visible")
+                  .attr("cursor", "pointer")
+                  .attr("pointer-events", "all")
+                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
 
-                var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+                    var XCoor = XCoor + 1 + currObj.prob[i][j]*100;
             }
         }
     }
 
- //restliche Abfrage, prob [][]
-    if(currObj.parents.length > 1){
-
-        for(var i = 0; i < currObj.prob.length; i++){
-
-        var XCoor = currObj.parents.length*10;
+ //Abfrage 2 Parents, prob [[][]][[][]]
+    if(currObj.parents.length == 2){
+    var XCoor = 10;
+        for(var s = 0; s < currObj.prob.length; s++){
         var YCoor = 20;
 
-            for(var j = 0; i < states.length; j++){
 
-                var XCoor = XCoor + 1 + currObj.prob[j]*100;
+            for(var j = 0; j < currObj.prob.length; j++){
+
+            YCoor = YCoor+(j*50);
+                for(var i = 0; i < currObj.prob.length; i++){
+                if( s > 0){XCoor = XArray[i];}
+                var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+                  .attr("width", function(d){return currObj.prob[s][i][j]*100;})
+                  .attr("height", 20)
+                  .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+                  .attr("x", XCoor)
+                  .attr("y", YCoor)
+                  .attr("fill", "gray")
+                  .attr("visibility", "visible")
+                  .attr("cursor", "pointer")
+                  .attr("pointer-events", "all")
+                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];});
+
+                    var XCoor = XCoor + 1 + currObj.prob[0][i][j]*100;
+                    XArray.push(XCoor);
+                }
             }
         }
     }
-/*
-        var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-             .attr("width", 100)
-             .attr("height", 20)
-             .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-             //.attr("transform", "translate(10,10)")
-             .attr("x", XCoor)
-             .attr("y", function(d){return(YCoor+(i*50));})
-             .attr("fill", "gray")
-             .attr("visibility", "visible")
-             .attr("cursor", "pointer")
-             .attr("pointer-events", "all")
-             .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + i;});
-             //.on("click",function(d){ return node_selection(d);});
-        }
-        }
-
-         if(currObj.parents.length == 1){
-            for(var j = 0; j< currObj.prob.length; j++){
-            var Rect_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + j);
-            var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
-            g_id.append("rect")
-            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + j) +"_" + states[j];})
-            .attr("width", function(d){return currObj.prob[j][0]*100;})
-            .attr("height", 20)
-            .attr("x", function(){ return Rect_id.attr("x");})
-            .attr("y", function(){ return Rect_id.attr("y");})
-            .attr("fill", "red");
-            }
-         }
-
-         if(currObj.parents.length > 1){
-            for(var j=0; j< currObj.prob.length ; j++){
-               for(var k = 0; k < states.length; k++){
-                  var Rect_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i);
-            var g_id = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
-            g_id.append("rect")
-            .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + i) +"_" + states[i];})
-            .attr("width", function(d){return currObj.prob[j][k]*100;})
-            .attr("height", 20)
-            .attr("x", function(){ return Rect_id.attr("x");})
-            .attr("y", function(){ return Rect_id.attr("y");})
-            .attr("fill", "red");
-               } hallo test
-            }*/
-
-  }
+ }
     // graphen farblich markieren???
 
-    function fillDendro(fillnode, fillgraph){/*
-    console.log(d3.select("#g_dendrok" + (fillnode) + "_g" + fillgraph));
+    function fillDendro(fillnode, fillgraph){
+    console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
         if(fillgraph = 1){
-            d3.select("svg_dendrok" + (fillnode) + "_g" + fillgraph).style("color", "#386cb0");
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#386cb0");
             //.attr("fill", "none");
             //.attr("fill", "#386cb0")
             }
         if(fillgraph = 2){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#7fc97f");}
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#7fc97f");}
         if(fillgraph = 3){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#fdc086");}
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#fdc086");}
         if(fillgraph = 4){
-            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).attr("fill", "#beaed4");}
-        neueer Test*/}
+            d3.select("#dendrok" + (fillnode) + "_g" + fillgraph).style("fill", "#beaed4");}
+        }
 
  };
 
