@@ -1153,11 +1153,6 @@ function glyph(nodes){
                if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(45)";
                if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(45)";})
       .attr( "stroke-width", 1.0);
-      /*.attr("transform", function(d){
-               if(graph_num == 2) return "rotate(45, " + (r_height) + "," + 0 + ")";
-               if(graph_num == 3) return "rotate(45, " + 0 + "," + (r_width) + ")";
-               if(graph_num == 4) return "rotate(45, " + (r_height) + "," + (r_width) + ")";
-               });*/
       //.style("fill", "none");
    };
 
@@ -1332,7 +1327,7 @@ function dendrogram(){
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("id", "svg_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
-    .call(d3.zoom().on("zoom", function(){
+    .call(d3.zoom().on("zoom", function(){ // zoom out beim erstellen!!!
        canvas.attr("transform", d3.event.transform)
     })).on("dblclick.zoom", null)
     .append("g")
@@ -1447,8 +1442,7 @@ brewer.pal(6, "Dark2")
                         .style("visibility", "hidden")});
 
                      XCoor = XCoor + 1 + currObj.prob[i][j]*100;
-                }
-
+            }
         }
         MakeDendroTree(10, 20, YCoor, 1, 20);
     }
@@ -1498,16 +1492,16 @@ brewer.pal(6, "Dark2")
             }
         }
 
-        MakeDendroTree(10, 20, YCoor, 2, 20);
+    MakeDendroTree(10, 20, YCoor, 2, 20);
     }
 
 
 
-   function MakeDendroTree(Xco, firstY, lastY, parentNum, prevWidth){
+   function MakeDendroTree(prevX, firstY, lastY, parentNum, prevWidth){
 
     var dendroParent;
+    var XCoorR = prevX - 100;
     var YCoorR = firstY + 50/2;
-    var XCoorR = Xco - 100;
     var Resize = 30;
     var i;
     if(parentNum == 0){
