@@ -1133,6 +1133,7 @@ function glyph(nodes){
 
    function glyph_split(id, glyph_node, node_name, graph_num){
       var curr_glyph = d3.select("#"+ id);
+      console.log(curr_glyph);
       /*
       var arc =d3.arc().innerRadius((r_height/2-1))
                            .outerRadius((r_height/2-1))
@@ -1150,6 +1151,7 @@ function glyph(nodes){
                if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";
             })
       .attr( "stroke-width", 1.0);
+      //.attr("transform", "rotate(0, 0, 45)");Zentrum von kreis noch einsetzen
       //.style("fill", "none");
    };
 
@@ -1361,9 +1363,10 @@ brewer.pal(6, "Dark2")
 #brewer.pal.info*/
 
 // Erstellung der benötigten Anzahl von Dendrogram Balken
+var YCoor;
     if(currObj.parents[0] == "root" && currObj.parents.length == 1 || currObj.parents.length == 0){
          var XCoor = 10;
-         var YCoor = 20;
+         YCoor = 20;
 
         for(var j = 0; j < currObj.prob.length; j++){
          var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
@@ -1401,13 +1404,11 @@ brewer.pal(6, "Dark2")
     }
 //ein Array abfangen, weil prob als []
     if(currObj.parents.length == 1 && currObj.parents[0] != "root"){
-      var YCoor = 20;
+    YCoor = 20;
         //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
-         for(var j = 0; j < states.length; j++){
+        for(var j = 0; j < states.length; j++){
             var XCoor = 10;
-                YCoor = YCoor+(j*50);
-                for(var i = 0; i < currObj.prob.length; i++){
-  
+            for(var i = 0; i < currObj.prob.length; i++){
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
                   .attr("width", function(d){return currObj.prob[i][j]*100;})
                   .attr("height", 20)
@@ -1438,19 +1439,21 @@ brewer.pal(6, "Dark2")
                         .transition()
                         .style("visibility", "hidden")});
 
-                    XCoor = XCoor + 1 + currObj.prob[i][j]*100;
-            }
+                     XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+                }
+                YCoor = YCoor+(j*50);
         }
     }
 
  //Abfrage 2 Parents, prob [[][]][[][]]
     if(currObj.parents.length == 2){
-    var YCoor = 20;
+    YCoor = 20;
+    var j;
         for(var s = 0; s < currObj.prob.length; s++){
 
-            for(var j = 0; j < currObj.prob.length; j++){
+            for(j = 0; j < currObj.prob.length; j++){
             var XCoor = 10;
-                YCoor = YCoor+50;
+
 
                 for(var i = 0; i < currObj.prob.length; i++){
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
@@ -1483,13 +1486,49 @@ brewer.pal(6, "Dark2")
 
                     XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
                 }
+                YCoor = YCoor+50;
             }
         }
-    }
 
-    function MakeDendroTree(){
 
     }
+    MakeDendroTree(10, YCoor);
+
+
+    function MakeDendroTree(Xco, Yco){
+    var dendroParent;
+    var YCoorR = 20+50/2;
+    var XCoorR = Xco -100;
+    var Resize = 30;
+    var i;
+    if ((currObj.parents[0] == "root" || currObj.parents.length == 0)){}
+    for(i = 0; i < ((Yco - 20)/(50*states.length)); i++){
+        dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+                       .attr("width", Resize)
+                       .attr("height", Resize)
+                       .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+                       .attr("x", XCoorR)
+                       .attr("y", YCoorR)
+                       .attr("fill", "lightgray")
+                       .attr("visibility", "visible")
+                       .attr("cursor", "pointer")
+                       .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                       .append("text")
+                       .style("font-size", 14)
+                       .attr("id", function(d){ return "Nodetext_"+ currObj.parents[0];})
+                       .attr("x", Resize)
+                       .attr("y", Resize/2+ 5)
+                       .attr("text-anchor", "middle")
+                       .attr("fill", "gray")
+                       .attr("visibility", "visible")
+                       .text(function (d) {return currObj.parents[0];});
+        YCoorR = YCoorR + 50*states.length;
+    }
+    //if (((Yco - 20)/(50*states.length)) > 1){MakeDendroTree(XCoorR, YCoorR);}
+
+    }
+
+    //canvas.attr("transform",  "translate(" + (dendroParent.attr("x")+5) + ",0)");
 
     // Hover für Belegung
     var dendro_hint = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
@@ -1501,9 +1540,9 @@ brewer.pal(6, "Dark2")
     .style("border", "1px solid black")
     .attr("transform", "translate(10,10)")
     .style("visibility", "hidden");
- }
+ };
 
-    // graphen farblich markieren
+    // background color based on graph number
     function fillDendro(fillnode, fillgraph){
     console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
         if(fillgraph == 1){
