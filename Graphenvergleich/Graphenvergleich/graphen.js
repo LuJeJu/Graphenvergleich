@@ -1349,11 +1349,6 @@ if (typeof currObj == 'undefined'){
          .attr("y", 20);
 return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}
 
-/* _______________________________
-function treeChild(parentX, parentY, NumOfChild, ){
-for()
-};
-_______________________________________*/
 /*colorbrewer code
 https://rdrr.io/snippets/
 library(RColorBrewer)
@@ -1501,7 +1496,7 @@ brewer.pal(6, "Dark2")
 
     var dendroParent;
     var XCoorR = prevX - 100;
-    var YCoorR = firstY + 50/2;
+    var YCoorR;
     var Resize = 30;
     var i;
     if(parentNum == 0){
@@ -1526,29 +1521,32 @@ brewer.pal(6, "Dark2")
                                        .attr("visibility", "visible")
                                        .text(function (d) {return currObj.node[0]});}
         else{
-        dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
-                               .attr("width", Resize)
-                               .attr("height", Resize)
-                               .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-                               .attr("x", XCoorR+50)
-                               .attr("y", (firstY - prevWidth/4))
-                               .attr("fill", "lightgray")
-                               .attr("visibility", "visible")
-                               .attr("cursor", "pointer")
-                               .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+            dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+                        .attr("width", Resize)
+                        .attr("height", Resize)
+                        .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+                        .attr("x", XCoorR+50)
+                        .attr("y", (firstY - prevWidth/4))
+                        .attr("fill", "lightgray")
+                        .attr("visibility", "visible")
+                        .attr("cursor", "pointer")
+                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
                         canvas.append("text")
-                               .style("font-size", 14)
-                               .attr("id", function(d){ return "Nodetext_"+ currObj.node[0];})
-                               .attr("x", Resize/2)
-                               .attr("y", Resize/2 + prevWidth/4)
-                               .attr("text-anchor", "middle")
-                               .attr("fill", "gray")
-                               .attr("visibility", "visible")
-                               .text(function (d) {return currObj.node[0]});
+                        .style("font-size", 14)
+                        .attr("id", function(d){ return "Nodetext_"+ currObj.node[0];})
+                        .attr("x", Resize/2)
+                        .attr("y", Resize/2 + prevWidth/4)
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "gray")
+                        .attr("visibility", "visible")
+                        .text(function (d) {return currObj.node[0]});
     }}
     else {
-        for(i = 0; i < ((lastY - 20)/(50*states.length)); i++){
-        dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+
+        if(prevWidth == Resize){
+            YCoorR = firstY + 50;
+            for(i = 0; i < (((lastY - firstY)/(50*states.length))/states.length); i++){
+            dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
                        .attr("width", Resize)
                        .attr("height", Resize)
                        .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
@@ -1567,9 +1565,36 @@ brewer.pal(6, "Dark2")
                        .attr("fill", "gray")
                        .attr("visibility", "visible")
                        .text(function (d) {return currObj.parents[0];});
-        YCoorR = YCoorR + 50*states.length;
+            YCoorR = YCoorR + 50*states.length;
+            }
+            MakeDendroTree(XCoorR, firstY+50, YCoorR, parentNum - 1, Resize);
         }
-        MakeDendroTree(XCoorR, firstY+50/2, YCoorR, parentNum - 1, Resize);
+        else{
+            YCoorR = firstY + 50/2;
+             for(i = 0; i < ((lastY - 20)/(50*states.length)); i++){
+             dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
+                        .attr("width", Resize)
+                        .attr("height", Resize)
+                        .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+                        .attr("x", XCoorR)
+                        .attr("y", YCoorR)
+                        .attr("fill", "lightgray")
+                        .attr("visibility", "visible")
+                        .attr("cursor", "pointer")
+                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                  canvas.append("text")
+                        .style("font-size", 14)
+                        .attr("id", function(d){ return "Nodetext_"+ currObj.parents[0];})
+                        .attr("x", Resize/2)
+                        .attr("y", Resize/2+ 5)
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "gray")
+                        .attr("visibility", "visible")
+                        .text(function (d) {return currObj.parents[0];});
+             YCoorR = YCoorR + 50*states.length;
+             }
+             MakeDendroTree(XCoorR, firstY+50/2, YCoorR, parentNum - 1, Resize);
+        }
     }
     //if (((Yco - 20)/(50*states.length)) > 1){MakeDendroTree(XCoorR, YCoorR);}
 
