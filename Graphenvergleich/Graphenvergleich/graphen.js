@@ -535,9 +535,9 @@ function multidisplay(){
       .scale(.7,.7))
    .append("g")
    .attr("transform",
-                     "translate(" + 50 + "," + 
-                     150 +")scale("+ .7 + "," +
-                      .7 + ")")
+                     "translate(" + 0 + "," + 
+                     150 +")scale("+ .6 + "," +
+                      .6 + ")")
    .attr("id", "compare_g");
 
    var n = new Array();
@@ -553,8 +553,6 @@ function multidisplay(){
 
    //parent iteration
    for(var i =0; i< parent1.length; i++){
-      //parent1[i].x = 10;
-      //parent1[i].y = i*110 +10;
       parent1[i].parents = ["root"];
       root.children.push(parent1[i]);
       n.push(parent1[i]);

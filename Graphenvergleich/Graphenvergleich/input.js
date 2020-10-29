@@ -69,11 +69,31 @@ function reset(){
 };			
 
 function center_all(){
-	d3.select("#compare_g").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_s_g1").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_s_g2").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_s_g3").transition().attr("transform", "translate(0,0)");
-	d3.select("#single_s_g4").transition().attr("transform", "translate(0,0)");
+	d3.select("#compare_g")	.transition()
+							.attr("transform",
+								"translate(" + 0 + "," + 
+								150 +")scale("+ .6 + "," +
+	 							.6 + ")");
+	d3.select("#single_s_g1").transition()
+							.attr("transform",
+							"translate(" + -50 + "," + 
+							50 +")scale("+ .3 + "," +
+	 						.3 + ")");
+	d3.select("#single_s_g2").transition()
+							.attr("transform",
+							"translate(" + -50 + "," + 
+							50 +")scale("+ .3 + "," +
+	 						.3 + ")");
+	d3.select("#single_s_g3").transition()
+							.attr("transform",
+							"translate(" + -50 + "," + 
+							50 +")scale("+ .3 + "," +
+	 						.3 + ")");
+	d3.select("#single_s_g4").transition()
+							.attr("transform",
+							"translate(" + -50 + "," + 
+							50 +")scale("+ .3 + "," +
+	 						.3 + ")");
 };
 
 function center_dendro(){
