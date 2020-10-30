@@ -1133,7 +1133,7 @@ function glyph(nodes){
       var curr_glyph = d3.select("#"+ id);
       var GlX = d3.select("#node_" + node_name).attr("x");
       var GlY = d3.select("#node_" + node_name).attr("y");
-      console.log(curr_glyph);
+      //console.log(curr_glyph);
       //console.log(curr_glyph);
       /*
       var arc =d3.arc().innerRadius((r_height/2-1))
@@ -1510,16 +1510,41 @@ brewer.pal(6, "Dark2")
                                        .attr("fill", "lightgray")
                                        .attr("visibility", "visible")
                                        .attr("cursor", "pointer")
-                                       .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                                       .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.node[0];})
                                 canvas.append("text")
                                        .style("font-size", 14)
                                        .attr("id", function(d){ return "Nodetext_"+ currObj.node[0];})
-                                       .attr("x", Resize/2)
-                                       .attr("y", Resize/2 + prevWidth/4)
+                                       .attr("x", function(d){
+                                          return (XCoorR+50 + Resize/2);})
+                                       .attr("y", function(d){
+                                          return (firstY + Resize/2);})
                                        .attr("text-anchor", "middle")
+                                       .attr("dominant-baseline", "middle")
                                        .attr("fill", "gray")
                                        .attr("visibility", "visible")
-                                       .text(function (d) {return currObj.node[0]});}
+                                       .text(function (d) {return currObj.node[0]});
+
+                                       var l_data = [];
+                                       var obj = {};
+                                       obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]);
+                                       obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0");
+                                       console.log(obj);
+                                       l_data.push(obj);
+                                       var link = canvas
+                                                .data(l_data)
+                                                .append("path")
+                                                .attr("class", "link")
+                                                .attr("stroke", "grey")
+                                                .style("fill", "none")
+                                                .style("stroke-width", 2.0)
+                                                .attr( "d", function(d){ 
+                                                   var sx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("x"));
+                                                   var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("y"));
+                                                   var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0").attr("x"));
+                                                   var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0").attr("y"));
+                                                   console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                                   return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + Resize/2);});
+               }                  
         else{
             dendroParent = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
                         .attr("width", Resize)
@@ -1530,16 +1555,40 @@ brewer.pal(6, "Dark2")
                         .attr("fill", "lightgray")
                         .attr("visibility", "visible")
                         .attr("cursor", "pointer")
-                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.node[0];})
                         canvas.append("text")
                         .style("font-size", 14)
                         .attr("id", function(d){ return "Nodetext_"+ currObj.node[0];})
-                        .attr("x", Resize/2)
-                        .attr("y", Resize/2 + prevWidth/4)
+                        .attr("x", function(d){
+                           return (XCoorR+50 + Resize/2);})
+                        .attr("y", function(d){
+                           return ((firstY - prevWidth/4) + Resize/2);})
                         .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
                         .attr("fill", "gray")
                         .attr("visibility", "visible")
                         .text(function (d) {return currObj.node[0]});
+
+                                       var l_data = [];
+                                       var obj = {};
+                                       obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]);
+                                       obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]);
+                                       console.log(obj);
+                                       l_data.push(obj);
+                                       var link = canvas
+                                                .data(l_data)
+                                                .append("path")
+                                                .attr("class", "link")
+                                                .attr("stroke", "grey")
+                                                .style("fill", "none")
+                                                .style("stroke-width", 2.0)
+                                                .attr( "d", function(d){ 
+                                                   var sx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("x"));
+                                                   var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("y"));
+                                                   var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("x"));
+                                                   var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("y"));
+                                                   console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                                   return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + 10);}); 
     }}
     else {
 
@@ -1555,17 +1604,42 @@ brewer.pal(6, "Dark2")
                        .attr("fill", "lightgray")
                        .attr("visibility", "visible")
                        .attr("cursor", "pointer")
-                       .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                       .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[parentNum-1] + i;})
                  canvas.append("text")
                        .style("font-size", 14)
-                       .attr("id", function(d){ return "Nodetext_"+ currObj.parents[0];})
-                       .attr("x", Resize/2)
-                       .attr("y", Resize/2+ 5)
+                       .attr("id", function(d){ return "Nodetext_"+ currObj.parents[parentNum-1] + i;})
+                       .attr("x", function(d){
+                           return (XCoorR + Resize/2);})
+                        .attr("y", function(d){
+                           return (YCoorR + Resize/2);})
                        .attr("text-anchor", "middle")
+                       .attr("dominant-baseline", "middle")
                        .attr("fill", "gray")
                        .attr("visibility", "visible")
-                       .text(function (d) {return currObj.parents[0];});
+                       .text(function (d) {return currObj.parents[parentNum-1];});
             YCoorR = YCoorR + 50*states.length;
+
+            var l_data = [];
+            var obj = {};
+            obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-2]);
+            obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1]);
+            console.log(obj);
+            l_data.push(obj);
+            var link = canvas
+                     .data(l_data)
+                     .append("path")
+                     .attr("class", "link")
+                     .attr("stroke", "grey")
+                     .style("fill", "none")
+                     .style("stroke-width", 2.0)
+                     .attr( "d", function(d){ 
+                        var sx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-2]).attr("x"));
+                        var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-2]).attr("y"));
+                        var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1]).attr("x"));
+                        var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1]).attr("y"));
+                        console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                        return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + Resize/2);}); 
+
             }
             MakeDendroTree(XCoorR, firstY+50, YCoorR, parentNum - 1, Resize);
         }
@@ -1581,16 +1655,41 @@ brewer.pal(6, "Dark2")
                         .attr("fill", "lightgray")
                         .attr("visibility", "visible")
                         .attr("cursor", "pointer")
-                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[0];})
+                        .attr("id", function(d){return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + currObj.parents[parentNum-1]+i;})
                   canvas.append("text")
                         .style("font-size", 14)
-                        .attr("id", function(d){ return "Nodetext_"+ currObj.parents[0];})
-                        .attr("x", Resize/2)
-                        .attr("y", Resize/2+ 5)
+                        .attr("id", function(d){ return "Nodetext_"+ currObj.parents[parentNum-1]+i;})
+                        .attr("x", function(d){
+                           return (XCoorR + Resize/2);})
+                        .attr("y", function(d){
+                           return (YCoorR + Resize/2);})
                         .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
                         .attr("fill", "gray")
                         .attr("visibility", "visible")
-                        .text(function (d) {return currObj.parents[0];});
+                        .text(function (d) {return currObj.parents[parentNum-1];});
+
+                        var l_data = [];
+                        var obj = {};
+                        obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum]);
+                        obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]);
+                        console.log(obj);
+                        l_data.push(obj);
+                        var link = canvas
+                                 .data(l_data)
+                                 .append("path")
+                                 .attr("class", "link")
+                                 .attr("stroke", "grey")
+                                 .style("fill", "none")
+                                 .style("stroke-width", 2.0)
+                                 .attr( "d", function(d){ 
+                                    var sx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum]).attr("x"));
+                                    var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum]).attr("y"));
+                                    var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("x"));
+                                    var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("y"));
+                                    console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                    return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + 10);}); 
+
              YCoorR = YCoorR + 50*states.length;
              }
              MakeDendroTree(XCoorR, firstY+50/2, YCoorR, parentNum - 1, Resize);
@@ -1616,7 +1715,7 @@ brewer.pal(6, "Dark2")
 
     // background color based on graph number
     function fillDendro(fillnode, fillgraph){
-    console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
+    //console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
         if(fillgraph == 1){
             d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
             .style("background-color", "#9bb5d7")
