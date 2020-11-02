@@ -980,8 +980,6 @@ function multidisplay(){
          function(){
             //hide nodes
             var diff = nodes.filter(x => !marked.includes(x));
-            console.log(marked);
-            console.log(diff);
 	         for(var i = 1; i< diff.length; i++){
                //var t = "";
                var name = diff[i].node[0];
@@ -1133,6 +1131,9 @@ function glyph(nodes){
       var curr_glyph = d3.select("#"+ id);
       var GlX = d3.select("#node_" + node_name).attr("x");
       var GlY = d3.select("#node_" + node_name).attr("y");
+
+      children_glyph();
+      parents_glyph();
       //console.log(curr_glyph);
       //console.log(curr_glyph);
       /*
@@ -1141,77 +1142,143 @@ function glyph(nodes){
                            .startAngle(45* (Math.PI/180))
                            .endAngle(3);
                            */
-     
-      d3.select("#node_" + node_name)
-      .append("path")
-      .attr("id", "path_children")
-      .attr("d", function(d){
-                var r = 20;
-                var t  = `M -${r} 0 A ${r} ${r} 0 0 1 0 -${r} L 0 0`;
-                return t;})
-      .attr("transform", function(d){
-               if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(45)";
-               if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(45)";
-               if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(45)";})
-      .attr( "stroke-width", 1.0);
-      //.style("fill", "none");
-
-    
-
-      var g1_node;
-      for(var key in graphs[0]){
-         if(graphs[0][key].node[0] == node_name){
-            g1_node = graphs[0][key];
-            var equal = true;
-            if(g1_node.parents.length == glyph_node.parents.length){
-               for(var i =0; i< g1_node.parents.length; i++){
-                  if(g1_node.parents[i] != glyph_node.parents[i])
-                     equal = false;
+      function children_glyph(){
+         var g1_node;
+         for(var key in graphs[0]){
+            if(graphs[0][key].node[0] == node_name){
+               g1_node = graphs[0][key];
+               var children_num = [];
+               for(var par = 0; par<g1_node.children.length; par++){
+                  if(g1_node.children[par] != "root"){
+                     children_num.push(g1_node.children[par]);
+               } else continue;
+            }
+            var equal = false;
+               if(g1_node.children.length == glyph_node.children.length){
+                  for(var i =0; i< g1_node.children.length; i++){
+                     for(var j =0; j<glyph_node.children.length; j++){
+                        if(g1_node.children[i] == glyph_node.children[j] && g1_node.children[i] != "root")
+                        equal = true;
+                  }}
                }
-            } else equal = false;
-               if(equal == false){
-                  var arc = d3.arc().innerRadius(0).outerRadius(20)
-                              .startAngle(45 * (Math.PI/180)).endAngle((360-45) * (Math.PI/180));
-                  d3 .select("#node_" + node_name)
-                     .append("path")
-                     .attr("id", "path_parent")
-                     .attr("d", arc)
-                     .attr("transform", function(d){
-                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
-                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
-                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                     .attr( "stroke-width", 1.0);
+               //console.log("parentnum "+ node_name + ": " + parent_num);
+               var help = glyph_node.children.filter(d => !g1_node.children.includes(d));
+               //console.log("help " +node_name + ": " +help);
+               for(var i = 0; i<help.length;i++){
+                  {children_num.push(help[i]);}
                }
-               else{
-                  var angle = (360-90) / g1_node.parents.length;
-                  var endangle = ((360) / g1_node.parents.length) * (Math.PI/180); 
-                  var startangle = 45 * (Math.PI/180);
-                  for(var i = 0; i<g1_node.parents.length; i++){
-                     if(g1_node.parents.length == 1){
-                        endangle = endangle - 45 * (Math.PI/180);
+
+               var angle = (90) / children_num.length;
+                  var startangle = (Math.PI/180);
+                  var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
+                  
+                  for(var i = 0; i<children_num.length; i++){
+                     if(children_num.length == 1){
+                        endangle = 90 *  (Math.PI/180);
+                        //endangle - 45 * (Math.PI/180);
+                     } else {
+                        //endangle = (i+1) * (2*Math.PI/(i+1)) - Math.PI/2
                      }
-                     var arc = d3.arc().innerRadius(0).outerRadius(12)
+                     console.log(node_name + " " + endangle);
+                     var arc = d3.arc().innerRadius(0).outerRadius(18.5)
                               .startAngle(startangle).endAngle(endangle);
                      d3 .select("#node_" + node_name)
                      .append("path")
-                     .attr("id", "path_parent")
+                     .attr("id", "path_children")
                      .attr("d", arc)
+                     .attr("fill", function(d){
+                        if (equal==false) return "black";
+                        else return "white";
+                     })
+                     .style("stroke", function(d){
+                        if(equal==false) return "white";
+                        else return "black";
+                     })
                      .attr("transform", function(d){
-                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
-                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
-                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                     .attr( "stroke-width", 1.0);
+                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(-45)";
+                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(-45)";
+                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(-45)";})
+                     .attr( "stroke-width", 0.5);
                      startangle = endangle;
                      endangle += angle * (Math.PI/180);
-                     if(i == g1_node.parents.length-1){
-                        console.log("last"); 
+                     if(i == children_num.length-1){
                         endangle = endangle - 45 * (Math.PI/180);
                      }
                   } 
                   
                }
          }
-      }
+   };
+
+      function parents_glyph(){
+
+      var g1_node;
+      for(var key in graphs[0]){
+         if(graphs[0][key].node[0] == node_name){
+            g1_node = graphs[0][key];
+            var parent_num = [];
+            for(var par = 0; par<g1_node.parents.length; par++){
+               if(g1_node.parents[par] != "root"){
+               parent_num.push(g1_node.parents[par]);
+            } else continue;
+         }
+         var equal = false;
+            if(g1_node.parents.length == glyph_node.parents.length){
+               for(var i =0; i< g1_node.parents.length; i++){
+                  for(var j =0; j<glyph_node.parents.length; j++){
+                     if(g1_node.parents[i] == glyph_node.parents[j] && g1_node.parents[i] != "root")
+                     equal = true;
+               }}
+            }
+            //console.log("parentnum "+ node_name + ": " + parent_num);
+            var help = glyph_node.parents.filter(d => !g1_node.parents.includes(d));
+            //console.log("help " +node_name + ": " +help);
+            for(var i = 0; i<help.length;i++){
+               {parent_num.push(help[i]);}
+            }
+            //console.log("parentnum "+ node_name + ": " + parent_num);
+                  var angle = (360-90) / parent_num.length;
+                  var startangle = 45 * (Math.PI/180);
+                  var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
+                  
+                  for(var i = 0; i<parent_num.length; i++){
+                     if(parent_num.length == 1){
+                        endangle = (315) *  (Math.PI/180);
+                        //endangle - 45 * (Math.PI/180);
+                     } else {
+                        //endangle = (i+1) * (2*Math.PI/(i+1)) - Math.PI/2
+                     }
+                     console.log(node_name + " " + endangle);
+                     var arc = d3.arc().innerRadius(0).outerRadius(12)
+                              .startAngle(startangle).endAngle(endangle);
+                     d3 .select("#node_" + node_name)
+                     .append("path")
+                     .attr("id", "path_parent")
+                     .attr("d", arc)
+                     .attr("fill", function(d){
+                        if (equal==false) return "black";
+                        else return "white";
+                     })
+                     .style("stroke", function(d){
+                        if(equal==false) return "white";
+                        else return "black";
+                     })
+                     .attr("transform", function(d){
+                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
+                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
+                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
+                     .attr( "stroke-width", 0.5);
+                     startangle = endangle;
+                     endangle += angle * (Math.PI/180);
+                     if(i == parent_num.length-1){
+                        endangle = endangle - 45 * (Math.PI/180);
+                     }
+                  } 
+                  
+               }
+         }
+      };
+
    };
 };
 
@@ -1599,7 +1666,7 @@ brewer.pal(6, "Dark2")
                                                    var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("y"));
                                                    var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0").attr("x"));
                                                    var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0").attr("y"));
-                                                   console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                                   //console.log(sx +","+ sy +"->"+ tx +","+ ty);
                                                    return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + Resize/2);});
                }                  
         else{
@@ -1630,7 +1697,7 @@ brewer.pal(6, "Dark2")
                                        var obj = {};
                                        obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]);
                                        obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]);
-                                       console.log(obj);
+                                       //console.log(obj);
                                        l_data.push(obj);
                                        var link = canvas
                                                 .data(l_data)
@@ -1644,7 +1711,7 @@ brewer.pal(6, "Dark2")
                                                    var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]).attr("y"));
                                                    var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("x"));
                                                    var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]).attr("y"));
-                                                   console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                                   //console.log(sx +","+ sy +"->"+ tx +","+ ty);
                                                    return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + 10);}); 
 
                               
@@ -1756,7 +1823,7 @@ brewer.pal(6, "Dark2")
                                     var sy = obj.source.y;
                                     var tx = obj.target.x;
                                     var ty = obj.target.y;
-                                    console.log(sx +","+ sy +"->"+ tx +","+ ty);
+                                    //console.log(sx +","+ sy +"->"+ tx +","+ ty);
                                     return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + 10);}); 
                                  }
              YCoorR = YCoorR + 50*states.length;
