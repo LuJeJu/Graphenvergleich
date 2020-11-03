@@ -1318,7 +1318,6 @@ function glyph(nodes){
                         equal = false;
                   }}
                } else equal = false;
-               console.log(graph_num + " " + node_name + ": " + equal);
                if(equal == false){
                   var arc = d3.arc().innerRadius(0).outerRadius(18.5)
                                  .startAngle(45 * (Math.PI/180)).endAngle(315 * (Math.PI/180));
@@ -1352,6 +1351,7 @@ function glyph(nodes){
                      
                      var count = states.length-1;
                      var count2 = states.length;
+                     var count3 = 0;
                      for(var i = 0; i<length; i++){                
                         if(length == 1){
                            endangle = (315) *  (Math.PI/180);
@@ -1367,9 +1367,7 @@ function glyph(nodes){
                         .attr("id", "path_cp")
                         .attr("d", arc)
                         .attr("fill", function(d){
-                           console.log(node_name+ ": " +g1_node.prob);
-                           console.log(node_name + ": "+glyph_node.prob);
-                           console.log(count + ", " + count2);
+                           console.log(node_name + ": " + count + ", " + count2);
                            if((glyph_node.parents.length == 1 && g1_node.parents[0] == "root") || glyph_node.parents.length == 0){
                               var diff = g1_node.prob[0] - glyph_node.prob[0];
                               return color(diff);
@@ -1380,9 +1378,12 @@ function glyph(nodes){
                            }
                            
                            if(glyph_node.parents.length == 2 && g1_node.parents[0] != "root"){
+                              count3 += 1;
                               if(count2 == 0) count2 = states.length;
                               count2 -= 1;
+                              console.log(count);
                               var diff = g1_node.prob[0][count][count2] - glyph_node.prob[0][count][count2];
+                              if(count3 % 2 == 1) count +=1;
                               return color(diff);
                            } 
                         })
