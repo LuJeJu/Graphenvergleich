@@ -1042,7 +1042,8 @@ function glyph(nodes){
       //graph 2
       for(var i in graphs[1]){
          if(node_name == graphs[1][i].node[0]){
-            curr_node.append("circle")
+            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 2})
+               .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(0," + r_height + ")")
                .style("fill", "white")
@@ -1050,13 +1051,13 @@ function glyph(nodes){
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
                .attr("id", function(d){return "node_"+ node_name + "_" + "g2"});
-               glyph_split("node_"+ node_name + "_" + "g2", graphs[1][i], node_name, 2);
-            curr_node.append("circle")
+               glyph_split(node_name + "_g_" + 2, graphs[1][i], node_name, 2);
+            d3.select("#" + node_name + "_g_" + 2).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(0," + r_height + ")")
                .style("fill", "white")
                .style("stroke", "black")
-            curr_node.append("text")
+               d3.select("#" + node_name + "_g_" + 2).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
                .style("font-size", 8)
@@ -1071,7 +1072,8 @@ function glyph(nodes){
       // graph 3
       for(var i in graphs[2]){
          if(node_name == graphs[2][i].node[0]){
-            curr_node.append("circle")
+            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 3})
+               .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + ",0)")
                .style("fill", "white")
@@ -1079,13 +1081,13 @@ function glyph(nodes){
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
                .attr("id", function(d){return "node_"+ node_name + "_" + "g3"});
-               glyph_split("node_"+ node_name + "_" + "g3", graphs[2][i], node_name, 3);
-            curr_node.append("circle")
+               glyph_split(node_name + "_g_" + 3, graphs[2][i], node_name, 3);
+               d3.select("#" + node_name + "_g_" + 3).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(" + r_width + ",0)")
                .style("fill", "white")
                .style("stroke", "black")
-            curr_node.append("text")
+               d3.select("#" + node_name + "_g_" + 3).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
                .style("font-size", 8)
@@ -1100,7 +1102,8 @@ function glyph(nodes){
       // graph 4
       for(var i in graphs[3]){
          if(node_name == graphs[3][i].node[0]){
-            curr_node.append("circle")
+            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 4})
+               .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + "," + r_height + ")")
                .style("fill", "white")
@@ -1108,13 +1111,13 @@ function glyph(nodes){
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
                .attr("id", function(d){return "node_"+ node_name + "_" + "g4"});
-               glyph_split("node_"+ node_name + "_" + "g4", graphs[3][i], node_name, 4);
-            curr_node.append("circle")
+               glyph_split(node_name + "_g_" + 4, graphs[3][i], node_name, 4);
+               d3.select("#" + node_name + "_g_" + 4).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(" + r_width + "," + r_height + ")")
                .style("fill", "white")
                .style("stroke", "black")
-            curr_node.append("text")
+               d3.select("#" + node_name + "_g_" + 4).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
                .style("font-size", 8)
@@ -1132,6 +1135,7 @@ function glyph(nodes){
       var GlX = d3.select("#node_" + node_name).attr("x");
       var GlY = d3.select("#node_" + node_name).attr("y");
 
+      cp_glyph();
       children_glyph();
       parents_glyph();
       //console.log(curr_glyph);
@@ -1179,10 +1183,9 @@ function glyph(nodes){
                      } else {
                         //endangle = (i+1) * (2*Math.PI/(i+1)) - Math.PI/2
                      }
-                     console.log(node_name + " " + endangle);
                      var arc = d3.arc().innerRadius(0).outerRadius(18.5)
                               .startAngle(startangle).endAngle(endangle);
-                     d3 .select("#node_" + node_name)
+                     d3 .select("#" + id)
                      .append("path")
                      .attr("id", "path_children")
                      .attr("d", arc)
@@ -1230,13 +1233,27 @@ function glyph(nodes){
                      equal = true;
                }}
             }
-            //console.log("parentnum "+ node_name + ": " + parent_num);
+
             var help = glyph_node.parents.filter(d => !g1_node.parents.includes(d));
-            //console.log("help " +node_name + ": " +help);
+            if((help.length+parent_num) == 0){
+               var arc = d3.arc().innerRadius(0).outerRadius(12)
+                                 .startAngle(45 * (Math.PI/180)).endAngle(315 * (Math.PI/180));
+                  d3 .select("#" + id)
+                     .append("path")
+                     .attr("id", "path_parent")
+                     .attr("d", arc)
+                     .attr("fill", "white")
+                     .style("stroke", "black")
+                     .attr("transform", function(d){
+                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
+                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
+                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
+                     .attr( "stroke-width", 0.5);
+            } else{
             for(var i = 0; i<help.length;i++){
                {parent_num.push(help[i]);}
             }
-            //console.log("parentnum "+ node_name + ": " + parent_num);
+
                   var angle = (360-90) / parent_num.length;
                   var startangle = 45 * (Math.PI/180);
                   var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
@@ -1248,10 +1265,9 @@ function glyph(nodes){
                      } else {
                         //endangle = (i+1) * (2*Math.PI/(i+1)) - Math.PI/2
                      }
-                     console.log(node_name + " " + endangle);
                      var arc = d3.arc().innerRadius(0).outerRadius(12)
                               .startAngle(startangle).endAngle(endangle);
-                     d3 .select("#node_" + node_name)
+                     d3 .select("#" + id)
                      .append("path")
                      .attr("id", "path_parent")
                      .attr("d", arc)
@@ -1274,10 +1290,123 @@ function glyph(nodes){
                         endangle = endangle - 45 * (Math.PI/180);
                      }
                   } 
-                  
+               } 
                }
          }
       };
+
+      function cp_glyph(){
+
+         var color = d3 .scaleLinear()
+                        .domain([-1, 0, 1])
+                        .range(["#67001f", "#f7f7f7", "#053061"]);
+
+
+         var g1_node;
+         for(var key in graphs[0]){
+            if(graphs[0][key].node[0] == node_name){
+               g1_node = graphs[0][key];
+
+            var equal = true;
+
+            var g1_parent_length = g1_node.parents.includes("root") ?  g1_node.parents.length -1 : g1_node.parents.length;
+               if(g1_parent_length == glyph_node.parents.length){
+                  for(var i =0; i< g1_node.parents.length; i++){
+                     for(var j =0; j< glyph_node.parents.length; j++){
+                        if(g1_node.parents[i] == "root") continue;
+                        if(!glyph_node.parents.includes(g1_node.parents[i]) || !g1_node.parents.includes(glyph_node.parents[j]))
+                        equal = false;
+                  }}
+               } else equal = false;
+               console.log(graph_num + " " + node_name + ": " + equal);
+               if(equal == false){
+                  var arc = d3.arc().innerRadius(0).outerRadius(18.5)
+                                 .startAngle(45 * (Math.PI/180)).endAngle(315 * (Math.PI/180));
+                  d3 .select("#" + id)
+                                 .append("path")
+                                 .attr("id", "path_cp")
+                                 .attr("d", arc)
+                                 .attr("fill", "black")
+                                 .style("stroke", "white")
+                                 .attr("transform", function(d){
+                                    if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
+                                    if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
+                                    if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
+                                 .attr( "stroke-width", 0.5);               
+               } else{
+               
+               //console.log("parentnum "+ node_name + ": " + parent_num);
+               //var help = glyph_node.parents.filter(d => !g1_node.parents.includes(d));
+               //console.log("help " +node_name + ": " +help);
+               /*
+               for(var i = 0; i<help.length;i++){
+                  {parent_num.push(help[i]);}
+               }
+               */
+               //console.log("parentnum "+ node_name + ": " + parent_num);
+               var length = glyph_node.parents.length*states.length;
+               if(length == 0) length = 1;
+                     var angle = (360-90) / length;
+                     var startangle = 45 * (Math.PI/180);
+                     var endangle = angle * (Math.PI/180) + startangle; 
+                     
+                     var count = states.length-1;
+                     var count2 = states.length;
+                     for(var i = 0; i<length; i++){                
+                        if(length == 1){
+                           endangle = (315) *  (Math.PI/180);
+                           //endangle - 45 * (Math.PI/180);
+                        } else {
+                           //endangle = (i+1) * (2*Math.PI/(i+1)) - Math.PI/2
+                        }
+                        //console.log(node_name + " " + endangle);
+                        var arc = d3.arc().innerRadius(0).outerRadius(18.5)
+                                 .startAngle(startangle).endAngle(endangle);
+                        d3 .select("#" + id)
+                        .append("path")
+                        .attr("id", "path_cp")
+                        .attr("d", arc)
+                        .attr("fill", function(d){
+                           console.log(node_name+ ": " +g1_node.prob);
+                           console.log(node_name + ": "+glyph_node.prob);
+                           console.log(count + ", " + count2);
+                           if((glyph_node.parents.length == 1 && g1_node.parents[0] == "root") || glyph_node.parents.length == 0){
+                              var diff = g1_node.prob[0] - glyph_node.prob[0];
+                              return color(diff);
+                           }
+                           if(glyph_node.parents.length == 1 && g1_node.parents[0] != "root"){
+                              var diff = g1_node.prob[0][count] - glyph_node.prob[0][count];
+                              return color(diff);
+                           }
+                           
+                           if(glyph_node.parents.length == 2 && g1_node.parents[0] != "root"){
+                              if(count2 == 0) count2 = states.length;
+                              count2 -= 1;
+                              var diff = g1_node.prob[0][count][count2] - glyph_node.prob[0][count][count2];
+                              return color(diff);
+                           } 
+                        })
+                        .style("stroke", function(d){
+                           if(equal==false) return "white";
+                           else return "black";
+                        })
+                        .attr("transform", function(d){
+                           if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
+                           if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
+                           if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
+                        .attr( "stroke-width", 0.5);
+                        startangle = endangle;
+                        endangle += angle * (Math.PI/180);
+                        if(i == length-1){
+                           endangle = endangle - 45 * (Math.PI/180);
+                        }
+                        if(count == 0) count = states.length-1;
+                        else count -= 1;
+                     } 
+                  } 
+                  }
+            }
+         };
 
    };
 };
@@ -1652,7 +1781,6 @@ brewer.pal(6, "Dark2")
                                        var obj = {};
                                        obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]);
                                        obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0");
-                                       console.log(obj);
                                        l_data.push(obj);
                                        var link = canvas
                                                 .data(l_data)
@@ -1750,7 +1878,6 @@ brewer.pal(6, "Dark2")
                            var obj = {};
                            obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + "0");
                            obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + key);
-                           console.log(obj);
                            l_data.push(obj);
                            var link = canvas
                                     .data(l_data)
@@ -1764,7 +1891,6 @@ brewer.pal(6, "Dark2")
                                        var sy = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + "0").attr("y"));
                                        var tx = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + key).attr("x"));
                                        var ty = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + key).attr("y"));
-                                       console.log(sx +","+ sy +"->"+ tx +","+ ty);
                                        return "M" + (sx + Resize) + "," + (sy + Resize/2) + ", " + (tx) + "," + (ty + Resize/2);});
                                  }
 
@@ -1809,7 +1935,6 @@ brewer.pal(6, "Dark2")
                         obj.target.y = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("y"))+ 25;
                         if(key == 1)
                         obj.target.y = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("y"))- 25;
-                        console.log(obj);
                         l_data.push(obj);
                         var link = canvas
                                  .data(l_data)
