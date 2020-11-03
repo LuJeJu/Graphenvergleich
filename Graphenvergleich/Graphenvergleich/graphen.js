@@ -900,14 +900,14 @@ function multidisplay(){
                                     + " " + (ty + r_width/2) + "," + (tx + r_height);
                }    
          if(ty > sy){
-             t += "M"   + (sy + r_width) + "," + (sx + r_height/2)
+            t += "M"    + (sy + r_width) + "," + (sx + r_height/2)
                         + m
                         + " " + (ty) + "," + (tx + r_height/2);
             }
          if(ty < sy){
-            t += "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                     + m
-                     + " " + (ty + r_width) + "," + (tx + r_height/2);
+            t += "M"    + (sy + r_width/2) + "," + (sx+ r_height)
+                        + m
+                        + " " + (ty + r_width) + "," + (tx + r_height/2);
             }   
             return t;      
       };   
@@ -973,7 +973,7 @@ function multidisplay(){
                                              .style("border", "1px solid black")
                                              .attr("transform", "translate(10,10)")
                                              .style("visibility", "hidden");
-                                             //.attr("id", "link_hint")
+                                             //.attr("id", "link_hint")                                  
    
    d3 .select("#hide")
    .on("click",
@@ -998,7 +998,9 @@ function multidisplay(){
                      function(d){
                         if((d.source == name) || (d.target == name))
                         return d;
-                     }).attr("visibility", "visible"); 
+                     }).attr("visibility", "visible");
+                  d3.select("#node_"+ name).selectAll(".glyph")
+                     .attr("visibility", "visible");     
                }
                if(hide == false){
                   d3.selectAll("#NodeButton_"+name)
@@ -1010,6 +1012,8 @@ function multidisplay(){
                         if((d.source == name) || (d.target == name))
                         return d;
                      }).attr("visibility", "hidden"); 
+                  d3.select("#node_"+ name).selectAll(".glyph")
+                     .attr("visibility", "hidden"); 
                }
             }
             hide = hide == true ? false : true;
@@ -1042,7 +1046,9 @@ function glyph(nodes){
       //graph 2
       for(var i in graphs[1]){
          if(node_name == graphs[1][i].node[0]){
-            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 2})
+            curr_node.append("g")
+               .attr("class", "glyph")
+               .attr("id", function(){ return node_name + "_g_" + 2})
                .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(0," + r_height + ")")
@@ -1050,13 +1056,17 @@ function glyph(nodes){
                .style("stroke", "black")
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g2"});
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g2"})
+               .on("mouseover", function(){return glyph_hover_in(this,2);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                glyph_split(node_name + "_g_" + 2, graphs[1][i], node_name, 2);
             d3.select("#" + node_name + "_g_" + 2).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(0," + r_height + ")")
                .style("fill", "white")
                .style("stroke", "black")
+               .on("mouseover", function(){return glyph_hover_in(this,2);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                d3.select("#" + node_name + "_g_" + 2).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
@@ -1064,7 +1074,9 @@ function glyph(nodes){
                .attr("x",0)
                .attr("y", r_height+1)
                //.style("stroke", "black")
-               .text("2").attr("id", "glyphnum");
+               .text("2").attr("id", "glyphnum")
+               .on("mouseover", function(){return glyph_hover_in(this,2);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
             
          }
       }
@@ -1072,7 +1084,7 @@ function glyph(nodes){
       // graph 3
       for(var i in graphs[2]){
          if(node_name == graphs[2][i].node[0]){
-            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 3})
+            curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 3})
                .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + ",0)")
@@ -1080,13 +1092,17 @@ function glyph(nodes){
                .style("stroke", "black")
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g3"});
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g3"})
+               .on("mouseover", function(){return glyph_hover_in(this,3);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                glyph_split(node_name + "_g_" + 3, graphs[2][i], node_name, 3);
                d3.select("#" + node_name + "_g_" + 3).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(" + r_width + ",0)")
                .style("fill", "white")
                .style("stroke", "black")
+               .on("mouseover", function(){return glyph_hover_in(this,3);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                d3.select("#" + node_name + "_g_" + 3).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
@@ -1094,7 +1110,9 @@ function glyph(nodes){
                .attr("x", r_width)
                .attr("y", 1)
                //.style("stroke", "black")
-               .text("3").attr("id", "glyphnum");
+               .text("3").attr("id", "glyphnum")
+               .on("mouseover", function(){return glyph_hover_in(this,3);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
             
          }
       }
@@ -1102,7 +1120,7 @@ function glyph(nodes){
       // graph 4
       for(var i in graphs[3]){
          if(node_name == graphs[3][i].node[0]){
-            curr_node.append("g").attr("id", function(){ return node_name + "_g_" + 4})
+            curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 4})
                .append("circle")
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + "," + r_height + ")")
@@ -1110,13 +1128,17 @@ function glyph(nodes){
                .style("stroke", "black")
                .attr("x", (d) => d.x)
                .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g4"});
+               .attr("id", function(d){return "node_"+ node_name + "_" + "g4"})
+               .on("mouseover", function(){return glyph_hover_in(this,4);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                glyph_split(node_name + "_g_" + 4, graphs[3][i], node_name, 4);
                d3.select("#" + node_name + "_g_" + 4).append("circle")
                .attr("r", 5)
                .attr("transform", "translate(" + r_width + "," + r_height + ")")
                .style("fill", "white")
                .style("stroke", "black")
+               .on("mouseover", function(){return glyph_hover_in(this,4);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
                d3.select("#" + node_name + "_g_" + 4).append("text")
                .attr("dominant-baseline", "middle")
                .attr("text-anchor", "middle")
@@ -1124,7 +1146,9 @@ function glyph(nodes){
                .attr("x", r_width)
                .attr("y", r_height+1)
                //.style("stroke", "black")
-               .text("4").attr("id", "glyphnum");
+               .text("4").attr("id", "glyphnum")
+               .on("mouseover", function(){return glyph_hover_in(this,4);})
+               .on("mouseout", function(){return glyph_hover_out(this);});
             
          }
       }
@@ -1201,7 +1225,9 @@ function glyph(nodes){
                         if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(-45)";
                         if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(-45)";
                         if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(-45)";})
-                     .attr( "stroke-width", 0.5);
+                     .attr( "stroke-width", 0.5)
+                     .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                     .on("mouseout", function(){return glyph_hover_out(this);});
                      startangle = endangle;
                      endangle += angle * (Math.PI/180);
                      if(i == children_num.length-1){
@@ -1248,7 +1274,9 @@ function glyph(nodes){
                         if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
                         if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
                         if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                     .attr( "stroke-width", 0.5);
+                     .attr( "stroke-width", 0.5)
+                     .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                     .on("mouseout", function(){return glyph_hover_out(this);});
             } else{
             for(var i = 0; i<help.length;i++){
                {parent_num.push(help[i]);}
@@ -1283,7 +1311,9 @@ function glyph(nodes){
                         if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
                         if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
                         if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                     .attr( "stroke-width", 0.5);
+                     .attr( "stroke-width", 0.5)
+                     .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                     .on("mouseout", function(){return glyph_hover_out(this);});
                      startangle = endangle;
                      endangle += angle * (Math.PI/180);
                      if(i == parent_num.length-1){
@@ -1331,7 +1361,9 @@ function glyph(nodes){
                                     if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
                                     if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
                                     if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                                 .attr( "stroke-width", 0.5);               
+                                 .attr( "stroke-width", 0.5)
+                                 .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                                 .on("mouseout", function(){return glyph_hover_out(this);});             
                } else{
                
                //console.log("parentnum "+ node_name + ": " + parent_num);
@@ -1367,7 +1399,6 @@ function glyph(nodes){
                         .attr("id", "path_cp")
                         .attr("d", arc)
                         .attr("fill", function(d){
-                           console.log(node_name + ": " + count + ", " + count2);
                            if((glyph_node.parents.length == 1 && g1_node.parents[0] == "root") || glyph_node.parents.length == 0){
                               var diff = g1_node.prob[0] - glyph_node.prob[0];
                               return color(diff);
@@ -1381,7 +1412,6 @@ function glyph(nodes){
                               count3 += 1;
                               if(count2 == 0) count2 = states.length;
                               count2 -= 1;
-                              console.log(count);
                               var diff = g1_node.prob[0][count][count2] - glyph_node.prob[0][count][count2];
                               if(count3 % 2 == 1) count +=1;
                               return color(diff);
@@ -1395,7 +1425,9 @@ function glyph(nodes){
                            if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
                            if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
                            if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                        .attr( "stroke-width", 0.5);
+                        .attr( "stroke-width", 0.5)
+                        .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                        .on("mouseout", function(){return glyph_hover_out(this);});
                         startangle = endangle;
                         endangle += angle * (Math.PI/180);
                         if(i == length-1){
@@ -1410,6 +1442,34 @@ function glyph(nodes){
          };
 
    };
+function glyph_hover_in(obj,graph_num){
+
+      var curr = d3.select(obj.parentNode);
+      if(graph_num == 2){
+         curr.attr("transform",
+         "translate(0," + (-r_height + r_height/2) + ")scale("+ 2 + "," +
+      2 + ")");
+      }
+      if(graph_num == 3){
+         curr.attr("transform",
+         "translate(" + -r_width + "," + (-r_height/2) + ")scale("+ 2 + "," +
+          2 + ")");
+      }
+      if(graph_num == 4){
+         curr.attr("transform",
+         "translate(" + -r_width + "," + (-r_height + r_height/2) + ")scale("+ 2 + "," +
+         2 + ")");
+      }
+};
+
+function glyph_hover_out(obj){   
+      
+      var curr = d3.select(obj.parentNode);
+      curr.attr("transform",
+      "translate(" + 0 + "," + 
+      0 +")scale("+ 1 + "," +
+       1 + ")");
+};
 };
 
 // color and push clicked node in an array for cpt and dendrogramm display
