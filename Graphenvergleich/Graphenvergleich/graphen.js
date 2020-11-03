@@ -1049,7 +1049,10 @@ function glyph(nodes){
             curr_node.append("g")
                .attr("class", "glyph")
                .attr("id", function(){ return node_name + "_g_" + 2})
+               .attr("x", function(d){return d.x;})
+               .attr("y", function(d){return d.y;})
                .append("circle")
+               .attr("id", function(){ return node_name + "_g_" + 2 + "_" + "circle";})
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(0," + r_height + ")")
                .style("fill", "white")
@@ -1085,7 +1088,10 @@ function glyph(nodes){
       for(var i in graphs[2]){
          if(node_name == graphs[2][i].node[0]){
             curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 3})
+               .attr("x", function(d){return d.x;})
+               .attr("y", function(d){return d.y;})
                .append("circle")
+               .attr("id", function(){ return node_name + "_g_" + 3 + "_" + "circle";})
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + ",0)")
                .style("fill", "white")
@@ -1121,7 +1127,10 @@ function glyph(nodes){
       for(var i in graphs[3]){
          if(node_name == graphs[3][i].node[0]){
             curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 4})
+               .attr("x", function(d){return d.x;})
+               .attr("y", function(d){return d.y;})
                .append("circle")
+               .attr("id", function(){ return node_name + "_g_" + 4 + "_" + "circle";})
                .attr("r", (r_height/2-1))
                .attr("transform", "translate(" + r_width + "," + r_height + ")")
                .style("fill", "white")
@@ -1200,6 +1209,7 @@ function glyph(nodes){
                   var startangle = (Math.PI/180);
                   var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
                   
+                  var child_num = children_num.length-1;
                   for(var i = 0; i<children_num.length; i++){
                      if(children_num.length == 1){
                         endangle = 90 *  (Math.PI/180);
@@ -1228,6 +1238,24 @@ function glyph(nodes){
                      .attr( "stroke-width", 0.5)
                      .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
                      .on("mouseout", function(){return glyph_hover_out(this);});
+/*
+                     curr_glyph.append("text").text(function(d){
+                                                if(child_num >=0){
+                                                child_num -= 1;
+                                                console.log(node_name + ": " + children_num);
+                                                return children_num[child_num+1];
+                                                } else return;
+                                             })
+                     .style("font-size", 10)
+                     .attr("transform", function(){
+                        if(graph_num == 2) return "translate(0," + (r_height-10) + ")";
+                        if(graph_num == 3) return "translate(" + r_width + ",0)";
+                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";
+                     })
+                     .attr("text-anchor", "middle")
+                     .attr("dominant-baseline", "middle");
+
+                     */
                      startangle = endangle;
                      endangle += angle * (Math.PI/180);
                      if(i == children_num.length-1){
