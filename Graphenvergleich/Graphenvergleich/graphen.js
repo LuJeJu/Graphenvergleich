@@ -972,18 +972,14 @@ function multidisplay(){
                                              .style("z-index", "1")
                                              .style("border", "1px solid black")
                                              .attr("transform", "translate(10,10)")
-                                             .style("visibility", "hidden");
-                                             //.attr("id", "link_hint")                                  
+                                             .style("visibility", "hidden");                                 
    
    d3 .select("#hide")
    .on("click",
          function(){
-            //hide nodes
             var diff = nodes.filter(x => !marked.includes(x));
 	         for(var i = 1; i< diff.length; i++){
-               //var t = "";
                var name = diff[i].node[0];
-               //var name = t;
                var link_diff = link.filter(function(d){
                   if((d.source == name) || (d.target == name)){
                      return d;
@@ -1018,6 +1014,7 @@ function multidisplay(){
             }
             hide = hide == true ? false : true;
          });
+
          /*
          var g_width = d3.select("#compare_g").node().getBoundingClientRect().width;
          var g_heigth = d3.select("#compare_g").node().getBoundingClientRect().height;
@@ -1210,6 +1207,8 @@ function glyph(nodes){
                   var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
                   
                   var child_num = children_num.length-1;
+
+                  var children_half = children_num.length/2;
                   for(var i = 0; i<children_num.length; i++){
                      if(children_num.length == 1){
                         endangle = 90 *  (Math.PI/180);
@@ -1219,6 +1218,8 @@ function glyph(nodes){
                      }
                      var arc = d3.arc().innerRadius(0).outerRadius(18.5)
                               .startAngle(startangle).endAngle(endangle);
+                     var coor = getPoint(0, 0 , 12, 180 * Math.PI/180 + angle/2*startangle);
+                     var start = startangle;          
                      d3 .select("#" + id)
                      .append("path")
                      .attr("id", "path_children")
@@ -1238,7 +1239,8 @@ function glyph(nodes){
                      .attr( "stroke-width", 0.5)
                      .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
                      .on("mouseout", function(){return glyph_hover_out(this);});
-/*
+
+                     var ch_count = 0;
                      curr_glyph.append("text").text(function(d){
                                                 if(child_num >=0){
                                                 child_num -= 1;
@@ -1246,16 +1248,27 @@ function glyph(nodes){
                                                 return children_num[child_num+1];
                                                 } else return;
                                              })
-                     .style("font-size", 10)
+                     .style("font-size", function(d){
+                        //if(children_num.length > 4) return 0;
+                        return 6; 
+                        //(12 - children_num.length*2);
+                     })
+                     .style( "fill", function(d){
+                        if(equal == true) return "black";
+                        else return "white";
+                     })
                      .attr("transform", function(){
+                        var x_c = coor[0];
+                        //(-Math.sqrt(2)/(2) * 3*Math.PI/4) - Math.PI*(Math.sqrt(2)/(2));
+                        //(2* Math.PI * 12)/4 - 12;
                         if(graph_num == 2) return "translate(0," + (r_height-10) + ")";
-                        if(graph_num == 3) return "translate(" + r_width + ",0)";
-                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";
+                        if(graph_num == 3) return "translate(" + (x_c + r_width) + ", -10)";
+                        if(graph_num == 4) return "translate(" + (x_c + r_width) + "," + (r_height-10) + ")";
                      })
                      .attr("text-anchor", "middle")
                      .attr("dominant-baseline", "middle");
 
-                     */
+                     
                      startangle = endangle;
                      endangle += angle * (Math.PI/180);
                      if(i == children_num.length-1){
@@ -1351,6 +1364,9 @@ function glyph(nodes){
                } 
                }
          }
+        };
+        function getPoint(c1,c2,radius,angle){
+         return [c1+Math.cos(angle)*radius,c2+Math.sin(angle)*radius];
       };
 
       function cp_glyph(){
@@ -1735,7 +1751,7 @@ brewer.pal(6, "Dark2")
                   .transition()
                   .style("visibility", "hidden")});
 
-              XCoor = XCoor + 1 + currObj.prob[j]*100;
+              XCoor = XCoor + 2 + currObj.prob[j]*100;
 
         }
         MakeDendroTree(10, 20, YCoor, 0, 20);
@@ -1778,7 +1794,7 @@ brewer.pal(6, "Dark2")
                         .transition()
                         .style("visibility", "hidden")});
 
-                     XCoor = XCoor + 1 + currObj.prob[i][j]*100;
+                     XCoor = XCoor + 2 + currObj.prob[i][j]*100;
             }
         }
         MakeDendroTree(10, 20, YCoor, 1, 20);
@@ -1823,7 +1839,7 @@ brewer.pal(6, "Dark2")
                         .transition()
                         .style("visibility", "hidden")});
 
-                    XCoor = XCoor + 1 + currObj.prob[i][j][s]*100;
+                    XCoor = XCoor + 2 + currObj.prob[i][j][s]*100;
                 }
                 YCoor = YCoor+50;
             }
@@ -2104,6 +2120,7 @@ function cpt(){
       '#fdc086',
       '#beaed4'
     ];
+
     for(var i = 0; i<marked.length; i++){
     data_write(marked[i]);
     }
@@ -2125,44 +2142,23 @@ function cpt(){
               push_array.push(node11);
               push_array.push(node12);
               data.push(push_array);
-          }
-          /*
-          if(marked[m].node[0] == graphs[1][key].node[0]){
-              var node21 = marked[m].prob[0];
-              var node22 = marked[m].prob[1];
-          }
-          if(marked[m].node[0] == graphs[2][key].node[0]){
-              var node31 = marked[m].prob[0];
-              var node32 = marked[m].prob[1];
-          }
-          if(marked[m].node[0] == graphs[3][key].node[0]){
-              var node41 = marked[m].prob[0];
-              var node42 = marked[m].prob[1];
-          } */    
+          }  
     }
     }
-    /*
-    const data = [
-       ["Graph1", node11, node12],
-       ["Graph2", node21, node22],
-       ["Graph3", node31, node32],
-       ["Graph4", node41, node42]
-    ];
-    */
-   //console.log(data);
+
    if(data.length >0) document.getElementById("CPT").appendChild(g(data, node_name)); 
     };
 
    function f(elem, direction="col") {
-      //console.log(i);
 
       if (typeof(elem) === "number") {
          var div = 
-         //d3.select("#CPT").append("div").attr("id", node);
+
          document.createElement("div");
          div.innerHTML = elem.toString();
+
          /*
-         //hover function yee
+         // hover function
          div.onmouseover = function(event){
             //console.log('Hallo');
             const element = document.getElementById("prob_window");
@@ -2175,6 +2171,7 @@ function cpt(){
             element.style.visibility = "hidden";
          };
          }; */
+
          return div;
       } else {
          var table = document.createElement("table");
@@ -2241,7 +2238,8 @@ function cpt(){
       for (var i=0; i<data.length; i++) {
 
          var tr = document.createElement("tr");
-         tr.style.backgroundColor = colors[i];
+         var color_index = data[i][0].slice(5);
+         tr.style.backgroundColor = colors[color_index-1];
 
          var td_node = document.createElement("td");
          td_node.innerHTML = data[i][0];
@@ -2263,16 +2261,5 @@ function cpt(){
       return table;
 
    };
-   //for (var i=0; i<marked.length; i++) {
-         /*for(key in graphs[0]){
-            if(graphs[0][key].node.length==0) nodee.push(graphs[0][key]);
-         }*/
-         //console.log(graphs[0][key].node[0]);
-         //console.log(marked[i].node[0]);
 
-         
-      //}
-   
-// node für alle 4 Graphen 
-//hover fkt fertig stellen
 };
