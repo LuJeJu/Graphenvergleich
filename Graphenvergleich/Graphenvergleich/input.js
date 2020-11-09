@@ -11,10 +11,18 @@ function read(){
 				}
 				const fileObj = document.getElementById("files");
 				fileObj.onchange = (event) => {
-					document.getElementById("start").disabled = false;
 				const files = event.target.files;
 				var i=0;
 				for(i; i<files.length; i++){
+					if(files.length == 1){
+						reset();
+						return window.alert("Please select more then one graph.");
+					}
+					if(files.length > 4){
+						delete(files);
+						reset();
+						return window.alert("Please select no more then four graphs.");
+					}
 				var file = files[i];
 				var reader = new FileReader();
 						reader.onload = function(e) {
@@ -26,6 +34,7 @@ function read(){
 						}
 						reader.readAsText(file);			
 					}
+					document.getElementById("start").disabled = false;
 				}
 				graphs.onchange = console.log(graphs);
 		};
@@ -35,7 +44,7 @@ function reset(){
 	graphs = [];
 	document.getElementById("files").value = "";
 	document.getElementById("reset").disabled = true;
-	document.getElementById("center").disabled = true;
+	document.getElementById("center_graph").disabled = true;
 	document.getElementById("hide").disabled = true;
 	document.getElementById("states").value = "True,False";
 	parent1 = [];
