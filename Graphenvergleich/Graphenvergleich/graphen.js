@@ -1191,7 +1191,6 @@ function glyph(nodes){
                if(g1_node.children.length == glyph_node.children.length){
                   for(var i =0; i< g1_node.children.length; i++){
                      for(var j =0; j<glyph_node.children.length; j++){
-                        console.log(node_name+"_"+graph_num+": "+g1_node.children[i]+" "+ glyph_node.children[j]);
                         if(g1_node.children[i] == glyph_node.children[j] && g1_node.children[i] != "root")
                         equal = true;
                   }}
@@ -1212,7 +1211,6 @@ function glyph(nodes){
                   var children_half = children_num.length/2;
 
                   for(var i = 0; i<children_num.length; i++){
-                     console.log(node_name+"_"+graph_num+": " + children_num);
                      var arc = d3.arc().innerRadius(5).outerRadius(18.5)
                               .startAngle(startangle).endAngle(endangle);
                      var coor = getPoint(0, 0 , 12, startangle - endangle);
@@ -1732,33 +1730,56 @@ function dendrogram(){
 
 
  function oneDendro(nodeNum, graphNum){
+
+   var currObj;
+   //Knoten in graphs(graphNum) finden
+   var NodeName = marked[nodeNum].node[0];
+       for(var i in graphs[graphNum]){
+           if(NodeName
+           == graphs[graphNum][i].node[0]){
+           currObj = graphs[graphNum][i];
+           }
+       }
+
+       if (typeof currObj == 'undefined'){
+         d3.select("#dendrok" + (nodeNum+1) + "_g" + (graphNum+1)).append("text").text( function(d){return "there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum})
+         .style("font-size", 14)
+               .attr("x", 20)
+               .attr("y", 20);
+      return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}    
+
+   var div_width = document.getElementById("dendrok"+ (nodeNum+1) + "_g" + (graphNum+1)).offsetWidth;
+   var num_parents = currObj.parents.length;
+
+   if(currObj.parents[0] == "root") num_parents -= 1;
+   // an knotenlänge anpassen
+   var dendro_width = 100 + num_parents*(100)  + (states.length-1)*2 + 30 + 20;
+
+         var scale = div_width/dendro_width - 0.1;
+         var x = div_width/2 + ((dendro_width)*scale)/2;
+         console.log(NodeName + ": " + dendro_width);
+
+    
+
+   var zoom = d3.zoom().on("zoom", function(d){
+      d3.select("#g_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("transform", d3.event.transform);});
    
     var canvas = d3.select("#dendrok" + (nodeNum+1) + "_g" + (graphNum+1)).append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
+    .call(zoom)
+    .on("dblclick.zoom", null)
+    .call(zoom.transform, d3.zoomIdentity
+    .translate(x,0)
+    .scale(scale,scale))
     .attr("id", "svg_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
-   .append("g")
-   .attr("transform",
-                     "translate(" + 0 + "," + 
-                     0 +")scale("+ .8 + "," +
-                      .8 + ")")
+    .append("g")
+    .attr("transform",
+                     "translate(" + x + "," + 
+                     0 +")scale("+ scale + "," +
+                     scale + ")")                 
     .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
 
-var currObj;
-//Knoten in graphs(graphNum) finden
-var NodeName = marked[nodeNum].node[0];
-    for(var i in graphs[graphNum]){
-        if(NodeName
-        == graphs[graphNum][i].node[0]){
-        currObj = graphs[graphNum][i];
-        }
-    }
-if (typeof currObj == 'undefined'){
-   canvas.append("text").text( function(d){return "there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum})
-   .style("font-size", 14)
-         .attr("x", 20)
-         .attr("y", 20);
-return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)}
 
 /*colorbrewer code
 https://rdrr.io/snippets/
@@ -1771,7 +1792,7 @@ brewer.pal(6, "Dark2")
 
 // Erstellung der benötigten Anzahl von Dendrogram Balken
     if(currObj.parents[0] == "root" && currObj.parents.length == 1 || currObj.parents.length == 0){
-         var XCoor = 10;
+         var XCoor = -100-(states.length-1)*2;
          var YCoor = 20;
 
         for(var j = 0; j < currObj.prob.length; j++){
@@ -1807,7 +1828,7 @@ brewer.pal(6, "Dark2")
               XCoor = XCoor + 2 + currObj.prob[j]*100;
 
         }
-        MakeDendroTree(10, 20, YCoor, 0, 20);
+        MakeDendroTree(-100-(states.length-1)*2, 20, YCoor, 0, 20);
 
     }
 //ein Array abfangen, weil prob als []
@@ -1816,7 +1837,7 @@ brewer.pal(6, "Dark2")
         //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
            var count = 0;
         for(var j = 0; j < states.length; j++){
-            var XCoor = 10;
+            var XCoor = -100-(states.length-1)*2;
             YCoor = YCoor+(j*50);
 
             for(var i = 0; i < currObj.prob.length; i++){
@@ -1832,18 +1853,20 @@ brewer.pal(6, "Dark2")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){ 
+                     /*
                      if(count%states.length == 0) t+= states[0];
                      if(count%states.length == 1) t+= states[1];
                      if(count%states.length == 2) t+= states[2];
                      if(count%states.length == 3) t+= states[3];
-                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_"+ state + "_rect" + states[i];})
+                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_"+  "_rect" + states[i];
+                  */})
                   .on("mouseover", function(d){
+                     /*
                      var coord = d3.mouse(this);
                      var t = "";
                      // die ID des Balken slicen für parent state und node state
-                     t += currObj.parents[0] + " = " + state + ": ";
+                     t += currObj.parents[0] + " = " + /*state + ": ";
                      t+= d3.select(this).attr("id").slice(19);
-                     console.log(t);
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
                         .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
                         .style("background-color", "lightgrey")   //bitte Farbe wählen
@@ -1851,6 +1874,7 @@ brewer.pal(6, "Dark2")
                         .text(t)
                         .attr("width", (t.length *8 + "px"))
                         .style("visibility", "visible");
+                        */
                     })
                     .on("mouseout", function(d){
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
@@ -1858,11 +1882,10 @@ brewer.pal(6, "Dark2")
                         .style("visibility", "hidden")});
 
                      XCoor = XCoor + 2 + currObj.prob[i][j]*100;
-                     console.log(count%states.length);
                      count++;
             }
         }
-        MakeDendroTree(10, 20, YCoor, 1, 20);
+        MakeDendroTree(-100-(states.length-1)*2, 20, YCoor, 1, 20);
     }
 
  //Abfrage 2 Parents, prob ([[][]] [[][]]) -> ( [ [[] []] [[] []] ] [ [[] []] [[] []] ] )
@@ -1873,7 +1896,7 @@ brewer.pal(6, "Dark2")
         for(var s = 0; s < currObj.prob.length; s++){
 
             for(j = 0; j < currObj.prob.length; j++){
-            var XCoor = 10;
+            var XCoor = -100-(states.length-1)*2;
 
 
                 for(var i = 0; i < currObj.prob.length; i++){
@@ -1895,6 +1918,7 @@ brewer.pal(6, "Dark2")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];})
                   .on("mouseover", function(d){
+                     /*
                      var coord = d3.mouse(this);
                      var y_ = (d.attr("y") - 20)/50;
                      var amount_parents = currObj.parents.length;
@@ -1913,6 +1937,7 @@ brewer.pal(6, "Dark2")
                         .text(t)
                         .attr("width", (t.length *8 + "px"))
                         .style("visibility", "visible");
+                        */
                     })
                     .on("mouseout", function(d){
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
@@ -1925,10 +1950,8 @@ brewer.pal(6, "Dark2")
             }
         }
 
-    MakeDendroTree(10, 20, YCoor, 2, 20);
+    MakeDendroTree(-100-(states.length-1)*2, 20, YCoor, 2, 20);
     }
-
-
 
    function MakeDendroTree(prevX, firstY, lastY, parentNum, prevWidth){
 
@@ -1967,7 +1990,7 @@ brewer.pal(6, "Dark2")
                                        obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.node[0]);
                                        obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + "0");
                                        l_data.push(obj);
-                                       var link = canvas
+                                       var link = d3.select("#g_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
                                                 .data(l_data)
                                                 .append("path")
                                                 .attr("class", "link")
@@ -2012,7 +2035,7 @@ brewer.pal(6, "Dark2")
                                        obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + states[0]);
                                        //console.log(obj);
                                        l_data.push(obj);
-                                       var link = canvas
+                                       var link = d3.select("#g_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
                                                 .data(l_data)
                                                 .append("path")
                                                 .attr("class", "link")
@@ -2064,7 +2087,7 @@ brewer.pal(6, "Dark2")
                            obj.source = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + "0");
                            obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum] + key);
                            l_data.push(obj);
-                           var link = canvas
+                           var link = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
                                     .data(l_data)
                                     .append("path")
                                     .attr("class", "link")
@@ -2121,7 +2144,7 @@ brewer.pal(6, "Dark2")
                         if(key == 1)
                         obj.target.y = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("y"))- 25;
                         l_data.push(obj);
-                        var link = canvas
+                        var link = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
                                  .data(l_data)
                                  .append("path")
                                  .attr("class", "link")
@@ -2149,28 +2172,6 @@ brewer.pal(6, "Dark2")
 
 
 //--------------------------------------- raus zoom und scale
-
-    var zoom = d3.zoom().on("zoom", function(d){
-      d3.select("#svg_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("transform", d3.event.transform);});
-
-  canvas   
-   .call(zoom)
-   .on("dblclick.zoom", null)
-   .call(zoom.transform, d3.zoomIdentity
-     .translate(0,0)
-     .scale(.8,.8))
-  .append("g")
-  .attr("transform",
-                    "translate(" + 0 + "," + 
-                    0 +")scale("+ .8 + "," +
-                     .8 + ")")
-   .attr("id", "g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1));
-   
-   d3.select("#g_" + "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1))
-   .attr("transform",
-   "translate(" + 0 + "," + 
-   0 +")scale("+ .8 + "," +
-    .8 + ")");
 
 //------------------------------------------------------------------------
 
