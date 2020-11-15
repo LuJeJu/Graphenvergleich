@@ -1587,8 +1587,14 @@ function node_selection(d, nodes){
       marked.splice(i, 1);
       d3.selectAll("#NodeButton_"+ d.node[0]).transition().style("fill", "lightgrey");
    }
-   if(marked.length > 0) document.getElementById("hide").disabled = false;
-   if(marked.length == 0) document.getElementById("hide").disabled = true;
+   if(marked.length > 0){
+    document.getElementById("hide").disabled = false;
+    document.getElementById("center_dendro").disabled = false;
+    }
+   if(marked.length == 0){
+    document.getElementById("hide").disabled = true;
+    document.getElementById("center_dendro").disabled = true;
+   }
    dendrogram();
    cpt();
 };

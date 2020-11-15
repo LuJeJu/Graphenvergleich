@@ -106,6 +106,31 @@ function center_all(){
 };
 
 function center_dendro(){
+    for(var i = 0; i< marked.length; i++){
+    for(var j = 0; j< graphs.length; j++){
+
+   var div_width = document.getElementById("dendrok"+ (i+1) + "_g" + (j+1)).offsetWidth;
+   for(var k in graphs[j]){
+    var currObj;
+        if(marked[i].node[0]== graphs[j][k].node[0]){
+            currObj=graphs[j][k];
+        }
+   }
+   var num_parents = currObj.parents.length;
+
+   if(currObj.parents[0] == "root") num_parents -= 1;
+   // an knotenlänge anpassen
+   var dendro_width = 100 + (states.length-1)*2/*dendrobar length*/
+                          + num_parents*(r_width + 50 /*lineSpace*/ ) //parents and their lines
+                          + r_width + 50/2 /*lineSpace*/; //node in the front
+
+         var scale = div_width/dendro_width - 0.05;
+         var x = div_width/2 + ((dendro_width)*scale)/2;
+
+   d3.select("#g_"+ "dendro_k" + (i+1) + "_g" + (j+1))
+        .attr("transform", "translate(" + x + "," + 0 +")scale("+ scale + "," + scale + ")");
+   }
+   }
 };
 
 function sync(){
