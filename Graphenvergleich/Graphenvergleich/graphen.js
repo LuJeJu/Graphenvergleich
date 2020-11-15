@@ -1597,18 +1597,27 @@ function node_selection(d, nodes){
 var isDived = false; //asking if #dendrogram has divs already
 
 function statesArray(parent_states, currObj){
+   var parentSize = currObj.parents.length;
 
-   var count = 1;
-   for(var s = states.length; s>0; --s){
-      console.log(1);
-      for(var z = 0; z < Math.pow(states.length, currObj.parents.length+1); ++z){
-         console.log(2);
+   if(currObj.parents[0] == "root"){
+        parentSize-=1;}
+
+   var count = states.length;
+   var count2 = (Math.pow(states.length, parentSize)) / states.length;
+      var count3 = 0;
+    //console.log(parentSize);
+   for(var s = parentSize-1; s>=0; --s){
+      //console.log(1);
+      for(var z = 0; z < count2; ++z){
+         //console.log(2);
             for(var t = 0; t < states.length; ++t){
-               console.log(3);
+               //console.log(3);
                for(var i = 0; i < count; ++i){
-                  parent_states[z*states.length + s] = states[t];
+                  parent_states[count3] = states[t];
+                  count3++;
       }}}
       count*=states.length;
+      count2/=states.length;
    }
    /*
    Spalten = states
@@ -1774,7 +1783,11 @@ function dendrogram(){
          var scale = div_width/dendro_width - 0.05;
          var x = div_width/2 + ((dendro_width)*scale)/2;
 
-   var parent_states = new Array(Math.pow(states.length, currObj.parents.length+1));
+   var parentSize = currObj.parents.length;
+   if(currObj.parents[0] == "root"){
+        parentSize-=1;}
+
+   var parent_states = new Array(Math.pow(states.length, parentSize+1)*parentSize);
    //console.log(states.length +","+ currObj.parents.length);
    statesArray(parent_states, currObj);
 
@@ -1830,7 +1843,7 @@ brewer.pal(6, "Dark2")
                t+= d3.select(this).attr("id").slice(19);
                //console.log(t);
                d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
-                  .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
+                  .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-20) + ")")
                   .style("background-color", "lightgrey")   //bitte Farbe wählen
                   .style("font-size", 15)
                   .text(t)
@@ -1871,19 +1884,16 @@ brewer.pal(6, "Dark2")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
                   .attr("id", function(d){
-                     if(count%states.length == 0) t+= states[0];
-                     if(count%states.length == 1) t+= states[1];
-                     if(count%states.length == 2) t+= states[2];
-                     if(count%states.length == 3) t+= states[3];
-                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_" + s +  "_rect" + states[i];})
+                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_" + parent_states[count] +  "_rect_" + states[i];})
                   .on("mouseover", function(d){                     
                      var coord = d3.mouse(this);
                      var t = "";
+                     var state = d3.select(this).attr("id").split("_");
                      // die ID des Balken slicen für parent state und node state
-                     t += currObj.parents[0] + " = " + state + ": ";
-                     t+= d3.select(this).attr("id").slice(19);
+                     t += currObj.parents[0] + " = " + state[4] + ": ";
+                     t+= state[6];
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
-                        .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
+                        .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-20) + ")")
                         .style("background-color", "lightgrey")   //bitte Farbe wählen
                         .style("font-size", 15)
                         .text(t)
@@ -1906,7 +1916,10 @@ brewer.pal(6, "Dark2")
     if(currObj.parents.length > 1){
     var YCoor = 20;
     var j;
-
+    var parentSize = currObj.parents.length;
+       if(currObj.parents[0] == "root"){
+            parentSize-=1;}
+    var count = 0;
         for(var s = 0; s < currObj.prob.length; s++){
 
             for(j = 0; j < currObj.prob.length; j++){
@@ -1930,7 +1943,15 @@ brewer.pal(6, "Dark2")
                   .attr("visibility", "visible")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
-                  .attr("id", function(d){ return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + "_rect" + states[i];})
+                  .attr("id", function(d){
+                        var k = "";
+                        for(var t = 0; t< parentSize; t++){
+                            k+="_p" + t + "_" + parent_states[count+t*Math.pow(states.length, parentSize)*states.length];
+                            console.log("i: " + i + "_" + (count + t*Math.pow(states.length, parentSize)*states.length));
+                        }
+                        k+="_rect" + states[i];
+
+                        return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id") + k;})
                   .on("mouseover", function(d){
                      /*
                      var coord = d3.mouse(this);
@@ -1959,8 +1980,12 @@ brewer.pal(6, "Dark2")
                         .style("visibility", "hidden")});
 
                     XCoor = XCoor + 2 + node_zugriff[j][s]*100;
+                    count+=1;
+
+
                 }
                 YCoor = YCoor+50;
+                //count = count - Math.pow(states.length, parentSize)*states.length + 1;
             }
         }
 
