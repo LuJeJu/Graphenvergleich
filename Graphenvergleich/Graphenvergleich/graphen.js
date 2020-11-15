@@ -1596,6 +1596,27 @@ function node_selection(d, nodes){
 // dendrogramm display of marked nodes
 var isDived = false; //asking if #dendrogram has divs already
 
+function statesArray(parent_states, currObj){
+
+   var count = 1;
+   for(var s = states.length; s>0; --s){
+      console.log(1);
+      for(var z = 0; z < Math.pow(states.length, currObj.parents.length+1); ++z){
+         console.log(2);
+            for(var t = 0; t < states.length; ++t){
+               console.log(3);
+               for(var i = 0; i < count; ++i){
+                  parent_states[z*states.length + s] = states[t];
+      }}}
+      count*=states.length;
+   }
+   /*
+   Spalten = states
+   Zeilen = parents
+   */
+   console.log(parent_states);
+};
+
 function dendrogram(){
 
    if(isDived == true){ //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
@@ -1752,9 +1773,10 @@ function dendrogram(){
 
          var scale = div_width/dendro_width - 0.05;
          var x = div_width/2 + ((dendro_width)*scale)/2;
-         console.log(NodeName + ": " + dendro_width);
 
-    
+   var parent_states = new Array(Math.pow(states.length, currObj.parents.length+1));
+   //console.log(states.length +","+ currObj.parents.length);
+   statesArray(parent_states, currObj);
 
    var zoom = d3.zoom().on("zoom", function(d){
       d3.select("#g_dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("transform", d3.event.transform);});
@@ -1836,6 +1858,7 @@ brewer.pal(6, "Dark2")
             YCoor = YCoor+(j*50);
 
             for(var i = 0; i < currObj.prob.length; i++){
+               var s= "";
                 var bar = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).append("rect")
                   .attr("width", function(d){return currObj.prob[i][j]*100;})
                   .attr("height", 20)
@@ -1847,20 +1870,17 @@ brewer.pal(6, "Dark2")
                   .attr("visibility", "visible")
                   .attr("cursor", "pointer")
                   .attr("pointer-events", "all")
-                  .attr("id", function(d){ 
-                     /*
+                  .attr("id", function(d){
                      if(count%states.length == 0) t+= states[0];
                      if(count%states.length == 1) t+= states[1];
                      if(count%states.length == 2) t+= states[2];
                      if(count%states.length == 3) t+= states[3];
-                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_"+  "_rect" + states[i];
-                  */})
-                  .on("mouseover", function(d){
-                     /*
+                     return d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).attr("id")+ "p_" + s +  "_rect" + states[i];})
+                  .on("mouseover", function(d){                     
                      var coord = d3.mouse(this);
                      var t = "";
                      // die ID des Balken slicen für parent state und node state
-                     t += currObj.parents[0] + " = " + /*state + ": ";
+                     t += currObj.parents[0] + " = " + state + ": ";
                      t+= d3.select(this).attr("id").slice(19);
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
                         .attr("transform", "translate("+ coord[0] + ","+ (coord[1]+10) + ")")
@@ -1869,7 +1889,6 @@ brewer.pal(6, "Dark2")
                         .text(t)
                         .attr("width", (t.length *8 + "px"))
                         .style("visibility", "visible");
-                        */
                     })
                     .on("mouseout", function(d){
                      d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
@@ -2138,7 +2157,7 @@ brewer.pal(6, "Dark2")
                         obj.source.y = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("y"));
                         obj.target = d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i);
                         obj.target.x = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("x")) + r_width + lineSpace;
-                        console.log(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i))
+                        //console.log(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i))
                         if(key == 0)
                             obj.target.y = Math.round(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i).attr("y")) + 25;
                         if(key == 1)
