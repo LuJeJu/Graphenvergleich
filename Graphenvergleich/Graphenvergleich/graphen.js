@@ -3,433 +3,421 @@ var marked = new Array();
 // function will be called by clicking the "Start"-button in Taskbar
 function darstellung(){
 
-      // delete default display, activate/disable buttons
-   document.getElementById("reset").disabled = false;
-   document.getElementById("start").disabled = true;
-   document.getElementById("center_graph").disabled = false;
-   document.getElementsByClassName("sync").disabled = false;
-   d3.select("#Vergleich2").text("");
-   d3.select("#Vergleich1").text("");
-   d3.select("#CPT").text("");
-   d3.select("#Dendrogramme").text("");
+     // delete default display, activate/disable buttons
+    document.getElementById("reset").disabled = false;
+    document.getElementById("start").disabled = true;
+    document.getElementById("center_graph").disabled = false;
+    document.getElementsByClassName("sync").disabled = false;
+    d3.select("#Vergleich2").text("");
+    d3.select("#Vergleich1").text("");
+    d3.select("#CPT").text("");
+    d3.select("#Dendrogramme").text("");
 
-
-   /*
+    /*
       prepare for scaling nodewidth on longest nodename
    */
-   test_string = document.createElement("span");
-   document.body.appendChild(test_string);
-   test_string.id = "t_width";
-   test_string.style.fontFamily = "sans-serif"
-   test_string.style.width = "auto";
-   test_string.style.height = "20px";
-   test_string.style.fontSize = "14px";
-   test_string.style.visibility = "hidden"; 
+    test_string = document.createElement("span");
+    document.body.appendChild(test_string);
+    test_string.id = "t_width";
+    test_string.style.fontFamily = "sans-serif"
+    test_string.style.width = "auto";
+    test_string.style.height = "20px";
+    test_string.style.fontSize = "14px";
+    test_string.style.visibility = "hidden";
    
-  r_width = 40;
-  r_height = 40;
+    r_width = 40;
+    r_height = 40;
 
-   /*
-      separates source nodes from others for every graph and
-      create divs depending on the number of graphs for the separate display
-   */
+    /*
+        separates source nodes from others for every graph and
+        create divs depending on the number of graphs for the separate display
+    */
 
-      // more than 1 graph
-   if(graphs.length>=1){
-      parent1 = new Array();
-      child1 = new Array();
-      link1 = new Array();
-      d3.select("#compare").style("display", "block");
+    // more than 1 graph
+    if(graphs.length>=1){
+        parent1 = new Array();
+        child1 = new Array();
+        link1 = new Array();
+        d3.select("#compare").style("display", "block");
 		d3.select("#window1").style("display", "block");
-   graph1(graphs[0], parent1, child1);
-   get_links(parent1,child1,link1);
-   }
+    graph1(graphs[0], parent1, child1);
+    get_links(parent1,child1,link1);
+    }
 
-      // more than 2 graphs
-   if(graphs.length>=2){
-      parent2 = new Array();
-      child2 = new Array();
-      link2 = new Array();
-      d3.select("#window2").style("display", "block");
-   graph1(graphs[1], parent2, child2);
-   get_links(parent2,child2,link2);
-   }
+    // more than 2 graphs
+    if(graphs.length>=2){
+        parent2 = new Array();
+        child2 = new Array();
+        link2 = new Array();
+        d3.select("#window2").style("display", "block");
+    graph1(graphs[1], parent2, child2);
+    get_links(parent2,child2,link2);
+    }
 
-      // more than 3 graphs
-   if(graphs.length>=3){
-      parent3 = new Array();
-      child3 = new Array();
-      link3 = new Array();
-      d3.select("#window3").style("display", "block");
-   graph1(graphs[2], parent3, child3);
-   get_links(parent3,child3,link3);
-   }
+    // more than 3 graphs
+    if(graphs.length>=3){
+        parent3 = new Array();
+        child3 = new Array();
+        link3 = new Array();
+        d3.select("#window3").style("display", "block");
+        graph1(graphs[2], parent3, child3);
+        get_links(parent3,child3,link3);
+    }
 
       // exactly 4 graphs
-   if(graphs.length == 4){
-      parent4 = new Array();
-      child4 = new Array();
-      link4 = new Array();
-      d3.select("#window4").style("display", "block");
-   graph1(graphs[3], parent4, child4);
-   get_links(parent4,child4,link4);
-   }
+    if(graphs.length == 4){
+        parent4 = new Array();
+        child4 = new Array();
+        link4 = new Array();
+        d3.select("#window4").style("display", "block");
+    graph1(graphs[3], parent4, child4);
+    get_links(parent4,child4,link4);
+    }
 
-   test_string.parentNode.removeChild(test_string);
+    test_string.parentNode.removeChild(test_string);
 
-   //for splitting divs
-   singledisplay();
-   // for draw comparison graph
-   multidisplay();
+    //for splitting divs
+    singledisplay();
+    // for draw comparison graph
+    multidisplay();
 
-   // more than 4 graphs -> hint that only 4 will be considered
-   // if(graphs.length>4){}
+    // more than 4 graphs -> hint that only 4 will be considered
+    // if(graphs.length>4){}
 };
 
 // split div depending on number of graphs
 function split_window(Target, id_){
-   if(graphs.length == 2){
-      var g1 = d3.select(Target).append("div").attr("id", id_ + "_g1");
-      g1 .style("width","100%")
-         .style("height","calc(50% - 1px")
-         .style("flex","1")
-         .style("border-bottom", "1px solid lightgrey");
+    if(graphs.length == 2){
+        var g1 = d3.select(Target).append("div").attr("id", id_ + "_g1");
+        g1. style("width","100%")
+            .style("height","calc(50% - 1px")
+            .style("flex","1")
+            .style("border-bottom", "1px solid lightgrey");
 
-      var g2 = d3.select(Target).append("div").attr("id", id_ + "_g2");
-      g2 .style("width","100%")
-         .style("height","calc(50% - 1px")
-         .style("flex","1")
-         .style("border-top", "1px solid lightgrey");
-   }
+        var g2 = d3.select(Target).append("div").attr("id", id_ + "_g2");
+        g2. style("width","100%")
+            .style("height","calc(50% - 1px")
+            .style("flex","1")
+            .style("border-top", "1px solid lightgrey");
+    }
 
-   if(graphs.length == 3 || graphs.length == 4){
-      var cont1 = d3.select(Target).append("div").attr("id",id_ + "_cont1");
-      cont1.style("width","100%").style("height","50%").style("flex","1");
-      cont1.style("display", "flex").style("flex-direction", "row");
-      var cont2 = d3.select(Target).append("div").attr("id",id_ + "_cont2");
-      cont2.style("width","100%").style("height","50%").style("flex","1");
-      cont2.style("display", "flex").style("flex-direction", "row");
+    if(graphs.length == 3 || graphs.length == 4){
+        var cont1 = d3.select(Target).append("div").attr("id",id_ + "_cont1");
+        cont1.style("width","100%").style("height","50%").style("flex","1");
+        cont1.style("display", "flex").style("flex-direction", "row");
+        var cont2 = d3.select(Target).append("div").attr("id",id_ + "_cont2");
+        cont2.style("width","100%").style("height","50%").style("flex","1");
+        cont2.style("display", "flex").style("flex-direction", "row");
 
-      var g1 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g1");
-      g1 .style("width","calc(50% - 1 px)")
-         .style("height","calc(100% - 1 px)")
-         .style("flex","1")
-         .style("border-bottom", "1px solid lightgrey")
-         .style("border-right", "1px solid lightgrey");
-         //.style("overflow", "auto");//.text("graph 1");
-      var g3 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g3");
-      g3 .style("width","calc(50% - 1 px)")
-         .style("height","calc(100% - 1 px)")
-         .style("flex","1")
-         .style("border-bottom", "1px solid lightgrey")
-         .style("border-left", "1px solid lightgrey");
-         //.style("overflow", "auto");//.text("graph 3");
-      var g2 = d3.select("#" + id_ + "_cont2").append("div").attr("id", id_ + "_g2");
-      g2 .style("width","calc(50% - 1 px)")
-         .style("height","calc(100% - 1 px)")
-         .style("flex","1")
-         .style("border-top", "1px solid lightgrey")
-         .style("border-right", "1px solid lightgrey");
-         //.style("overflow", "auto");//.text("graph 2");
-      var g4 = d3.select("#" + id_ + "_cont2").append("div").attr("id",id_ + "_g4");
-      g4 .style("width","calc(50% - 1 px)")
-         .style("height","calc(100% - 1 px)")
-         .style("flex","1")
-         .style("border-top", "1px solid lightgrey")
-         .style("border-left", "1px solid lightgrey");
-   }
+        var g1 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g1");
+        g1  .style("width","calc(50% - 1 px)")
+            .style("height","calc(100% - 1 px)")
+            .style("flex","1")
+            .style("border-bottom", "1px solid lightgrey")
+            .style("border-right", "1px solid lightgrey");
+        var g3 = d3.select("#" + id_ + "_cont1").append("div").attr("id", id_ + "_g3");
+        g3  .style("width","calc(50% - 1 px)")
+            .style("height","calc(100% - 1 px)")
+            .style("flex","1")
+            .style("border-bottom", "1px solid lightgrey")
+            .style("border-left", "1px solid lightgrey");
+        var g2 = d3.select("#" + id_ + "_cont2").append("div").attr("id", id_ + "_g2");
+        g2  .style("width","calc(50% - 1 px)")
+            .style("height","calc(100% - 1 px)")
+            .style("flex","1")
+            .style("border-top", "1px solid lightgrey")
+            .style("border-right", "1px solid lightgrey");
+            //.style("overflow", "auto");//.text("graph 2");
+        var g4 = d3.select("#" + id_ + "_cont2").append("div").attr("id",id_ + "_g4");
+        g4  .style("width","calc(50% - 1 px)")
+            .style("height","calc(100% - 1 px)")
+            .style("flex","1")
+            .style("border-top", "1px solid lightgrey")
+            .style("border-left", "1px solid lightgrey");
+    }
 };
 
 //call split & draw, for each single graph to display
 function singledisplay(){
 
-   split_window("#Vergleich2", "s");
+    split_window("#Vergleich2", "s");
 
-   if(graphs.length == 2){
-      draw(parent1, child1, "s_g1", link1);
-      draw(parent2, child2, "s_g2", link2);
-   }
+    if(graphs.length == 2){
+        draw(parent1, child1, "s_g1", link1);
+        draw(parent2, child2, "s_g2", link2);
+    }
 
-   if(graphs.length >=3){
-      draw(parent1, child1, "s_g1", link1);
-      draw(parent2, child2, "s_g2", link2);
-      draw(parent3, child3, "s_g3", link3);
-      if(graphs.length == 4){
-      draw(parent4, child4, "s_g4", link4);}
-   }
+    if(graphs.length >=3){
+        draw(parent1, child1, "s_g1", link1);
+        draw(parent2, child2, "s_g2", link2);
+        draw(parent3, child3, "s_g3", link3);
+    if(graphs.length == 4){
+        draw(parent4, child4, "s_g4", link4);}
+    }
 };
 
 // separate-function for parent/child differentiation
 function graph1(g, parent,child){
-   var key;
-   for(key in g){
-      var text = document.getElementById("t_width");
-      text.innerHTML = g[key].node[0];
-      r_width = Math.max(r_width, (text.getBoundingClientRect().width + 20));
-      if(g[key].parents.length==0) parent.push(g[key]);
-      else child.push(g[key]);
+    var key;
+    for(key in g){
+        var text = document.getElementById("t_width");
+        text.innerHTML = g[key].node[0];
+        r_width = Math.max(r_width, (text.getBoundingClientRect().width + 20));
+        if(g[key].parents.length==0) parent.push(g[key]);
+        else child.push(g[key]);
       //graphs[0][key].parents
-   }
+    }
 };
 
 // draw graphs separatly in own div
 function draw(parent,child,divs, link){
     //console.log(document.getElementById("s_g1"));
-   var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
-   var height = document.getElementById(divs).offsetHeight;
-   var title;
+    var width = document.getElementById(divs).offsetWidth;   // Stimmen !!!
+    var height = document.getElementById(divs).offsetHeight;
+    var title;
 
-   // colors for links
-   if(divs == "s_g1"){
-      var color = "#386cb0";
-      title = "Graph 1";
-   }
-   if(divs == "s_g2"){
-      var color = "#7fc97f";
-      title = "Graph 2";
-   }
-   if(divs == "s_g3"){
-      var color = "#fdc086";
-      title = "Graph 3";
-   }
-   if(divs == "s_g4"){
-      var color = "#beaed4";
-      title = "Graph 4";
-   }
+    // colors for links
+    if(divs == "s_g1"){
+        var color = "#386cb0";
+        title = "Graph 1";
+    }
 
-   var zoom = d3.zoom().on("zoom", function(d){
-                  d3.select("#single_"+ divs).attr("transform", d3.event.transform);});
+    if(divs == "s_g2"){
+        var color = "#7fc97f";
+        title = "Graph 2";
+    }
 
-   var rect = d3.select("#"+divs).append("rect")
-   .attr("width", "50")
-   .attr("height", "15")
-   .attr("transform", "translate(0,0)")
-   .style("background-color", color)
-   .style("border-right", "1px solid lightgrey")
-   .style("border-bottom", "1px solid lightgrey");
-   rect.append("text")  .attr("id", "graphnumbertext")
-                        .attr("x", 1)
-                        .attr("y", 11)
-                        .style("font-weight", "bold")
-                        .text(title);
+    if(divs == "s_g3"){
+        var color = "#fdc086";
+        title = "Graph 3";
+    }
 
-   var canvas = d3.select("#"+divs).append("svg")
-   .attr("id", "svg_"+divs)
-   .attr("width", "100%")
-   .attr("height", "calc(100% - 16px)")
-   .call(zoom)
-   .on("dblclick.zoom", null)
-   .call(zoom.transform, d3.zoomIdentity
-      .translate(-50,50)
-      .scale(.3,.3))
-   .append("g")
-   .attr("transform",
-                     "translate(" + -50 + "," + 
-                     50 +")scale("+ .3 + "," +
-                      .3 + ")")
-   .attr("id", "single_" + divs);
+    if(divs == "s_g4"){
+        var color = "#beaed4";
+        title = "Graph 4";
+    }
 
-   var root = {
-      children : [],
-      node : ["root"],
-      parents : [],
-      prob : []
-};
+    var zoom = d3.zoom().on("zoom", function(d){
+        d3.select("#single_"+ divs).attr("transform", d3.event.transform);});
 
-   var n = new Array();
-   n.push(root);
+    var rect = d3.select("#"+divs).append("rect")
+        .attr("width", "50")
+        .attr("height", "15")
+        .attr("transform", "translate(0,0)")
+        .style("background-color", color)
+        .style("border-right", "1px solid lightgrey")
+        .style("border-bottom", "1px solid lightgrey");
+    rect.append("text")
+        .attr("id", "graphnumbertext")
+        .attr("x", 1)
+        .attr("y", 11)
+        .style("font-weight", "bold")
+        .text(title);
 
-   for(var i =0; i<parent1.length;i++){
-      parent1[i].parents = ["root"];
-      n.push(parent1[i]);
-   }
-   for(var i=0; i<child1.length; i++){
-      n.push(child1[i]);
-   }
-      var elem = false;
-      for(var i = 0; i< parent.length; i++){
-         for(var j = 0; j< n.length; j++){
+    var canvas = d3.select("#"+divs).append("svg")
+        .attr("id", "svg_"+divs)
+        .attr("width", "100%")
+        .attr("height", "calc(100% - 16px)")
+        .call(zoom)
+        .on("dblclick.zoom", null)
+        .call(zoom.transform, d3.zoomIdentity
+        .translate(-50,50)
+        .scale(.3,.3))
+        .append("g")
+        .attr("transform", "translate(" + -50 + "," + 50 +")scale("+ .3 + "," + .3 + ")")
+        .attr("id", "single_" + divs);
+
+    var root = {
+        children : [],
+        node : ["root"],
+        parents : [],
+        prob : []
+    };
+
+    var n = new Array();
+    n.push(root);
+
+    for(var i =0; i<parent1.length;i++){
+        parent1[i].parents = ["root"];
+        n.push(parent1[i]);
+    }
+
+    for(var i=0; i<child1.length; i++){
+        n.push(child1[i]);
+    }
+
+    var elem = false;
+
+    for(var i = 0; i< parent.length; i++){
+        for(var j = 0; j< n.length; j++){
             if(n[j].node[0] == parent[i].node[0]){
-               elem = true;
-            }
-         }
-         if(elem == false){
-            if(parent[i].parents.length == 0){
-               parent[i].parents.push("root");
-            }
-            n.push(parent[i]);
-         }
-         elem = false;
-   }
-   for(var i = 0; i< child.length; i++){
-      for(var j = 0; j< n.length; j++){
-         if(n[j].node[0] == child[i].node[0]){
             elem = true;
-         }
-      }
-      if(elem == false){ 
-         if(child[i].parents.length == 0) child[i].parents.push("root");
-         n.push(child[i]);
-      }
-      elem = false;
-   }
-/* altes layout
-   for(var i =0; i<parent.length;i++){
-      //parent[i].x = 10;
-      //parent[i].y = i*100+10;
-      parent[i].parents = ["root"];
-      n.push(parent[i]);
-   }
-   for(var i =0; i<child.length;i++){
-      //child[i].x = 110;
-      //child[i].y = i*100+10;
-      n.push(child[i]);
-   }
-   */
-   var nodes = n;
-   var links = link;
-
-var simulation = d3.tree().nodeSize([r_height*2, r_width*2+40]);
-var treedata = d3.stratify().id(function(d){return d.node[0];})
-                  .parentId(function(d){return d.parents[0];})(nodes);
-                  treedata.each(function(d){
-                     d.node = d.id;
-                  })
-
-var tree = d3.hierarchy(treedata, function(d){return d.children;});
-   tree = simulation(tree);
-
-      var n = canvas.selectAll(".node")
-         .data(tree.descendants())
-         .enter()
-         .append("g")
-         .attr("class", "node")
-         .attr("id", function(d){ return divs+"node_"+d.data.node;})
-         .attr("transform", function (d) {
-               return "translate("+ (d.y - 50) +", "+ d.x +" )";
-         })
-         .attr("x", (d) => d.x)
-         .attr("y", (d) => d.y - 50);
-
-      n.append("rect")
-         .attr("width", r_width)
-         .attr("height", r_height)
-         //.attr("cursor", "pointer")
-         //.attr("pointer-events", "all")
-         .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
-         .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-         .attr("fill", "lightgray");
-
-         n.append("text")
-         .style("font-size", 14)
-         .attr("id", function(d){ return "Nodetext_"+ d.data.node;})
-         .attr("x", r_width/2)
-         .attr("y", r_height/2+ 5)
-         //.attr("cursor", "pointer")
-         //.attr("pointer-events", "all")
-         .attr("text-anchor", "middle")
-         .text(function (d) {
-            return d.data.id;
-         });
-
-         d3.selectAll("#Nodetext_root").style("visibility", "hidden");
-         d3.selectAll("#NodeButton_root").style("visibility", "hidden");
-
-// remove node, if not in graph, but in graph 1
-for(var i = 0; i < parent1.length; i++){
-   var el = false;
-   for(var j = 0; j< parent.length; j++){
-      if(parent1[i].node[0] == parent[j].node[0]) el = true;
-   }
-   for(var j = 0; j< child.length; j++){
-      if(parent1[i].node[0] == child[j].node[0]) el = true;
-   }
-   if(el == false){
-      var node_name = parent1[i].node[0];
-      console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
-      d3 .select("#single_" + divs)
-         .select("#"+ divs + "node_" + node_name)
-         .remove();
-   }
-      el = false;
-}
-for(var i = 0; i < child1.length; i++){
-   var el = false;
-   for(var j = 0; j< parent.length; j++){
-      if(child1[i].node[0] == parent[j].node[0]) el = true;
-   }
-   for(var j = 0; j< child.length; j++){
-      if(child1[i].node[0] == child[j].node[0]) el = true;
-   }
-   if(el == false){
-      var node_name = child1[i].node[0];
-      console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
-      d3 .select("#single_" + divs)
-         .select("#"+ divs + "node_" + node_name)
-         .remove();
-   }
-      el = false;
-}  
-
-       canvas.append("svg:defs").selectAll("marker")
-       .data(["end"])
-       .enter().append("svg:marker")
-       .attr("id", "arrow"+divs)
-       .attr("viewBox", "0 -5 10 10")
-       .attr("refX", 10)
-       .attr("refY", 0)
-       .attr("markerWidth", 6)
-       .attr("markerHeight", 6)
-       .attr("orient", "auto")
-       .append("svg:path")
-       .attr("d", "M0,-5L10,0L0,5")
-       .style("fill", color); 
-
-      var diagonal = function link(d){
-         var source = d3.select("#"+divs+"node_"+ d.source);
-         var target = d3.select("#"+divs+"node_"+ d.target);
-         var sx = Math.round(source.attr("x"));
-         var sy = Math.round(source.attr("y"));
-         var tx = Math.round(target.attr("x"));
-         var ty = Math.round(target.attr("y"));
-         var t = "";
-         var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
-         if(ty == sy){
-            if(tx > sx) t +=  "M"   + (sy + r_width/2) + "," + (sx + r_height) 
-                                    + m
-                                    + " " + (ty) + "," + (tx + r_height/2);
-            if(tx < sx) t +=  "M"   + (sy + r_width/2) + "," + (sx)
-                                    + m
-                                    + " " + (ty + r_width/2) + "," + (tx + r_height);
-            }    
-         if(ty > sy){
-            t += "M"    + (sy + r_width) + "," + (sx + r_height/2)
-                        + m
-                        + " " + (ty) + "," + (tx + r_height/2);
             }
-         if(ty < sy){
-               t += "M" + (sy + r_width/2) + "," + (sx+ r_height)
-                        + m
-                        + " " + (ty + r_width) + "," + (tx + r_height/2);
-         }   
-         return t;      
-                     };   
+        }
+        if(elem == false){
+            if(parent[i].parents.length == 0){
+            parent[i].parents.push("root");
+            }
+        n.push(parent[i]);
+        }
+        elem = false;
+    }
 
-      var l =canvas.selectAll(".link")
-         .data(links)
-         .enter()
-         .append("path")
-         .attr("class", "link")
-         .style("stroke", color)
-         .style("fill", "none")
-         .style("stroke-width", 2.0)
-         .attr("marker-end", "url(#arrow"+ divs + ")")
+    for(var i = 0; i< child.length; i++){
+        for(var j = 0; j< n.length; j++){
+            if(n[j].node[0] == child[i].node[0]){
+            elem = true;
+            }
+        }
+        if(elem == false){
+            if(child[i].parents.length == 0) child[i].parents.push("root");
+                n.push(child[i]);
+        }
+        elem = false;
+    }
+
+    var nodes = n;
+    var links = link;
+
+    var simulation = d3.tree().nodeSize([r_height*2, r_width*2+40]);
+    var treedata = d3.stratify().id(function(d){return d.node[0];})
+        .parentId(function(d){return d.parents[0];})(nodes);
+    treedata.each(function(d){
+        d.node = d.id;
+        })
+
+    var tree = d3.hierarchy(treedata, function(d){return d.children;});
+    tree = simulation(tree);
+
+    var n = canvas.selectAll(".node")
+        .data(tree.descendants())
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("id", function(d){ return divs+"node_"+d.data.node;})
+        .attr("transform", function (d) {
+            return "translate("+ (d.y - 50) +", "+ d.x +" )";})
+        .attr("x", (d) => d.x)
+        .attr("y", (d) => d.y - 50);
+
+    n.append("rect")
+        .attr("width", r_width)
+        .attr("height", r_height)
+        .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
+        .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+        .attr("fill", "lightgray");
+
+        n.append("text")
+        .style("font-size", 14)
+        .attr("id", function(d){ return "Nodetext_"+ d.data.node;})
+        .attr("x", r_width/2)
+        .attr("y", r_height/2+ 5)
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d.data.id;});
+
+        d3.selectAll("#Nodetext_root").style("visibility", "hidden");
+        d3.selectAll("#NodeButton_root").style("visibility", "hidden");
+
+    // remove node, if not in graph, but in graph 1
+    for(var i = 0; i < parent1.length; i++){
+        var el = false;
+        for(var j = 0; j< parent.length; j++){
+            if(parent1[i].node[0] == parent[j].node[0]) el = true;
+        }
+        for(var j = 0; j< child.length; j++){
+            if(parent1[i].node[0] == child[j].node[0]) el = true;
+        }
+        if(el == false){
+            var node_name = parent1[i].node[0];
+            console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
+            d3  .select("#single_" + divs)
+                .select("#"+ divs + "node_" + node_name)
+                .remove();
+        }
+        el = false;
+    }
+
+    for(var i = 0; i < child1.length; i++){
+    var el = false;
+        for(var j = 0; j< parent.length; j++){
+            if(child1[i].node[0] == parent[j].node[0]) el = true;
+        }
+        for(var j = 0; j< child.length; j++){
+            if(child1[i].node[0] == child[j].node[0]) el = true;
+        }
+        if(el == false){
+            var node_name = child1[i].node[0];
+            console.log(d3.select("#single_" + divs).select("#"+ divs + "node_" + node_name));
+            d3  .select("#single_" + divs)
+                .select("#"+ divs + "node_" + node_name)
+                .remove();
+        }
+        el = false;
+    }
+
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", "arrow"+divs)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .style("fill", color);
+
+    var diagonal = function link(d){
+    var source = d3.select("#"+divs+"node_"+ d.source);
+    var target = d3.select("#"+divs+"node_"+ d.target);
+    var sx = Math.round(source.attr("x"));
+    var sy = Math.round(source.attr("y"));
+    var tx = Math.round(target.attr("x"));
+    var ty = Math.round(target.attr("y"));
+    var t = "";
+    var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
+
+//klammern nach If???
+    if(ty == sy){
+        if(tx > sx) t +=  "M"   + (sy + r_width/2) + "," + (sx + r_height)
+                                + m
+                                + " " + (ty) + "," + (tx + r_height/2);
+
+        if(tx < sx) t +=  "M"   + (sy + r_width/2) + "," + (sx)
+                                + m
+                                + " " + (ty + r_width/2) + "," + (tx + r_height);
+    }
+
+    if(ty > sy){ t += "M"   + (sy + r_width) + "," + (sx + r_height/2)
+                            + m
+                            + " " + (ty) + "," + (tx + r_height/2);
+    }
+
+    if(ty < sy){ t += "M"   + (sy + r_width/2) + "," + (sx+ r_height)
+                            + m
+                            + " " + (ty + r_width) + "," + (tx + r_height/2);
+    }
+    return t;
+    };
+
+    var l = canvas.selectAll(".link")
+        .data(links)
+        .enter()
+        .append("path")
+        .attr("class", "link")
+        .style("stroke", color)
+        .style("fill", "none")
+        .style("stroke-width", 2.0)
+        .attr("marker-end", "url(#arrow"+ divs + ")")
          //.attr("x1", function(d) { return d.source.x+20; })
          //.attr("y1", function(d) { return d.source.y+20/2; })
          //.attr("x2", function(d) { return d.target.x; })
          //.attr("y2", function(d) { return d.target.y+20/2; })
          //.attr( "d", (d) => "M" + (d.source.x + r_width) + "," + (d.source.y + r_height/2) + ", " + d.target.x + "," + (d.target.y+r_height/2));
-         .attr("d", function(d){return diagonal(d);});
+        .attr("d", function(d){return diagonal(d);});
 
          /*
          var g_width = d3.select("#single_"+divs).node().getBoundingClientRect().width;
@@ -457,543 +445,551 @@ for(var i = 0; i < child1.length; i++){
 // get link array with source and target node from every link
 function get_links(parent, child, link){
 
-   for(var i=0; i<parent.length; i++){
-      if(parent[i].children.length >= 1){
-         for(var j = 0; j<parent[i].children.length; j++){
+    for(var i=0; i<parent.length; i++){
+        if(parent[i].children.length >= 1){
+            for(var j = 0; j<parent[i].children.length; j++){
             var obj = {};
             obj.source = parent[i].node[0];
             obj.target = parent[i].children[j];
-         link.push(obj);
-         }
-      }else continue;
-   }
-
-   for(var i=0; i< child.length; i++){
-      if(child[i].children.length >= 1){
-         for(var j = 0; j<child[i].children.length; j++){
-            var obj = {};
-            obj.source = child[i].node[0];
-            obj.target = child[i].children[j];
             link.push(obj);
-         }
-      }else continue;
-   }
+        }
+        }else continue;
+    }
+
+    for(var i=0; i< child.length; i++){
+        if(child[i].children.length >= 1){
+            for(var j = 0; j<child[i].children.length; j++){
+                var obj = {};
+                obj.source = child[i].node[0];
+                obj.target = child[i].children[j];
+                link.push(obj);
+            }
+        }else continue;
+    }
 };
 
 //draw comparison graph
 function multidisplay(){
-   var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
-   var height = document.getElementById("Vergleich1").offsetHeight;
+    var width = document.getElementById("Vergleich1").offsetWidth;   // Stimmen !!!
+    var height = document.getElementById("Vergleich1").offsetHeight;
 
-   var zoom = d3.zoom().on("zoom", function(d){
-      d3.select("#compare_g").attr("transform", d3.event.transform);});
+    var zoom = d3.zoom().on("zoom", function(d){
+        d3.select("#compare_g").attr("transform", d3.event.transform);});
 
 
-   var canvas = d3.select("#Vergleich1").append("svg")
-   .attr("id", "compare_svg")
-   .attr("width", "100%")
-   .attr("height", "100%")
-   /*
-   .on("mousedown", function(d){
-      var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
-      console.log(ctrl);
-      if(ctrl){
-         console.log("ctrl key is used");
-         var m = d3.mouse(this);
-         console.log(m);
-         d3.select("#compare_svg") .append("rect")
-                     .attr("id", "selection")
-                     .attr("x", m[0])
-                     .attr("y", m[1])
-                     .attr("height", 0)
-                     .attr("width", 0)
-                     .attr("stroke", "gray")
-                     .attr("stroke-dasharray", "4px")
-                     .attr("fill", "transparent");            
-      }
-      })
-   .on("mousemove", function(){
-      // da ctrl immer true auch immer mousemove abfrage und selection existiert
-      // nicht immer -> fehlermeldungen, die noch gefixt werden
-      var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
-      if(ctrl){
-         var m2 = d3.mouse(this);
-         d3.select("#selection")
-               .attr("width", Math.max(0, m2[0] - d3.select("#selection").attr("x")))
-               .attr("height", Math.max(0, m2[1] - d3.select("#selection").attr("y")))
-      }
-      })
-      //denke mal funktioniert nicht immer, weil ctrl immer true
-   .on("mouseup", function(){
-      d3.select("#compare_svg").select("#selection").remove();
-      })
-      */
-   .call(zoom).on("dblclick.zoom", null)
-   .call(zoom.transform, d3.zoomIdentity
-      .translate(50,150)
-      .scale(.7,.7))
-   .append("g")
-   .attr("transform",
+    var canvas = d3.select("#Vergleich1").append("svg")
+        .attr("id", "compare_svg")
+        .attr("width", "100%")
+        .attr("height", "100%")
+    /*
+    .on("mousedown", function(d){
+    var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
+    console.log(ctrl);
+        if(ctrl){
+        console.log("ctrl key is used");
+        var m = d3.mouse(this);
+        console.log(m);
+        d3.select("#compare_svg") .append("rect")
+            .attr("id", "selection")
+            .attr("x", m[0])
+            .attr("y", m[1])
+            .attr("height", 0)
+            .attr("width", 0)
+            .attr("stroke", "gray")
+            .attr("stroke-dasharray", "4px")
+            .attr("fill", "transparent");
+        }
+        })
+    .on("mousemove", function(){
+    // da ctrl immer true auch immer mousemove abfrage und selection existiert
+    // nicht immer -> fehlermeldungen, die noch gefixt werden
+    var ctrl = d3.event.keyCode == Event.ctrlKey ? true : false;
+        if(ctrl){
+        var m2 = d3.mouse(this);
+        d3.select("#selection")
+            .attr("width", Math.max(0, m2[0] - d3.select("#selection").attr("x")))
+            .attr("height", Math.max(0, m2[1] - d3.select("#selection").attr("y")))
+        }
+        })
+        //denke mal funktioniert nicht immer, weil ctrl immer true
+    .on("mouseup", function(){
+    d3.select("#compare_svg").select("#selection").remove();
+    })
+    */
+        .call(zoom).on("dblclick.zoom", null)
+        .call(zoom.transform, d3.zoomIdentity
+        .translate(50,150)
+        .scale(.7,.7))
+        .append("g")
+        .attr("transform",
                      "translate(" + 0 + "," + 
                      150 +")scale("+ .6 + "," +
                       .6 + ")")
-   .attr("id", "compare_g");
+        .attr("id", "compare_g");
 
-   var n = new Array();
-   var link = new Array();
+    var n = new Array();
+    var link = new Array();
 
-   var root = {
-      children : [],
-      node : ["root"],
-      parents : [],
-      prob : [],
-};
-   n.push(root);
+    var root = {
+        children : [],
+        node : ["root"],
+        parents : [],
+        prob : [],
+    };
+    n.push(root);
 
-   //parent iteration
-   for(var i =0; i< parent1.length; i++){
-      parent1[i].parents = ["root"];
-      root.children.push(parent1[i]);
-      n.push(parent1[i]);
-   }
-   for(var i = 0; i< child1.length; i++){
-      n.push(child1[i]);
-   }
-   if(graphs.length >= 2){
-      var element;
-      for(var i =0; i<parent2.length;i++){
-         for(var j=0; j<n.length; j++){
+    //parent iteration
+    for(var i =0; i< parent1.length; i++){
+        parent1[i].parents = ["root"];
+        root.children.push(parent1[i]);
+        n.push(parent1[i]);
+    }
+
+    for(var i = 0; i< child1.length; i++){
+        n.push(child1[i]);
+    }
+
+    if(graphs.length >= 2){
+        var element;
+        for(var i =0; i<parent2.length;i++){
+            for(var j=0; j<n.length; j++){
             if(parent2[i].node[0] == n[j].node[0]) {element = true; break;}
             else element = false;
-         }
-         if(element == false){
-         parent2[i].parents = ["root"];
-         root.children.push(parent2[i]);
-         n.push(parent2[i]);
-         }
-      }
-   }
-   if(graphs.length >= 3){
-      var element;
-      for(var i =0; i<parent3.length;i++){
-         for(var j=0; j<n.length; j++){
-            if(parent3[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         //parent3[i].x = 10;
-         //parent3[i].y = (n.length)*110 +10;
-         parent3[i].parents = ["root"];
-         root.children.push(parent3[i]);
-         n.push(parent3[i]);
-         }
-      }
-   }
-   if(graphs.length == 4){
-      var element;
-      for(var i =0; i<parent4.length;i++){
-         for(var j=0; j<n.length; j++){
-            if(parent4[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         //parent4[i].x = 10;
-         //parent4[i].y = (n.length)*110 +10;
-         parent4[i].parents = ["root"];
-         root.children.push(parent4[i]);
-         n.push(parent4[i]);
-         }
-      }
-   }
+            }
+            if(element == false){
+                parent2[i].parents = ["root"];
+                root.children.push(parent2[i]);
+                n.push(parent2[i]);
+            }
+        }
+    }
 
-   var count = 0;
+    if(graphs.length >= 3){
+        var element;
+        for(var i =0; i<parent3.length;i++){
+            for(var j=0; j<n.length; j++){
+                if(parent3[i].node[0] == n[j].node[0]) {element = true; break;}
+                else element = false;
+            }
+            if(element == false){
+                //parent3[i].x = 10;
+                //parent3[i].y = (n.length)*110 +10;
+                parent3[i].parents = ["root"];
+                root.children.push(parent3[i]);
+                n.push(parent3[i]);
+            }
+        }
+    }
 
-   //children iteration
+    if(graphs.length == 4){
+        var element;
+        for(var i =0; i<parent4.length;i++){
+            for(var j=0; j<n.length; j++){
+                if(parent4[i].node[0] == n[j].node[0]) {element = true; break;}
+                else element = false;
+            }
+            if(element == false){
+                //parent4[i].x = 10;
+                //parent4[i].y = (n.length)*110 +10;
+                parent4[i].parents = ["root"];
+                root.children.push(parent4[i]);
+                n.push(parent4[i]);
+            }
+        }
+    }
 
-   if(graphs.length >= 2){
-      var element;
-      for(var i =0; i<child2.length;i++){
-         for(var j=0; j<n.length; j++){
-            if(child2[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         child2[i].x = 110;
-         child2[i].y = count*110 +10;
-         count++;
-         n.push(child2[i]);
-         }
-      }
-   }
-   if(graphs.length >= 3){
-      var element;
-      for(var i =0; i<child3.length;i++){
-         for(var j=0; j<n.length; j++){
-            if(child3[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         child3[i].x = 110;
-         child3[i].y = count*110 +10;
-         count++;
-         n.push(child3[i]);
-         }
-      }
-   }
-   if(graphs.length == 4){
-      var element;
-      for(var i =0; i<child4.length;i++){
-         for(var j=0; j<n.length; j++){
-            if(child4[i].node[0] == n[j].node[0]) {element = true; break;}
-            else element = false;
-         }
-         if(element == false){
-         child4[i].x = 110;
-         child4[i].y = count*110 +10;
-         count++;
-         n.push(child4[i]);
-         }
-      }
-   }
-   // build linkarray
-   if(graphs.length >= 1){
-      var l1 = new Array();
-      get_links(parent1, child1, l1);
-      for(var i=0; i< l1.length; i++){
-         l1[i].g = 1;
-         link.push(l1[i]);
-      }
-   }
-   if(graphs.length >= 2){
-      var l2 = new Array(); 
-      get_links(parent2, child2, l2);
-      for(var i=0; i< l2.length; i++){
-         l2[i].g = 2;
-         link.push(l2[i]);
-      }
-   }
-   if(graphs.length >= 3){
-      var l3 = new Array();
-      get_links(parent3, child3, l3);
-      for(var i=0; i< l3.length; i++){
-         l3[i].g = 3;
-         link.push(l3[i]);
-      }
-   }
-   if(graphs.length == 4){
-      var l4 = new Array();
-      get_links(parent4, child4, l4);
-      for(var i=0; i< l4.length; i++){
-         l4[i].g = 4;
-         link.push(l4[i]);
-      }
-   }
+    var count = 0;
 
-   var nodes = n;
-   var links = link.filter((v,i,a) =>
-          a.findIndex(t =>
-               (t.source == v.source && t.target == v.target)) === i);
+    //children iteration
 
-   var simulation = d3.tree().nodeSize([r_height*3, r_width+(3*40)]);
-   var treedata = d3.stratify().id(function(d){return d.node[0];})
-                  .parentId(function(d){return d.parents[0];})(nodes);
-       treedata.each(function(d){
-          d.node = d.id;
-       })
-   var tree = d3.hierarchy(treedata, function(d){return d.children;});
-       tree = simulation(tree);
+    if(graphs.length >= 2){
+        var element;
+        for(var i =0; i<child2.length;i++){
+            for(var j=0; j<n.length; j++){
+                if(child2[i].node[0] == n[j].node[0]) {element = true; break;}
+                else element = false;
+            }
+            if(element == false){
+                child2[i].x = 110;
+                child2[i].y = count*110 +10;
+                count++;
+                n.push(child2[i]);
+            }
+        }
+    }
+
+    if(graphs.length >= 3){
+        var element;
+        for(var i =0; i<child3.length;i++){
+            for(var j=0; j<n.length; j++){
+                if(child3[i].node[0] == n[j].node[0]) {element = true; break;}
+                else element = false;
+            }
+            if(element == false){
+                child3[i].x = 110;
+                child3[i].y = count*110 +10;
+                count++;
+                n.push(child3[i]);
+            }
+        }
+    }
+
+    if(graphs.length == 4){
+        var element;
+        for(var i =0; i<child4.length;i++){
+            for(var j=0; j<n.length; j++){
+                if(child4[i].node[0] == n[j].node[0]) {element = true; break;}
+                else element = false;
+            }
+            if(element == false){
+                child4[i].x = 110;
+                child4[i].y = count*110 +10;
+                count++;
+                n.push(child4[i]);
+            }
+        }
+    }
+
+    // build linkarray
+    if(graphs.length >= 1){
+        var l1 = new Array();
+        get_links(parent1, child1, l1);
+        for(var i=0; i< l1.length; i++){
+            l1[i].g = 1;
+            link.push(l1[i]);
+        }
+    }
+
+    if(graphs.length >= 2){
+        var l2 = new Array();
+        get_links(parent2, child2, l2);
+        for(var i=0; i< l2.length; i++){
+            l2[i].g = 2;
+            link.push(l2[i]);
+        }
+    }
+
+    if(graphs.length >= 3){
+        var l3 = new Array();
+        get_links(parent3, child3, l3);
+        for(var i=0; i< l3.length; i++){
+            l3[i].g = 3;
+            link.push(l3[i]);
+        }
+    }
+
+    if(graphs.length == 4){
+        var l4 = new Array();
+        get_links(parent4, child4, l4);
+        for(var i=0; i< l4.length; i++){
+            l4[i].g = 4;
+            link.push(l4[i]);
+        }
+    }
+
+    var nodes = n;
+    var links = link.filter((v,i,a) =>
+        a.findIndex(t =>
+        (t.source == v.source && t.target == v.target)) === i);
+
+    var simulation = d3.tree().nodeSize([r_height*3, r_width+(3*40)]);
+    var treedata = d3.stratify().id(function(d){return d.node[0];})
+        .parentId(function(d){return d.parents[0];})(nodes);
+        treedata.each(function(d){
+            d.node = d.id;})
+    var tree = d3.hierarchy(treedata, function(d){return d.children;});
+        tree = simulation(tree);
    
-      var n = canvas.selectAll(".node")
-         .data(tree.descendants())
-         .enter()
-         .append("g")
-         .attr("class", "node")
-         .attr("id", function(d){ return "node_"+d.data.node;})
-         .attr("transform", function (d) {
-               return "translate("+ (d.y-150) +", "+ d.x +" )";
-         })
-         .attr("x", (d) => d.x)
-         .attr("y", (d) => d.y - 150);
+    var n = canvas.selectAll(".node")
+        .data(tree.descendants())
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("id", function(d){ return "node_"+d.data.node;})
+        .attr("transform", function (d) {
+            return "translate("+ (d.y-150) +", "+ d.x +" )";})
+        .attr("x", (d) => d.x)
+        .attr("y", (d) => d.y - 150);
 
-      var node_rect = n.append("rect")
-         .attr("width", r_width)
-         .attr("height", r_height)
-         .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-         .attr("fill", "lightgray")
-         .attr("visibility", "visible")
-         .attr("cursor", function(d){
-                  var node_name = d.data.node;
-                  if(node_name =="root") return "none"; 
-                  else return "pointer";})
-         .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
-         .on("click",function(d){ return node_selection(d, nodes);})
-         .attr("pointer-events", "all")
-         .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
-         .attr("pointer-events", "none");
-
-         n.append("text")
-         .style("font-size", 14)
-         .attr("x", r_width/2)
-         .attr("y", r_height/2)
-         .attr("dominant-baseline", "middle")
-         .attr("text-anchor", "middle")
-         .text(function (d) {
-            return d.data.node;
-         })
-         .attr("cursor", function(d){
+    var node_rect = n.append("rect")
+        .attr("width", r_width)
+        .attr("height", r_height)
+        .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
+        .attr("fill", "lightgray")
+        .attr("visibility", "visible")
+        .attr("cursor", function(d){
             var node_name = d.data.node;
-            console.log(node_name == "root"); 
-            if(node_name =="root") return "none"; 
+            if(node_name =="root") return "none";
+                else return "pointer";})
+        .attr("id", function(d){ return "NodeButton_"+ d.data.node;})
+        .on("click",function(d){ return node_selection(d, nodes);})
+        .attr("pointer-events", "all")
+        .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
+        .attr("pointer-events", "none");
+
+    n.append("text")
+        .style("font-size", 14)
+        .attr("x", r_width/2)
+        .attr("y", r_height/2)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d.data.node;})
+        .attr("cursor", function(d){
+    var node_name = d.data.node;
+    //console.log(node_name == "root");
+        if(node_name =="root") return "none";
             else return "pointer";})
-         .attr("id", function(d){ return "Nodetext_"+d.data.node;})
-         .on("click", function(d){ return node_selection(d, nodes);})  
-         .attr("pointer-events", "all")
-         .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
-         .attr("pointer-events", "none");
+    .attr("id", function(d){ return "Nodetext_"+d.data.node;})
+    .on("click", function(d){ return node_selection(d, nodes);})
+    .attr("pointer-events", "all")
+    .filter(function(d){var node_name = d.data.node; return (node_name == "root");})
+    .attr("pointer-events", "none");
 
-
-         d3.select("#node_root").style("visibility", "hidden");
-         d3.select("#NodeButton_root").style("visibility", "hidden");
-/*
-      var text = canvas.append("g")
-         .attr("class", "labels")
-         .selectAll("text")
-         .data(nodes)
-         .enter()
-         .append("text")
-         .attr("cursor", "pointer")
-         .attr("pointer-events", "all")
-         .attr("id", function(d){ return "Nodetext_"+d.node;})
-         .attr("text-anchor", "middle")
-         .text(function (d) {
+    d3.select("#node_root").style("visibility", "hidden");
+    d3.select("#NodeButton_root").style("visibility", "hidden");
+    /*
+    var text = canvas.append("g")
+        .attr("class", "labels")
+        .selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .attr("cursor", "pointer")
+        .attr("pointer-events", "all")
+        .attr("id", function(d){ return "Nodetext_"+d.node;})
+        .attr("text-anchor", "middle")
+        .text(function (d) {
             return d.node;
-         })
+        })
             .attr("dominant-baseline", "middle")
             .attr("x", function(d){return d.x + (20/2);})
             .attr("y", function(d){return d.y + (20/2);})
             .on("click", function(d){ return node_selection(d);});
 */
-      var color_array = ["#386cb0" , "#7fc97f" , "#fdc086" , "#beaed4"]
-      //["#beaed4", "#fdc086", "#7fc97f", "#386cb0"]
+    var color_array = ["#386cb0" , "#7fc97f" , "#fdc086" , "#beaed4"]
+     //["#beaed4", "#fdc086", "#7fc97f", "#386cb0"]
       
-      //blue Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", 'arrow_#386cb0')
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "#386cb0")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
+    //blue Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", 'arrow_#386cb0')
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "#386cb0")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
-      //green Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", 'arrow_#7fc97f')
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "#7fc97f")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
+    //green Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", 'arrow_#7fc97f')
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "#7fc97f")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
        
-      //orange Arrow   
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", 'arrow_#fdc086')
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "#fdc086")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
-      
-      //purple Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", "arrow_#beaed4")
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "#beaed4")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
+    //orange Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", 'arrow_#fdc086')
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "#fdc086")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
-      //lightgrey Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", "arrow_lightgrey")
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "lightgrey")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
-      
-      //grey Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", "arrow_grey")
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "grey")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
+    //purple Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", "arrow_#beaed4")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "#beaed4")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
-      //black Arrow
-      canvas.append("svg:defs").selectAll("marker")
-         .data(["end"])
-         .enter().append("svg:marker")
-         .attr("id", "arrow_black")
-         .attr("viewBox", "0 -5 10 10")
-         .attr("refX", 10)
-         .attr("refY", 0.0)
-         .attr("markerWidth", 6)
-         .attr("markerHeight", 6)
-         .attr("fill", "black")
-         .attr("orient", "auto")
-         .append("svg:path")
-         .attr("d", "M0,-5L10,0L0,5");
+    //lightgrey Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", "arrow_lightgrey")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "lightgrey")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
-      var diagonal = function link(d){
-         var source = d3.select("#node_"+ d.source);
-         var target = d3.select("#node_"+ d.target);
-         var sx = Math.round(source.attr("x"));
-         var sy = Math.round(source.attr("y"));
-         var tx = Math.round(target.attr("x"));
-         var ty = Math.round(target.attr("y"));
-         var t = "";
-         var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
-         if(ty == sy){
+    //grey Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", "arrow_grey")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "grey")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
+
+    //black Arrow
+    canvas.append("svg:defs").selectAll("marker")
+        .data(["end"])
+        .enter().append("svg:marker")
+        .attr("id", "arrow_black")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("fill", "black")
+        .attr("orient", "auto")
+    .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
+
+    var diagonal = function link(d){
+        var source = d3.select("#node_"+ d.source);
+        var target = d3.select("#node_"+ d.target);
+        var sx = Math.round(source.attr("x"));
+        var sy = Math.round(source.attr("y"));
+        var tx = Math.round(target.attr("x"));
+        var ty = Math.round(target.attr("y"));
+        var t = "";
+        var m = "C" + (sy + ty)/2 + "," + sx + " " + (sy + ty)/2 + "," + tx;
+        if(ty == sy){
             if(tx > sx) t +=  "M"   + (sy + r_width/2) + "," + (sx + r_height) 
                                     + m
                                     + " " + (ty) + "," + (tx + r_height/2);
             if(tx < sx) t +=  "M"   + (sy + r_width/2) + "," + (sx)
                                     + m
                                     + " " + (ty + r_width/2) + "," + (tx + r_height);
-               }    
-         if(ty > sy){
+        }
+
+        if(ty > sy){
             t += "M"    + (sy + r_width) + "," + (sx + r_height/2)
                         + m
                         + " " + (ty) + "," + (tx + r_height/2);
-            }
-         if(ty < sy){
+        }
+
+        if(ty < sy){
             t += "M"    + (sy + r_width/2) + "," + (sx+ r_height)
                         + m
                         + " " + (ty + r_width) + "," + (tx + r_height/2);
-            }   
-            return t;      
-      };   
+        }
+        return t;
+    };
 
-      var l =canvas.selectAll(".link")
-         .data(links)
-            //tree.descendants().slice(1))
-         .enter()
-         .append("path")
-         .attr("class", "link")
-         .attr("stroke", function(d){
+    var l = canvas.selectAll(".link")
+        .data(links)
+        //tree.descendants().slice(1))
+        .enter()
+    .append("path")
+        .attr("class", "link")
+        .attr("stroke", function(d){
             var count = 0;
             for(var i = 0; i < link.length; i++){
-               if(link[i].target == d.target && link[i].source == d.source)
-                  count++;
+                if(link[i].target == d.target && link[i].source == d.source)
+                    count++;
             }
             if(count == 1){ return color_array[(d.g-1)];}
             if(count == 2){ return "lightgrey";}
             if(count == 3){ return "grey";}
             if(count == 4){ return "black";}
             }) 
-         .style("fill", "none")
-         .style("stroke-width", 2.0)
-         .attr("marker-end", function(d){
-                              var stroke_color = d3.select(this).attr("stroke"); 
-                              return "url(#arrow_" +stroke_color+ ")"})
-         .attr( "d", function(d){return diagonal(d);}) 
-         //(d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
-         .attr("id", function(d){ return "link_";})
-         .on("mouseover", function(d){
-                           d3.select(this).style("stroke-width", 3.5)
-                           var coord = d3.mouse(this);
-                           var t = "";
-                           for(var i = 0; i < link.length; i++){
-                              if((link[i].target==d.target) && (link[i].source==d.source)){
-                                 if(link[i].g == 1) t+=" Graph1";
-                                 if(link[i].g == 2) t+=" Graph2";
-                                 if(link[i].g == 3) t+=" Graph3";
-                                 if(link[i].g == 4) t+=" Graph4";
-                              }
-                           }
-                           var text_length = t.length;
-                           d3 .select("#link_hint")
-                              .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-10) + ")")
-                              .style("background-color", "lightgrey")   //bitte Farbe wählen
-                              .style("font-size", 15)
-                              .text(t)
-                              .attr("width", (t.length *8 + "px"))
-                              .style("visibility", "visible");
+        .style("fill", "none")
+        .style("stroke-width", 2.0)
+        .attr("marker-end", function(d){
+            var stroke_color = d3.select(this).attr("stroke");
+                return "url(#arrow_" +stroke_color+ ")"})
+        .attr( "d", function(d){return diagonal(d);})
+        //(d) => "M" + d.source.x + "," + d.source.y + ", " + d.target.x + "," + d.target.y)
+        .attr("id", function(d){ return "link_";})
+        .on("mouseover", function(d){
+            d3.select(this).style("stroke-width", 3.5)
+            var coord = d3.mouse(this);
+            var t = "";
+            for(var i = 0; i < link.length; i++){
+                if((link[i].target==d.target) && (link[i].source==d.source)){
+                    if(link[i].g == 1) t+=" Graph1";
+                    if(link[i].g == 2) t+=" Graph2";
+                    if(link[i].g == 3) t+=" Graph3";
+                    if(link[i].g == 4) t+=" Graph4";
+                }
+            }
+            var text_length = t.length;
+                d3  .select("#link_hint")
+                .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-10) + ")")
+                .style("background-color", "lightgrey")   //bitte Farbe wählen
+                .style("font-size", 15)
+                .text(t)
+                .attr("width", (t.length *8 + "px"))
+                .style("visibility", "visible");
                            })
-         .on("mouseout", function(d){
-                           d3.select(this).style("stroke-width", 2.0);
-                           d3 .select("#link_hint")
-                              .transition()
-                              .style("visibility", "hidden");
-         });
+        .on("mouseout", function(d){
+            d3.select(this).style("stroke-width", 2.0);
+                d3  .select("#link_hint")
+                    .transition()
+                    .style("visibility", "hidden");
+        });
 
-         var link_hint = d3.select("#compare_g").append("foreignObject")
-                                             .attr("id", "link_hint")
-                                             .attr("width", "20px")
-                                             .attr("height", "20px")
-                                             .style("z-index", "1")
-                                             .style("border", "1px solid black")
-                                             .attr("transform", "translate(10,10)")
-                                             .style("visibility", "hidden");                                 
+    var link_hint = d3.select("#compare_g")
+        .append("foreignObject")
+            .attr("id", "link_hint")
+            .attr("width", "20px")
+            .attr("height", "20px")
+            .style("z-index", "1")
+            .style("border", "1px solid black")
+            .attr("transform", "translate(10,10)")
+            .style("visibility", "hidden");
    
-   d3 .select("#hide")
-   .on("click",
-         function(){
-            var diff = nodes.filter(x => !marked.includes(x));
-	         for(var i = 1; i< diff.length; i++){
-               var name = diff[i].node[0];
-               var link_diff = link.filter(function(d){
-                  if((d.source == name) || (d.target == name)){
-                     return d;
-                  }
-               })
-               if(hide == true){
-                  d3.selectAll("#NodeButton_"+name)
-                     .attr("visibility", "visible");
-                  d3.selectAll("#Nodetext_"+name)
-                     .attr("visibility", "visible");
-                  d3.selectAll(".link").filter(
-                     function(d){
-                        if((d.source == name) || (d.target == name))
+    d3 .select("#hide")
+    .on("click",function(){
+        var diff = nodes.filter(x => !marked.includes(x));
+	    for(var i = 1; i< diff.length; i++){
+            var name = diff[i].node[0];
+            var link_diff = link.filter(function(d){
+                if((d.source == name) || (d.target == name)){
+                    return d;
+                }
+            })
+            if(hide == true){
+                d3.selectAll("#NodeButton_"+name)
+                    .attr("visibility", "visible");
+                d3.selectAll("#Nodetext_"+name)
+                    .attr("visibility", "visible");
+                d3.selectAll(".link").filter(function(d){
+                    if((d.source == name) || (d.target == name))
                         return d;
-                     }).attr("visibility", "visible");
+                })
+                .attr("visibility", "visible");
                   d3.select("#node_"+ name).selectAll(".glyph")
                      .attr("visibility", "visible");     
                }
