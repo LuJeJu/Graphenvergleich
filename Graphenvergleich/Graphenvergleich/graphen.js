@@ -990,345 +990,328 @@ function multidisplay(){
                         return d;
                 })
                 .attr("visibility", "visible");
-                  d3.select("#node_"+ name).selectAll(".glyph")
-                     .attr("visibility", "visible");     
-               }
-               if(hide == false){
-                  d3.selectAll("#NodeButton_"+name)
-                     .attr("visibility", "hidden");
-                  d3.selectAll("#Nodetext_"+name)
-                     .attr("visibility", "hidden");
-                  d3.selectAll(".link").filter(
-                     function(d){
-                        if((d.source == name) || (d.target == name))
+                    d3.select("#node_"+ name).selectAll(".glyph")
+                        .attr("visibility", "visible");
+                }
+            if(hide == false){
+                d3.selectAll("#NodeButton_"+name)
+                    .attr("visibility", "hidden");
+                d3.selectAll("#Nodetext_"+name)
+                    .attr("visibility", "hidden");
+                d3.selectAll(".link").filter(function(d){
+                    if((d.source == name) || (d.target == name))
                         return d;
-                     }).attr("visibility", "hidden"); 
-                  d3.select("#node_"+ name).selectAll(".glyph")
-                     .attr("visibility", "hidden"); 
-               }
+                })
+                .attr("visibility", "hidden");
+                d3.select("#node_"+ name).selectAll(".glyph")
+                    .attr("visibility", "hidden");
             }
-            hide = hide == true ? false : true;
-         });
+        }
+        hide = hide == true ? false : true;
+    });
 
-         /*
-         var g_width = d3.select("#compare_g").node().getBoundingClientRect().width;
-         var g_heigth = d3.select("#compare_g").node().getBoundingClientRect().height;
-         var svg_width = d3.select("#compare_svg").node().getBoundingClientRect().width;
-         var svg_heigth = d3.select("#compare_svg").node().getBoundingClientRect().height;
-         d3.select("#compare_svg").call(zoom.transform, d3.zoomIdentity
-                     .translate(g_width/2-r_width*2,g_heigth/2 - r_height)
-                     .scale(svg_width/g_width,svg_heigth/g_heigth));
-         d3.select("#compare_g")
-                     .attr("transform",
-                     "translate(" + (g_width/2 - r_width*2) + "," + 
-                     (g_heigth/2 - r_height) +")scale("+ svg_width/g_width + "," +
-                      svg_heigth/g_heigth + ")")
-                      */
+    /*
+    var g_width = d3.select("#compare_g").node().getBoundingClientRect().width;
+    var g_heigth = d3.select("#compare_g").node().getBoundingClientRect().height;
+    var svg_width = d3.select("#compare_svg").node().getBoundingClientRect().width;
+    var svg_heigth = d3.select("#compare_svg").node().getBoundingClientRect().height;
+    d3.select("#compare_svg").call(zoom.transform, d3.zoomIdentity
+        .translate(g_width/2-r_width*2,g_heigth/2 - r_height)
+        .scale(svg_width/g_width,svg_heigth/g_heigth));
+        d3.select("#compare_g")
+            .attr("transform",
+            "translate(" + (g_width/2 - r_width*2) + "," +
+            (g_heigth/2 - r_height) +")scale("+ svg_width/g_width + "," +
+            svg_heigth/g_heigth + ")")
+            */
 
-   glyph(nodes);
+    glyph(nodes);
 };
 
 function glyph(nodes){
 
-   //draw glyph if node is element of graphs[i]
-   for(var key=1; key < nodes.length; key++){
-      var node_name = nodes[key].node[0];
-      var curr_node = d3.select("#compare_g").select("#node_"+ node_name);
+    //draw glyph if node is element of graphs[i]
+    for(var key=1; key < nodes.length; key++){
+        var node_name = nodes[key].node[0];
+        var curr_node = d3.select("#compare_g").select("#node_"+ node_name);
 
-      //graph 2
-      for(var i in graphs[1]){
-         if(node_name == graphs[1][i].node[0]){
-            curr_node.append("g")
-               .attr("class", "glyph")
-               .attr("id", function(){ return node_name + "_g_" + 2})
-               .attr("x", function(d){return d.x;})
-               .attr("y", function(d){return d.y;})
-               .append("circle")
-               .attr("id", function(){ return node_name + "_g_" + 2 + "_" + "circle";})
-               .attr("r", (r_height/2-1))
-               .attr("transform", "translate(0," + r_height + ")")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .attr("x", (d) => d.x)
-               .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g2"})
-               .on("mouseover", function(){return glyph_hover_in(this,2);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               glyph_split(node_name + "_g_" + 2, graphs[1][i], node_name, 2);
-            d3.select("#" + node_name + "_g_" + 2).append("circle")
-               .attr("r", 5)
-               .attr("transform", "translate(0," + r_height + ")")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .style("stroke-width", 0.5)
-               .on("mouseover", function(){return glyph_hover_in(this,2);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               d3.select("#" + node_name + "_g_" + 2).append("text")
-               .attr("dominant-baseline", "middle")
-               .attr("text-anchor", "middle")
-               .style("font-size", 8)
-               .attr("x",0)
-               .attr("y", r_height+1)
-               //.style("stroke", "black")
-               .text("2").attr("id", "glyphnum")
-               .on("mouseover", function(){return glyph_hover_in(this,2);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
+        //graph 2
+        for(var i in graphs[1]){
+            if(node_name == graphs[1][i].node[0]){
+                curr_node.append("g")
+                    .attr("class", "glyph")
+                    .attr("id", function(){ return node_name + "_g_" + 2})
+                    .attr("x", function(d){return d.x;})
+                    .attr("y", function(d){return d.y;})
+                .append("circle")
+                    .attr("id", function(){ return node_name + "_g_" + 2 + "_" + "circle";})
+                    .attr("r", (r_height/2-1))
+                    .attr("transform", "translate(0," + r_height + ")")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .attr("x", (d) => d.x)
+                    .attr("y", (d) => d.y)
+                    .attr("id", function(d){return "node_"+ node_name + "_" + "g2"})
+                    .on("mouseover", function(){return glyph_hover_in(this,2);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                glyph_split(node_name + "_g_" + 2, graphs[1][i], node_name, 2);
+
+                d3.select("#" + node_name + "_g_" + 2).append("circle")
+                    .attr("r", 5)
+                    .attr("transform", "translate(0," + r_height + ")")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .on("mouseover", function(){return glyph_hover_in(this,2);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                d3.select("#" + node_name + "_g_" + 2).append("text")
+                    .attr("dominant-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .style("font-size", 8)
+                    .attr("x",0)
+                    .attr("y", r_height+1)
+                    .text("2").attr("id", "glyphnum")
+                    .on("mouseover", function(){return glyph_hover_in(this,2);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
             
-         }
-      }
-
-      // graph 3
-      for(var i in graphs[2]){
-         if(node_name == graphs[2][i].node[0]){
-            curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 3})
-               .attr("x", function(d){return d.x;})
-               .attr("y", function(d){return d.y;})
-               .append("circle")
-               .attr("id", function(){ return node_name + "_g_" + 3 + "_" + "circle";})
-               .attr("r", (r_height/2-1))
-               .attr("transform", "translate(" + r_width + ",0)")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .attr("x", (d) => d.x)
-               .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g3"})
-               .on("mouseover", function(){return glyph_hover_in(this,3);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               glyph_split(node_name + "_g_" + 3, graphs[2][i], node_name, 3);
-               d3.select("#" + node_name + "_g_" + 3).append("circle")
-               .attr("r", 5)
-               .attr("transform", "translate(" + r_width + ",0)")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .style("stroke-width", 0.5)
-               .on("mouseover", function(){return glyph_hover_in(this,3);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               d3.select("#" + node_name + "_g_" + 3).append("text")
-               .attr("dominant-baseline", "middle")
-               .attr("text-anchor", "middle")
-               .style("font-size", 8)
-               .attr("x", r_width)
-               .attr("y", 1)
-               //.style("stroke", "black")
-               .text("3").attr("id", "glyphnum")
-               .on("mouseover", function(){return glyph_hover_in(this,3);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-            
-         }
-      }
-
-      // graph 4
-      for(var i in graphs[3]){
-         if(node_name == graphs[3][i].node[0]){
-            curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 4})
-               .attr("x", function(d){return d.x;})
-               .attr("y", function(d){return d.y;})
-               .append("circle")
-               .attr("id", function(){ return node_name + "_g_" + 4 + "_" + "circle";})
-               .attr("r", (r_height/2-1))
-               .attr("transform", "translate(" + r_width + "," + r_height + ")")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .attr("x", (d) => d.x)
-               .attr("y", (d) => d.y)
-               .attr("id", function(d){return "node_"+ node_name + "_" + "g4"})
-               .on("mouseover", function(){return glyph_hover_in(this,4);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               glyph_split(node_name + "_g_" + 4, graphs[3][i], node_name, 4);
-               d3.select("#" + node_name + "_g_" + 4).append("circle")
-               .attr("r", 5)
-               .attr("transform", "translate(" + r_width + "," + r_height + ")")
-               .style("fill", "white")
-               .style("stroke", "black")
-               .style("stroke-width", 0.5)
-               .on("mouseover", function(){return glyph_hover_in(this,4);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-               d3.select("#" + node_name + "_g_" + 4).append("text")
-               .attr("dominant-baseline", "middle")
-               .attr("text-anchor", "middle")
-               .style("font-size", 8)
-               .attr("x", r_width)
-               .attr("y", r_height+1)
-               //.style("stroke", "black")
-               .text("4").attr("id", "glyphnum")
-               .on("mouseover", function(){return glyph_hover_in(this,4);})
-               .on("mouseout", function(){return glyph_hover_out(this);});
-            
-         }
-      }
-   }
-
-   function glyph_split(id, glyph_node, node_name, graph_num){
-      var curr_glyph = d3.select("#"+ id);
-      var GlX = d3.select("#node_" + node_name).attr("x");
-      var GlY = d3.select("#node_" + node_name).attr("y");
-
-      cp_glyph();
-      children_glyph();
-      parents_glyph();
-      //console.log(curr_glyph);
-      //console.log(curr_glyph);
-      /*
-      var arc =d3.arc().innerRadius((r_height/2-1))
-                           .outerRadius((r_height/2-1))
-                           .startAngle(45* (Math.PI/180))
-                           .endAngle(3);
-                           */
-      function children_glyph(){
-         var g1_node;
-         for(var key in graphs[0]){
-            if(graphs[0][key].node[0] == node_name){
-               g1_node = graphs[0][key];
-               var children_num = [];
-               for(var par = 0; par<g1_node.children.length; par++){
-                     children_num.push(g1_node.children[par]);
             }
-            var equal = false;
-               if(g1_node.children.length == glyph_node.children.length){
-                  for(var i =0; i< g1_node.children.length; i++){
-                     for(var j =0; j<glyph_node.children.length; j++){
-                        if(g1_node.children[i] == glyph_node.children[j] && g1_node.children[i] != "root")
-                        equal = true;
-                  }}
-               }
-               //console.log("parentnum "+ node_name + ": " + parent_num);
-               var help = glyph_node.children.filter(d => !g1_node.children.includes(d));
-               //console.log("help " +node_name + ": " +help);
-               for(var i = 0; i<help.length;i++){
-                  {children_num.push(help[i]);}
-               }
+        }
 
-               var angle = (90) / children_num.length;
-                  var startangle = 315 * (Math.PI/180);
-                  var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);  
-                  
-                  var child_num = children_num.length-1;
+        // graph 3
+        for(var i in graphs[2]){
+            if(node_name == graphs[2][i].node[0]){
+                curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 3})
+                    .attr("x", function(d){return d.x;})
+                    .attr("y", function(d){return d.y;})
+                .append("circle")
+                    .attr("id", function(){ return node_name + "_g_" + 3 + "_" + "circle";})
+                    .attr("r", (r_height/2-1))
+                    .attr("transform", "translate(" + r_width + ",0)")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .attr("x", (d) => d.x)
+                    .attr("y", (d) => d.y)
+                    .attr("id", function(d){return "node_"+ node_name + "_" + "g3"})
+                    .on("mouseover", function(){return glyph_hover_in(this,3);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                glyph_split(node_name + "_g_" + 3, graphs[2][i], node_name, 3);
+                d3.select("#" + node_name + "_g_" + 3).append("circle")
+                    .attr("r", 5)
+                    .attr("transform", "translate(" + r_width + ",0)")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .on("mouseover", function(){return glyph_hover_in(this,3);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                d3.select("#" + node_name + "_g_" + 3).append("text")
+                    .attr("dominant-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .style("font-size", 8)
+                    .attr("x", r_width)
+                    .attr("y", 1)
+                .text("3").attr("id", "glyphnum")
+                    .on("mouseover", function(){return glyph_hover_in(this,3);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+            
+            }
+        }
 
-                  var children_half = children_num.length/2;
+        // graph 4
+        for(var i in graphs[3]){
+            if(node_name == graphs[3][i].node[0]){
+                curr_node.append("g").attr("class", "glyph").attr("id", function(){ return node_name + "_g_" + 4})
+                    .attr("x", function(d){return d.x;})
+                    .attr("y", function(d){return d.y;})
+                .append("circle")
+                    .attr("id", function(){ return node_name + "_g_" + 4 + "_" + "circle";})
+                    .attr("r", (r_height/2-1))
+                    .attr("transform", "translate(" + r_width + "," + r_height + ")")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .attr("x", (d) => d.x)
+                    .attr("y", (d) => d.y)
+                    .attr("id", function(d){return "node_"+ node_name + "_" + "g4"})
+                    .on("mouseover", function(){return glyph_hover_in(this,4);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                glyph_split(node_name + "_g_" + 4, graphs[3][i], node_name, 4);
+                d3.select("#" + node_name + "_g_" + 4).append("circle")
+                    .attr("r", 5)
+                    .attr("transform", "translate(" + r_width + "," + r_height + ")")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .on("mouseover", function(){return glyph_hover_in(this,4);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+                d3.select("#" + node_name + "_g_" + 4).append("text")
+                    .attr("dominant-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .style("font-size", 8)
+                    .attr("x", r_width)
+                    .attr("y", r_height+1)
+                .text("4").attr("id", "glyphnum")
+                    .on("mouseover", function(){return glyph_hover_in(this,4);})
+                    .on("mouseout", function(){return glyph_hover_out(this);});
+            }
+        }
+    }
 
-                  for(var i = 0; i<children_num.length; i++){
-                     var arc = d3.arc().innerRadius(5).outerRadius(18.5)
-                              .startAngle(startangle).endAngle(endangle);
-                     var coor = getPoint(0, 0 , 12, startangle - endangle);
+    function glyph_split(id, glyph_node, node_name, graph_num){
+        var curr_glyph = d3.select("#"+ id);
+        var GlX = d3.select("#node_" + node_name).attr("x");
+        var GlY = d3.select("#node_" + node_name).attr("y");
 
-                     var start = startangle;          
-                     var path = d3 .select("#" + id)
-                     .append("path")
-                     .attr("id", function(){ return "graph"+graph_num + "_" + node_name +"_"+ "path_children"+i;})
-                     .attr("d", arc)
-                     .attr("fill", function(d){
-                        if(equal==false) return "black";
-                        else return "white";
-                     })
-                     .style("stroke", function(d){
-                        if(equal==false) return "white";
-                        else return "black";
-                     })
-                     .attr("transform", function(d){
-                        if(graph_num == 2) return "translate(0," + r_height + ")";
-                        if(graph_num == 3) return "translate(" + r_width + ",0)" ;
-                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";})
-                     .attr( "stroke-width", 0.5)
-                     .attr("x", function(d){return d.x;})
-                     .attr("y", function(d){return d.y;})
-                     .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
-                     .on("mouseout", function(){return glyph_hover_out(this);});
+        cp_glyph();
+        children_glyph();
+        parents_glyph();
+        /*
+        var arc =d3.arc().innerRadius((r_height/2-1))
+            .outerRadius((r_height/2-1))
+            .startAngle(45* (Math.PI/180))
+            .endAngle(3);
+        */
+        function children_glyph(){
+            var g1_node;
+            for(var key in graphs[0]){
+                if(graphs[0][key].node[0] == node_name){
+                    g1_node = graphs[0][key];
+                    var children_num = [];
+                    for(var par = 0; par<g1_node.children.length; par++){
+                        children_num.push(g1_node.children[par]);
+                    }
+                    var equal = false;
+                    if(g1_node.children.length == glyph_node.children.length){
+                        for(var i =0; i< g1_node.children.length; i++){
+                            for(var j =0; j<glyph_node.children.length; j++){
+                                if(g1_node.children[i] == glyph_node.children[j] && g1_node.children[i] != "root")
+                                    equal = true;
+                            }
+                        }
+                    }
 
-                     d3.select("#"+id).append("text")
-                                             .text(function(d){
-                                                if(child_num >=0){
-                                                child_num -= 1;
-                                                return children_num[child_num+1];
-                                                } else return;
-                                             })
-                                             .attr("id", function(d){
-                                                return "path_children_" + i + "_text";
-                                             })
-                     .style("font-size", function(d){
-                        //if(children_num.length > 4) return 0;
-                        return 6; 
-                        //(12 - children_num.length*2);
-                     })
-                     .style( "fill", function(d){
-                        if(equal == true) return "black";
-                        else return "white";
-                     })
-                     
-                     .attr("transform", 
-                      function(d){
-                         //centroid(path)
-                        var sel = d3.select("#graph"+ graph_num + "_" + node_name +"_"+ "path_children"+i);
-                        //console.log(sel.attr("x"));
-                        var centroid = arc.centroid(sel);
-                        var x = centroid[0];
-                        var y = centroid[1];
-                        if(y > 0) y = -y;
-                        //console.log(sel);
-                        //console.log(node_name + "_ " + children_num[child_num+1] + ": ");
-                        //console.log(centroid);
-                        if(graph_num == 2) return "translate(" + x + "," + (r_height+y) + ")";
-                        if(graph_num == 3) return "translate(" + (x + r_width) + "," + (y) + ")";
-                        if(graph_num == 4) return "translate(" + (x + r_width) + "," + (r_height+y) + ")";
-                   })
+                    var help = glyph_node.children.filter(d => !g1_node.children.includes(d));
+                    for(var i = 0; i<help.length;i++){
+                        {children_num.push(help[i]);}
+                    }
+
+                    var angle = (90) / children_num.length;
+                    var startangle = 315 * (Math.PI/180);
+                    var endangle = angle * (Math.PI/180) + startangle;//((360) / parent_num.length) * (Math.PI/180);
+                    var child_num = children_num.length-1;
+                    var children_half = children_num.length/2;
+
+                    for(var i = 0; i<children_num.length; i++){
+                        var arc = d3.arc().innerRadius(5).outerRadius(18.5)
+                            .startAngle(startangle).endAngle(endangle);
+                        var coor = getPoint(0, 0 , 12, startangle - endangle);
+                        var start = startangle;
+                        var path = d3 .select("#" + id)
+                            .append("path")
+                            .attr("id", function(){ return "graph"+graph_num + "_" + node_name +"_"+ "path_children"+i;})
+                            .attr("d", arc)
+                            .attr("fill", function(d){
+                                if(equal==false) return "black";
+                                    else return "white";
+                            })
+                            .style("stroke", function(d){
+                                if(equal==false) return "white";
+                                    else return "black";
+                            })
+                            .attr("transform", function(d){
+                                if(graph_num == 2) return "translate(0," + r_height + ")";
+                                if(graph_num == 3) return "translate(" + r_width + ",0)" ;
+                                if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")";
+                            })
+                            .attr( "stroke-width", 0.5)
+                            .attr("x", function(d){return d.x;})
+                            .attr("y", function(d){return d.y;})
+                            .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                            .on("mouseout", function(){return glyph_hover_out(this);});
+
+                        d3.select("#"+id).append("text")
+                            .text(function(d){
+                            if(child_num >=0){
+                                child_num -= 1;
+                                return children_num[child_num+1];
+                            } else return;
+                            })
+                            .attr("id", function(d){
+                                return "path_children_" + i + "_text";
+                            })
+                            .style("font-size", function(d){
+                                return 6;
+                            })
+                            .style( "fill", function(d){
+                                if(equal == true) return "black";
+                                else return "white";
+                            })
+                            .attr("transform", function(d){
+                                var sel = d3.select("#graph"+ graph_num + "_" + node_name +"_"+ "path_children"+i);
+                                var centroid = arc.centroid(sel);
+                                var x = centroid[0];
+                                var y = centroid[1];
+                                if(y > 0) y = -y;
+                                if(graph_num == 2) return "translate(" + x + "," + (r_height+y) + ")";
+                                if(graph_num == 3) return "translate(" + (x + r_width) + "," + (y) + ")";
+                                if(graph_num == 4) return "translate(" + (x + r_width) + "," + (r_height+y) + ")";
+                            })
                    
-                     .attr("text-anchor", "middle")
-                     .attr("dominant-baseline", "middle");
+                            .attr("text-anchor", "middle")
+                            .attr("dominant-baseline", "middle");
 
                      
-                     startangle = endangle;
-                     endangle += angle * (Math.PI/180);
-                     if(i == children_num.length-1){
-                        endangle = endangle - 45 * (Math.PI/180);
-                     }
-                  } 
-                  
-               }
-         }
-   };
-
-      function parents_glyph(){
-
-      var g1_node;
-      for(var key in graphs[0]){
-         if(graphs[0][key].node[0] == node_name){
-            g1_node = graphs[0][key];
-            var parent_num = [];
-            for(var par = 0; par<g1_node.parents.length; par++){
-               if(g1_node.parents[par] != "root"){
-               parent_num.push(g1_node.parents[par]);
-            } else continue;
-         }
-         var equal = false;
-            if(g1_node.parents.length == glyph_node.parents.length){
-               for(var i =0; i< g1_node.parents.length; i++){
-                  for(var j =0; j<glyph_node.parents.length; j++){
-                     if(g1_node.parents[i] == glyph_node.parents[j] && g1_node.parents[i] != "root")
-                     equal = true;
-               }}
+                        startangle = endangle;
+                        endangle += angle * (Math.PI/180);
+                        if(i == children_num.length-1){
+                            endangle = endangle - 45 * (Math.PI/180);
+                        }
+                    }
+                }
             }
+        };
 
-            var help = glyph_node.parents.filter(d => !g1_node.parents.includes(d));
-            if((help.length+parent_num) == 0){
-               var arc = d3.arc().innerRadius(5).outerRadius(12)
-                                 .startAngle(45 * (Math.PI/180)).endAngle(315 * (Math.PI/180));
-                  d3 .select("#" + id)
-                     .append("path")
-                     .attr("id", function(){ return "graph"+graph_num + "_" + node_name +"_"+ "path_parents"+i;})
-                     .attr("d", arc)
-                     .attr("fill", "white")
-                     .style("stroke", "black")
-                     .attr("transform", function(d){
-                        if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
-                        if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
-                        if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
-                     .attr( "stroke-width", 0.5)
-                     .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
-                     .on("mouseout", function(){return glyph_hover_out(this);});
-            } else{
-            for(var i = 0; i<help.length;i++){
-               {parent_num.push(help[i]);}
-            }
-               par_num = parent_num.length-1;
+        function parents_glyph(){
+            var g1_node;
+            for(var key in graphs[0]){
+                if(graphs[0][key].node[0] == node_name){
+                    g1_node = graphs[0][key];
+                    var parent_num = [];
+                    for(var par = 0; par<g1_node.parents.length; par++){
+                        if(g1_node.parents[par] != "root"){
+                            parent_num.push(g1_node.parents[par]);
+                        } else continue;
+                    }
+                    var equal = false;
+                    if(g1_node.parents.length == glyph_node.parents.length){
+                        for(var i =0; i< g1_node.parents.length; i++){
+                            for(var j =0; j<glyph_node.parents.length; j++){
+                                if(g1_node.parents[i] == glyph_node.parents[j] && g1_node.parents[i] != "root")
+                                    equal = true;
+                            }
+                        }
+                    }
+
+                    var help = glyph_node.parents.filter(d => !g1_node.parents.includes(d));
+                    if((help.length+parent_num) == 0){
+                        var arc = d3.arc().innerRadius(5).outerRadius(12)
+                            .startAngle(45 * (Math.PI/180)).endAngle(315 * (Math.PI/180));
+                        d3.select("#" + id)
+                            .append("path")
+                            .attr("id", function(){ return "graph"+graph_num + "_" + node_name +"_"+ "path_parents"+i;})
+                            .attr("d", arc)
+                            .attr("fill", "white")
+                            .style("stroke", "black")
+                            .attr("transform", function(d){
+                                if(graph_num == 2) return "translate(0," + r_height + ")" + "rotate(0)";
+                                if(graph_num == 3) return "translate(" + r_width + ",0)" + "rotate(0)";
+                                if(graph_num == 4) return "translate(" + r_width + "," + r_height + ")" + "rotate(0)";})
+                            .attr( "stroke-width", 0.5)
+                            .on("mouseover", function(){return glyph_hover_in(this,graph_num);})
+                            .on("mouseout", function(){return glyph_hover_out(this);});
+                    } else{
+                    for(var i = 0; i<help.length;i++){
+                        {parent_num.push(help[i]);}
+                    }
+                    par_num = parent_num.length-1;
 
                   var angle = (360-90) / parent_num.length;
                   var startangle = 45 * (Math.PI/180);
@@ -1530,8 +1513,9 @@ function glyph(nodes){
             }
          };
 
-   };
-function glyph_hover_in(obj,graph_num){
+    };
+
+    function glyph_hover_in(obj,graph_num){
 
       var curr = d3.select(obj.parentNode);
       if(graph_num == 2){
