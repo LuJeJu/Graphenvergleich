@@ -1,7 +1,13 @@
+/*	------------------------------------------------------------------------------
+	all functions of buttons are implemented here (except the hide-function)
+*///------------------------------------------------------------------------------
+
+// the global Array contains the uploaded graphs
 var graphs = new Array();
+
 // function is called by Taskbar and is waiting for input JSON
 function read(){            
-				//read json, parse all graphs in one array
+				//read json, parse all graphs in the graphs-array
 				if(graphs.length == 0){
 					d3.select("#window1").style("display", "none");
 					d3.select("#window2").style("display", "none");
@@ -38,8 +44,10 @@ function read(){
 				}
 				graphs.onchange = console.log(graphs);
 		};
-			
+
+// reset the whole display and variables -> like refresh the html
 function reset(){
+
 	// all graph-arrays 
 	graphs = [];
 	document.getElementById("files").value = "";
@@ -77,12 +85,18 @@ function reset(){
   	d3.select("#Dendrogramme").text("Dendrogramme");
 };			
 
+
+// center and scale, that the whole graphs are visible 
 function center_all(){
+
+	// compare visualisation
 	d3.select("#compare_g")	.transition()
 							.attr("transform",
 								"translate(" + 0 + "," + 
 								150 +")scale("+ .6 + "," +
-	 							.6 + ")");
+								 .6 + ")");
+								 
+	// all single visualisations							 
 	d3.select("#single_s_g1").transition()
 							.attr("transform",
 							"translate(" + -50 + "," + 
@@ -105,6 +119,8 @@ function center_all(){
 	 						.3 + ")");
 };
 
+// center and scale, that the whole dendrogramms are visible
+// - useful if browser or div is rescaled
 function center_dendro(){
     for(var i = 0; i< marked.length; i++){
     for(var j = 0; j< graphs.length; j++){
@@ -133,6 +149,10 @@ function center_dendro(){
    }
 };
 
+// this function is not implemented yet
+/* - should center the node, which is the next to the middle of the first 
+	 selected div
+*/
 function sync(){
 
 	var div_midX = parseInt(d3.select("#Vergleich1").style("width"))/2;
@@ -146,6 +166,7 @@ function sync(){
 	*/
 };
 
+// should be the help-function for sync
 function is_clicked(id){
 
 	var button = d3.select("#"+id);
