@@ -998,14 +998,14 @@ function multidisplay() {
                 svg_heigth/g_heigth + ")")
                 */
    //----------------------------------------------------------
-
    glyph(nodes);
 };
 //	------------------------------------------------------------------------------
 
 //	------------------------------------------------------------------------------
-function glyph(nodes) {
+function glyph(nodes){
 
+   if(states.length > 2){ console.log(":("); return window.alert("No Glyphs available.");}
    //draw circle if node is element of graphs[i]
    for (var key = 1; key < nodes.length; key++) {
       var node_name = nodes[key].node[0];
@@ -1875,7 +1875,6 @@ function dendrogram() {
       //ein Array abfangen, weil prob als []
       if (currObj.parents.length == 1 && currObj.parents[0] != "root") {
          var YCoor = 20;
-         //for (var i=0; i < Math.pow(states.length, currObj.parents.length); i++){
          var count = 0;
          for (var j = 0; j < states.length; j++) {
             var XCoor = -100 - (states.length - 1) * 2;
@@ -1887,7 +1886,6 @@ function dendrogram() {
                   .attr("width", function (d) { return currObj.prob[i][j] * 100; })
                   .attr("height", 20)
                   .attr("viewBox", (d) => "d.x, d.y ,d.x+20, d.y+20")
-                  //.attr("transform", "translate(10,10)")
                   .attr("x", XCoor)
                   .attr("y", YCoor)
                   .attr("fill", "gray")
@@ -1901,12 +1899,11 @@ function dendrogram() {
                      var coord = d3.mouse(this);
                      var t = "";
                      var state = d3.select(this).attr("id").split("_");
-                     // die ID des Balken slicen für parent state und node state
                      t += currObj.parents[0] + " = " + state[4] + ": ";
                      t += state[state.length-1];
                      d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).select("#dendro_hint")
                         .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 20) + ")")
-                        .style("background-color", "lightgrey")   //bitte Farbe wählen
+                        .style("background-color", "lightgrey")
                         .style("font-size", 15)
                         .text(t)
                         .attr("width", (t.length * 8 + "px"))
@@ -1925,7 +1922,6 @@ function dendrogram() {
          MakeDendroTree(-100 - (states.length - 1) * 2, 20, YCoor, 1, 20);
       }
 
-      //Abfrage 2 Parents, prob ([[][]] [[][]]) -> ( [ [[] []] [[] []] ] [ [[] []] [[] []] ] )
       if (currObj.parents.length > 1) {
          var YCoor = 20;
          var j;
@@ -1995,7 +1991,6 @@ function dendrogram() {
 
                }
                YCoor = YCoor + 50;
-               //count = count - Math.pow(states.length, parentSize)*states.length + 1;
             }
          }
 
@@ -2203,7 +2198,6 @@ function dendrogram() {
                      obj.source.y = Math.round(d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.parents[parentNum - 1] + i).attr("y"));
                      obj.target = d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.parents[parentNum - 1] + i);
                      obj.target.x = Math.round(d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.parents[parentNum - 1] + i).attr("x")) + r_width + lineSpace;
-                     //console.log(d3.select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1) + "_rect" + currObj.parents[parentNum-1] + i))
                      if (key == 0)
                         obj.target.y = Math.round(d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.parents[parentNum - 1] + i).attr("y")) + 25;
                      if (key == 1)
@@ -2232,7 +2226,7 @@ function dendrogram() {
 
       }
 
-      // Hover für Belegung
+      // Hover for dendrograms
       var dendro_hint = d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1))
          .append("foreignObject")
          .attr("id", "dendro_hint")
@@ -2246,7 +2240,7 @@ function dendrogram() {
 
    // background color based on graph number
    function fillDendro(fillnode, fillgraph) {
-      //console.log(d3.select("#dendrok" + (fillnode) + "_g" + fillgraph));
+
       if (fillgraph == 1) {
          d3.select("#dendrok" + (fillnode) + "_g" + fillgraph)
             .style("background-color", "#9bb5d7")
