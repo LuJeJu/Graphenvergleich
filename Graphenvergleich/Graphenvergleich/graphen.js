@@ -16,7 +16,6 @@ function darstellung() {
    d3.select("#CPT").text("");
    d3.select("#Dendrogramme").text("");
 
-
    /*
       prepare for scaling nodewidth on longest nodename
    */
@@ -918,7 +917,7 @@ function multidisplay() {
          }
          var text_length = t.length;
          d3.select("#link_hint")
-            .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 10) + ")")
+            .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 30) + ")")
             .style("background-color", "lightgrey")
             .style("font-size", 15)
             .text(t)
@@ -966,6 +965,7 @@ function multidisplay() {
                      }).attr("visibility", "visible");
                   d3.select("#node_" + name).selectAll(".glyph")
                      .attr("visibility", "visible");
+                  document.getElementById("hide").innerHTML = "Hide Unmarked";  
                }
                if (hide == false) {
                   d3.selectAll("#NodeButton_" + name)
@@ -979,6 +979,7 @@ function multidisplay() {
                      }).attr("visibility", "hidden");
                   d3.select("#node_" + name).selectAll(".glyph")
                      .attr("visibility", "hidden");
+                  document.getElementById("hide").innerHTML = "Show Unmarked";
                }
             }
             hide = hide == true ? false : true;
@@ -1005,7 +1006,7 @@ function multidisplay() {
 //	------------------------------------------------------------------------------
 function glyph(nodes){
 
-   if(states.length > 2){ console.log(":("); return window.alert("No Glyphs available.");}
+   //if(states.length > 2){ console.log(":("); return window.alert("No Glyphs available.");}
    //draw circle if node is element of graphs[i]
    for (var key = 1; key < nodes.length; key++) {
       var node_name = nodes[key].node[0];
@@ -1547,7 +1548,8 @@ function glyph(nodes){
 
 // color and push clicked node in an array for cpt and dendrogramm display
 function node_selection(d, nodes) {
-   //console.log("Click !!!");
+   
+   if(hide == false){
    var node_name = d.data.id;
    for (var i = 0; i < nodes.length; i++) {
       if (node_name ==
@@ -1577,6 +1579,7 @@ function node_selection(d, nodes) {
    }
    dendrogram();
    cpt();
+   }
 };
 
 // dendrogramm display of marked nodes
@@ -1767,6 +1770,7 @@ function dendrogram() {
       if (typeof currObj == 'undefined') {
          d3.select("#dendrok" + (nodeNum + 1) + "_g" + (graphNum + 1)).append("text").text(function (d) { return "there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum })
             .style("font-size", 14)
+            .style("cursor", "default")
             .attr("x", 20)
             .attr("y", 20);
          return console.log("there is no node " + marked[nodeNum].node[0] + " in Graph " + graphNum)
@@ -1798,8 +1802,6 @@ function dendrogram() {
          var parent_states = new Array(Math.pow(states.length, parentSize + 1) * parentSize);
          statesArray(parent_states, currObj);
       }
-      
-      console.log(parent_states);
 
       var zoom = d3.zoom().on("zoom", function (d) {
          d3.select("#g_dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("transform", d3.event.transform);
@@ -1853,9 +1855,10 @@ function dendrogram() {
                   var t = "";
                   t += d3.select(this).attr("id").slice(19);
                   d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).select("#dendro_hint")
-                     .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 20) + ")")
+                     .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 40) + ")")
                      .style("background-color", "lightgrey")
                      .style("font-size", 15)
+                     .style("cursor", "default")
                      .text(t)
                      .attr("width", (t.length * 8 + "px"))
                      .style("visibility", "visible");
@@ -1902,9 +1905,10 @@ function dendrogram() {
                      t += currObj.parents[0] + " = " + state[4] + ": ";
                      t += state[state.length-1];
                      d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).select("#dendro_hint")
-                        .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 20) + ")")
+                        .attr("transform", "translate(" + coord[0] + "," + (coord[1] - 40) + ")")
                         .style("background-color", "lightgrey")
                         .style("font-size", 15)
+                        .style("cursor", "default")
                         .text(t)
                         .attr("width", (t.length * 8 + "px"))
                         .style("visibility", "visible");
@@ -1972,9 +1976,10 @@ function dendrogram() {
                         var t = s.slice(0, -2);
                         t+=": " + currObj.node[0] + " = " + state[state.length-1];
                         d3 .select("#g_"+ "dendro_k" + (nodeNum+1) + "_g" + (graphNum+1)).select("#dendro_hint")
-                           .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-20) + ")")
+                           .attr("transform", "translate("+ coord[0] + ","+ (coord[1]-40) + ")")
                            .style("background-color", "white")
                            .style("font-size", 15)
+                           .style("cursor", "default")
                            .text(t)
                            .attr("width", (t.length *8 + "px"))
                            .style("visibility", "visible");
@@ -2018,10 +2023,10 @@ function dendrogram() {
                   .attr("y", firstY)
                   .attr("fill", "lightgray")
                   .attr("visibility", "visible")
-                  .attr("cursor", "pointer")
                   .attr("id", function (d) { return d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("id") + "_rect" + currObj.node[0]; })
                canvas.append("text")
                   .style("font-size", 14)
+                  .style("cursor", "default")
                   .attr("id", function (d) { return "Nodetext_" + currObj.node[0]; })
                   .attr("x", function (d) {
                      return (XCoorR + lineSpace / 2 + r_width / 2);
@@ -2065,9 +2070,9 @@ function dendrogram() {
                   .attr("y", (firstY - prevHeight / 4))
                   .attr("fill", "lightgray")
                   .attr("visibility", "visible")
-                  .attr("cursor", "pointer")
                   .attr("id", function (d) { return d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("id") + "_rect" + currObj.node[0]; })
                canvas.append("text")
+                  .style("cursor", "default")
                   .style("font-size", 14)
                   .attr("id", function (d) { return "Nodetext_" + currObj.node[0]; })
                   .attr("x", function (d) {
@@ -2118,9 +2123,9 @@ function dendrogram() {
                      .attr("y", YCoorR)
                      .attr("fill", "lightgray")
                      .attr("visibility", "visible")
-                     .attr("cursor", "pointer")
                      .attr("id", function (d) { return d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("id") + "_rect" + currObj.parents[parentNum - 1] + i; })
                   canvas.append("text")
+                     .style("cursor", "default")
                      .style("font-size", 14)
                      .attr("id", function (d) { return "Nodetext_" + currObj.parents[parentNum - 1] + i; })
                      .attr("x", function (d) {
@@ -2173,9 +2178,9 @@ function dendrogram() {
                      .attr("y", YCoorR)
                      .attr("fill", "lightgray")
                      .attr("visibility", "visible")
-                     .attr("cursor", "pointer")
                      .attr("id", function (d) { return d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("id") + "_rect" + currObj.parents[parentNum - 1] + i; })
                   canvas.append("text")
+                     .style("cursor", "default")
                      .style("font-size", 14)
                      .attr("id", function (d) { return "Nodetext_" + currObj.parents[parentNum - 1] + i; })
                      .attr("x", function (d) {
@@ -2381,16 +2386,22 @@ function cpt() {
       var thead = document.createElement("thead");
       var tr_head = document.createElement("tr");
 
+      // column node
       var th_node = document.createElement("th");
       th_node.innerHTML = name;
+      th_node.style.cursor = "default";
       tr_head.appendChild(th_node);
 
+      // column true
       var th_true = document.createElement("th");
       th_true.innerHTML = states[0];
+      th_true.style.cursor = "default";
       tr_head.appendChild(th_true);
 
+      // column false
       var th_false = document.createElement("th");
       th_false.innerHTML = states[1];
+      th_false.style.cursor = "default";
       tr_head.appendChild(th_false);
 
       thead.appendChild(tr_head);
@@ -2400,13 +2411,18 @@ function cpt() {
 
       for (var i = 0; i < data.length; i++) {
 
+         // graphnumber
          var tr = document.createElement("tr");
          var color_index = data[i][0].slice(5);
          tr.style.backgroundColor = colors[color_index - 1];
+         tr.style.cursor = "default";
 
+         // probabilities
          var td_node = document.createElement("td");
          td_node.innerHTML = data[i][0];
+         td_node.style.cursor = "default";
          tr.appendChild(td_node);
+
 
          var td_true = document.createElement("td");
          td_true.appendChild(f(data[i][1]));
