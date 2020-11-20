@@ -29,13 +29,16 @@
                 <button id = "reset" disabled = true onclick="reset()">Reset</button>
                 
                 <script>
+
+                    // get input for variable states, split on ",", delete spaces and push single states in array --
                     var state_input = document.getElementById("states");
                     state_input.defaultValue = "True,False";
                     states = state_input.value.split(",");
 
                     state_input.onchange = (event) =>{
                         var text = state_input.value.replace(/\s/g, '');
-                        // states ist das globale Array für die Abfrage
+
+                        // states is global array for dendrograms and CPT
                         states = text.split(",");
                         if(text == ""){
                             state_input.value = "True,False";
@@ -48,14 +51,21 @@
                             return window.alert("Please select no more then four states.");
                         }
                     }
+                    // ---------------------------------------------------------------------------------------------
+                     
                     read()
+
+                    // global boolean for not implemented sync function
                     compare_clicked = false;
                     window1_clicked = false;
                     window2_clicked = false;
                     window3_clicked = false;
                     window4_clicked = false;
-                    hide = false;
                     var boolcount = 0;
+
+                    // global boolean for hide function (hide/unhide)
+                    hide = false;
+                    
                 </script>
             </div>
             <div id="Ansicht"> 
