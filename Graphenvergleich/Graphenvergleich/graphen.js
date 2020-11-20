@@ -879,6 +879,7 @@ function multidisplay() {
       return t;
    };
 
+   // define links
    var l = canvas.selectAll(".link")
       .data(links)
       .enter()
@@ -931,6 +932,7 @@ function multidisplay() {
             .style("visibility", "hidden");
       });
 
+   // create little box for hover text
    var link_hint = d3.select("#compare_g").append("foreignObject")
       .attr("id", "link_hint")
       .attr("width", "20px")
@@ -1003,16 +1005,18 @@ function multidisplay() {
 };
 //	------------------------------------------------------------------------------
 
-//	------------------------------------------------------------------------------
+//	draw glyphs on each node -----------------------------------------------------
 function glyph(nodes){
 
-   //if(states.length > 2){ console.log(":("); return window.alert("No Glyphs available.");}
+   //don't show node if more then 2 states are available, because they are not implemented yet
+   if(states.length > 2){ console.log(":("); return window.alert("No Glyphs available.");}
+
    //draw circle if node is element of graphs[i]
    for (var key = 1; key < nodes.length; key++) {
       var node_name = nodes[key].node[0];
       var curr_node = d3.select("#compare_g").select("#node_" + node_name);
 
-      //graph 2
+      //graph 2 glyphs, call split function and create little circle with graphnumber
       for (var i in graphs[1]) {
          if (node_name == graphs[1][i].node[0]) {
             curr_node.append("g")
@@ -1053,7 +1057,7 @@ function glyph(nodes){
          }
       }
 
-      // graph 3
+      // graph 3 glyphs, call split function and create little circle with graphnumber
       for (var i in graphs[2]) {
          if (node_name == graphs[2][i].node[0]) {
             curr_node.append("g").attr("class", "glyph").attr("id", function () { return node_name + "_g_" + 3 })
@@ -1092,7 +1096,7 @@ function glyph(nodes){
          }
       }
 
-      // graph 4
+      // graph 4 glyphs, call split function and create little circle with graphnumber
       for (var i in graphs[3]) {
          if (node_name == graphs[3][i].node[0]) {
             curr_node.append("g").attr("class", "glyph").attr("id", function () { return node_name + "_g_" + 4 })
@@ -1132,6 +1136,7 @@ function glyph(nodes){
       }
    }
 
+   //	splits glyphs depending on number of children and parents -----------------
    function glyph_split(id, glyph_node, node_name, graph_num) {
       var curr_glyph = d3.select("#" + id);
       var GlX = d3.select("#node_" + node_name).attr("x");
@@ -1515,7 +1520,9 @@ function glyph(nodes){
       };
 
    };
+   //	---------------------------------------------------------------------------
 
+   //	define hoverfunction ------------------------------------------------------
    function glyph_hover_in(obj, graph_num) {
 
       var curr = d3.select(obj.parentNode);
@@ -1535,7 +1542,9 @@ function glyph(nodes){
             2 + ")");
       }
    };
+   //	---------------------------------------------------------------------------
 
+   //	reset after hover ---------------------------------------------------------
    function glyph_hover_out(obj) {
 
       var curr = d3.select(obj.parentNode);
@@ -1544,9 +1553,11 @@ function glyph(nodes){
          0 + ")scale(" + 1 + "," +
          1 + ")");
    };
+   //	---------------------------------------------------------------------------
 };
+//	------------------------------------------------------------------------------
 
-// color and push clicked node in an array for cpt and dendrogramm display
+// color and push clicked node in an array for cpt and dendrogramm display ------
 function node_selection(d, nodes) {
    
    if(hide == false){
@@ -1581,10 +1592,12 @@ function node_selection(d, nodes) {
    cpt();
    }
 };
+//	------------------------------------------------------------------------------
 
-// dendrogramm display of marked nodes
+
 var isDived = false; //asking if #dendrogram has divs already
 
+//	fill parent_states array with states of parents like a truth table -----------
 function statesArray(parent_states, currObj){
    var parentSize = currObj.parents.length;
 
@@ -1612,7 +1625,9 @@ function statesArray(parent_states, currObj){
    Zeilen = parents
    */
 };
+//	------------------------------------------------------------------------------
 
+//	order the parent_states array, because we start filling from the back of the truth table
 function order(parent_states){
    var help_array = [];
    help_array.length = parent_states.length;
@@ -1629,7 +1644,9 @@ function order(parent_states){
    }
       return help_array;
 };
+//	------------------------------------------------------------------------------
 
+// dendrogramm display of marked nodes ------------------------------------------
 function dendrogram() {
 
    if (isDived == true) { //deleting previous devs (Ausführung bei Auswählen und Wegnehmen neuer Knoten!!)
@@ -1644,7 +1661,7 @@ function dendrogram() {
    var width = document.getElementById("Dendrogramme").offsetWidth;
    var height = document.getElementById("Dendrogramme").offsetHeight;
 
-   //Anzeige in Divs aufteilen je nach Knotenanzahl
+   //devide divs depends on number of marked nodes-----
    if (marked.length == 1) {
       var k1 = d3.select("#Dendrogramme").append("div").attr("id", "k1");
       k1.style("width", "100%")
@@ -1750,15 +1767,17 @@ function dendrogram() {
          }
       }
    }
+   //--------------------------------------------------
 
    // no more than 4 nodes
    if (marked.length > 4) { return window.alert("Please select no more then four nodes for the comparison."); }
 
-   //constructing the dendrogram
+   //constructing the dendrogram ---------------------------------------
    function oneDendro(nodeNum, graphNum) {
 
       var currObj;
-      //Knoten in graphs(graphNum) finden
+
+      //find node in graphs array
       var NodeName = marked[nodeNum].node[0];
       for (var i in graphs[graphNum]) {
          if (NodeName
@@ -1781,7 +1800,7 @@ function dendrogram() {
 
       if (currObj.parents[0] == "root") num_parents -= 1;
 
-      // an knotenlänge anpassen
+      // resize on longest node name
       var dendro_width = 100 + (states.length - 1) * 2/*dendrobar length*/
          + num_parents * (r_width + 50 /*lineSpace*/) //parents and their lines
          + r_width + 50 / 2 /*lineSpace*/; //node in the front
@@ -1789,6 +1808,7 @@ function dendrogram() {
       var scale = div_width / dendro_width - 0.05;
       var x = div_width / 2 + ((dendro_width) * scale) / 2;
 
+      // create states array of parents for hoverfunction ---
       var parentSize = currObj.parents.length;
       if (currObj.parents[0] == "root") {
          parentSize -= 1;
@@ -1802,6 +1822,8 @@ function dendrogram() {
          var parent_states = new Array(Math.pow(states.length, parentSize + 1) * parentSize);
          statesArray(parent_states, currObj);
       }
+      // ----------------------------------------------------
+
 
       var zoom = d3.zoom().on("zoom", function (d) {
          d3.select("#g_dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1)).attr("transform", d3.event.transform);
@@ -1833,7 +1855,7 @@ function dendrogram() {
       brewer.pal(6, "Dark2")
       #brewer.pal.info*/
 
-      // Erstellung der benötigten Anzahl von Dendrogram Balken
+      // create bars for dendrograms with 0 parents
       if (currObj.parents[0] == "root" && currObj.parents.length == 1 || currObj.parents.length == 0) {
          var XCoor = -100 - (states.length - 1) * 2;
          var YCoor = 20;
@@ -1872,10 +1894,11 @@ function dendrogram() {
             XCoor = XCoor + 2 + currObj.prob[j] * 100;
 
          }
+         // call draw-function for links and nodes
          MakeDendroTree(-100 - (states.length - 1) * 2, 20, YCoor, 0, 20);
 
       }
-      //ein Array abfangen, weil prob als []
+      // create bars for dendrograms with 1 parent 
       if (currObj.parents.length == 1 && currObj.parents[0] != "root") {
          var YCoor = 20;
          var count = 0;
@@ -1923,9 +1946,10 @@ function dendrogram() {
                count++;
             }
          }
+         // call draw-function for links and nodes
          MakeDendroTree(-100 - (states.length - 1) * 2, 20, YCoor, 1, 20);
       }
-
+      // create bars for dendrograms with more than 1 parents
       if (currObj.parents.length > 1) {
          var YCoor = 20;
          var j;
@@ -1939,9 +1963,7 @@ function dendrogram() {
             for (j = 0; j < currObj.prob.length; j++) {
                var XCoor = -100 - (states.length - 1) * 2;
 
-
                for (var i = 0; i < currObj.prob.length; i++) {
-
                   var node_zugriff = currObj.prob[i];
                   for (var k = 1; k < currObj.parents.length - 1; k++) {
                      node_zugriff = node_zugriff[i];
@@ -1998,10 +2020,11 @@ function dendrogram() {
                YCoor = YCoor + 50;
             }
          }
-
+         // call draw-function for links and nodes
          MakeDendroTree(-100 - (states.length - 1) * 2, 20, YCoor, 2, 20);
       }
 
+      //constructing the tree layout --------------------------------------
       function MakeDendroTree(prevX, firstY, lastY, parentNum, prevHeight) {
 
          var dendroParent;
@@ -2040,6 +2063,7 @@ function dendrogram() {
                   .attr("visibility", "visible")
                   .text(function (d) { return currObj.node[0] });
 
+               //create data for links and draw them
                var l_data = [];
                var obj = {};
                obj.source = d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.node[0]);
@@ -2087,6 +2111,7 @@ function dendrogram() {
                   .attr("visibility", "visible")
                   .text(function (d) { return currObj.node[0] });
 
+               //create data for links and draw them
                var l_data = [];
                var obj = {};
                obj.source = d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1) + "_rect" + currObj.node[0]);
@@ -2164,6 +2189,7 @@ function dendrogram() {
                   }
 
                }
+               // recursion call
                MakeDendroTree(XCoorR, firstY + 50, YCoorR, parentNum - 1, Resize);
             }
             //There was a dendro bar before
@@ -2195,6 +2221,7 @@ function dendrogram() {
                      .attr("visibility", "visible")
                      .text(function (d) { return currObj.parents[parentNum - 1]; });
 
+                  //create data for links and draw them
                   var l_data = [];
                   for (var key = 0; key < states.length; key++) {
                      var obj = {};
@@ -2225,13 +2252,15 @@ function dendrogram() {
                   }
                   YCoorR = YCoorR + 50 * states.length;
                }
+               // recursion call
                MakeDendroTree(XCoorR, firstY + 50 / 2, YCoorR, parentNum - 1, Resize);
             }
          }
 
       }
+      // ------------------------------------------------------------------
 
-      // Hover for dendrograms
+      // Hoverbox for dendrograms
       var dendro_hint = d3.select("#g_" + "dendro_k" + (nodeNum + 1) + "_g" + (graphNum + 1))
          .append("foreignObject")
          .attr("id", "dendro_hint")
@@ -2242,8 +2271,9 @@ function dendrogram() {
          .attr("transform", "translate(10,10)")
          .style("visibility", "hidden");
    };
+   //	------------------------------------------------------------------
 
-   // background color based on graph number
+   // fill background color based on graph number ----------------------
    function fillDendro(fillnode, fillgraph) {
 
       if (fillgraph == 1) {
@@ -2267,10 +2297,12 @@ function dendrogram() {
             ;
       }
    }
+   //	------------------------------------------------------------------
 
 };
+//	------------------------------------------------------------------------------
 
-// cpt's of marked nodes
+// cpt's of marked nodes --------------------------------------------------------
 function cpt() {
    d3.select("#CPT").text("");
    if (marked.length > 4) return;
@@ -2282,6 +2314,7 @@ function cpt() {
       .attr("height", "100%")
       .append("g");
 
+   // color array for rows
    colors = [
       '#386cb0',
       '#7fc97f',
@@ -2290,9 +2323,11 @@ function cpt() {
    ];
 
    for (var i = 0; i < marked.length; i++) {
+      //call function for each marked node
       data_write(marked[i]);
    }
 
+   // ???????????????????????????????????????????????
    function data_write(marked_node) {
 
       var data = [];
@@ -2442,3 +2477,4 @@ function cpt() {
    };
 
 };
+//	------------------------------------------------------------------------------
